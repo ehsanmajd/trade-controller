@@ -1,4 +1,4 @@
-import { Box, Container, createStyles, makeStyles, Theme } from '@material-ui/core'
+import { Container, createStyles, makeStyles, Theme } from '@material-ui/core'
 import React from 'react'
 import Footer from '../Footer'
 import Header from '../Header'

@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, createStyles, FormControlLabel, makeStyles, TextField, Theme } from '@material-ui/core'
+import { Button, Checkbox, createStyles, FormControlLabel, makeStyles, TextField, Theme } from '@material-ui/core'
 import React from 'react'
 import { useForm, SubmitHandler } from "react-hook-form";
 import DetailContainer from './DetailContainer';
@@ -43,8 +43,7 @@ const Row: React.FC = ({ children }) => {
 }
 
 export default function Settings() {
-  const styles = useStyles();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm<Inputs>();
+  const { register, handleSubmit } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
   return (
     <DetailContainer>
