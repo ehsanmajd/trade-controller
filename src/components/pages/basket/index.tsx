@@ -48,7 +48,7 @@ export default function Basket() {
   return (
     <>
       <Grid container justify='center' className={classes.root}>
-        <Box justify='center' spacing={1} m={1} className={classes.box}>
+        <Grid justify='center' spacing={1} m={1} className={classes.box}>
           <Autocomplete
             id="combo-box-demo"
             options={basketList}
@@ -56,15 +56,15 @@ export default function Basket() {
             style={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
           />
-        </Box>
+        </Grid>
       </Grid>
       <h2>Basket Summary</h2>
-      <Box className={classes.boxContainer}>
+      <Grid className={classes.boxContainer}>
         <DetailBox />
         <DetailBox />
         <DetailBox />
         <DetailBox />
-      </Box>
+      </Grid>
       <h2>Expert Setting</h2>
       <Box className={classes.boxContainer}>
         <Settings />
