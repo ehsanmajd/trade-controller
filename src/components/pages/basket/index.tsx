@@ -2,7 +2,6 @@ import { createStyles, Grid, makeStyles } from '@material-ui/core'
 import React from 'react'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Box from '@material-ui/core/Box';
 import { Theme } from '@material-ui/core';
 import DetailBox from './DetailBox';
 import Settings from './Settings';
