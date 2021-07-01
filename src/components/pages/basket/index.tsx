@@ -71,12 +71,12 @@ export default function Basket() {
         <DetailBox />
       </Grid>
       <h2>Expert Setting</h2>
-      <Box className={classes.boxContainer}>
+      <Grid className={classes.boxContainer}>
         <Settings />
         <Settings />
         <Settings />
         <Settings />
-      </Box>
+      </Grid>
     </>
   )
 }
