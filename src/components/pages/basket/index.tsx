@@ -32,12 +32,17 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'grid',
       marginTop: 48,
       gridGap: 16,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('xs')]: {
+        gridTemplateColumns: '1fr',
+        gridTemplateRows: '1fr'
+      },
+      [theme.breakpoints.up('sm')]: {
         gridTemplateColumns: '1fr 1fr',
         gridTemplateRows: '1fr 1fr'
       },
       [theme.breakpoints.up('md')]: {
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        gridTemplateRows: '1fr'
       },
     }
   }),
