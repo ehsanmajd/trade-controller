@@ -52,7 +52,7 @@ export default function Basket() {
   return (
     <>
       <Grid container justify='center' className={classes.root}>
-        <Grid justify='center' spacing={1} m={1} className={classes.box}>
+        <Grid justify='center' spacing={1} md={1} className={classes.box} component='div'>
           <Autocomplete
             id="combo-box-demo"
             options={basketList}
