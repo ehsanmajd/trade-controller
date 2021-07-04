@@ -180,7 +180,23 @@ const SAMPLE: Input[] = [
   {
     name: 'order_to_modify',
     type: 'number',
-    component: 'Textbox',
+    component: 'Dropdown',
+    attributes: {
+      datasource: [
+        {
+          label: 'Pending order',
+          value: 1
+        },
+        {
+          label: 'Market order',
+          value: 2
+        },
+        {
+          label: 'All',
+          value: 3
+        }
+      ]
+    }
   },
   {
     name: 'close_Pending_Order',
