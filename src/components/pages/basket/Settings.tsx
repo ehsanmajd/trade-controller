@@ -1,5 +1,5 @@
 import { MenuItem, Select } from '@material-ui/core';
-import { Button, createStyles, FormControlLabel, InputLabel, makeStyles, TextField, Theme } from '@material-ui/core'
+import { Button, createStyles, InputLabel, makeStyles, TextField, Theme } from '@material-ui/core'
 import React from 'react'
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import DetailContainer from './DetailContainer';
@@ -222,7 +222,7 @@ const VALUES: Inputs = {
 }
 
 export default function Settings({ structure = SAMPLE, title, value = VALUES }: SettingsProps) {
-  const { register, handleSubmit, control } = useForm<Inputs>({
+  const { handleSubmit, control } = useForm<Inputs>({
     defaultValues: VALUES
   });
 
