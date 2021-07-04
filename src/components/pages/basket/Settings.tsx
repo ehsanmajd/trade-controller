@@ -1,7 +1,7 @@
 import { MenuItem, Select } from '@material-ui/core';
-import { Button, Checkbox, createStyles, FormControlLabel, InputLabel, makeStyles, TextField, Theme } from '@material-ui/core'
+import { Button, createStyles, FormControlLabel, InputLabel, makeStyles, TextField, Theme } from '@material-ui/core'
 import React from 'react'
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import DetailContainer from './DetailContainer';
 
 
@@ -42,22 +42,30 @@ interface SettingsProps {
 }
 
 const Components = {
-  'Textbox': (props) => <TextField fullWidth label='channel_top' {...props} />,
-  'Checkbox': ({ label, ...rest }) => <FormControlLabel
-    control={<Checkbox {...rest} />}
-    label={label}
-  />,
+  'Textbox': props =>
+    <TextField {...props} />
+  ,
+  'Checkbox': (props) => {
+    return <><InputLabel id={`label-${props.name}`}>{props.label}</InputLabel>
+      <Select
+        labelId={`label-${props.name}`}
+        name={props.name}
+        fullWidth
+        {...props}
+      >
+        <MenuItem value={1}>True</MenuItem>
+        <MenuItem value={0}>False</MenuItem>
+      </Select>
+    </>
+  },
   'Dropdown': (props) => <><InputLabel id={`label-${props.name}`}>{props.label}</InputLabel>
     <Select
       labelId={`label-${props.name}`}
-      id={props.name}
-      value={props.value}
-      onChange={props.onChange}
-      fullWidth
+      {...props}
     >
       {props.datasource.map(item => <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>)}
     </Select>
-  </>,
+  </>
 }
 type Inputs = {
   channel_top: number,
@@ -76,9 +84,9 @@ type Inputs = {
   pending_order_limit_count: number,
   maximum_market_order_count: number,
   order_to_modify: number,
-  close_Pending_Order: boolean,
-  close_Market_Order: boolean,
-  terminate_strategy: boolean
+  close_Pending_Order: number,
+  close_Market_Order: number,
+  terminate_strategy: number
 };
 
 const SAMPLE: Input[] = [
@@ -125,11 +133,11 @@ const SAMPLE: Input[] = [
       datasource: [
         {
           label: 'SELL',
-          value: '1'
+          value: 1
         },
         {
           label: 'BUY',
-          value: '2'
+          value: 2
         }
       ]
     }
@@ -191,9 +199,32 @@ const SAMPLE: Input[] = [
   },
 ]
 
-export default function Settings({ structure = SAMPLE, title }: SettingsProps) {
-  const { register, handleSubmit } = useForm<Inputs>();
+const VALUES: Inputs = {
+  channel_top: 1.28,
+  channel_bottom: 1.19,
+  min_distance: 10,
+  lot_size: 0.1,
+  order_interval: 5,
+  take_profit: 10,
+  stop_loss: 10,
+  side: 1,
+  strategy_serial: 1001,
+  trailing_stop_first_step: 6,
+  trailing_stop_first_modification: 1,
+  trailing_stop_further_step: 1,
+  trailing_stop_further_modification: 1,
+  pending_order_limit_count: 5,
+  maximum_market_order_count: 4,
+  terminate_strategy: 0,
+  close_Pending_Order: 0,
+  close_Market_Order: 1,
+  order_to_modify: 1,
+}
 
+export default function Settings({ structure = SAMPLE, title, value = VALUES }: SettingsProps) {
+  const { register, handleSubmit, control } = useForm<Inputs>({
+    defaultValues: VALUES
+  });
 
 
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
@@ -203,13 +234,19 @@ export default function Settings({ structure = SAMPLE, title }: SettingsProps) {
       <form onSubmit={handleSubmit(onSubmit)}>
         {
           structure.map(s => {
-            return <Row>{
-              Components[s.component]({
-                fullWidth: true,
-                label: s.label ?? s.name,
-                ...register(s.name as any),
-                ...(s.attributes || {})
-              })
+            return <Row key={s.name}>{
+              <Controller
+                name={s.name as any}
+                control={control}
+                render={({ field }) => React.createElement(Components[s.component], {
+                  fullWidth: true,
+                  label: s.label ?? s.name,
+                  ...(s.attributes || {}),
+                  ...field
+                })}
+              />
+
+
             }</Row>
           })
         }
