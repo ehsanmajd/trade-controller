@@ -184,16 +184,20 @@ const SAMPLE: Input[] = [
     attributes: {
       datasource: [
         {
-          label: 'Pending order',
+          label: 'None',
           value: 1
         },
         {
-          label: 'Market order',
+          label: 'Pending order',
           value: 2
         },
         {
-          label: 'All',
+          label: 'Market order',
           value: 3
+        },
+        {
+          label: 'All',
+          value: 4
         }
       ]
     }
