@@ -1,5 +1,4 @@
 import { createStyles, Grid, makeStyles } from '@material-ui/core'
-import React from 'react'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { Theme } from '@material-ui/core';
@@ -25,7 +24,8 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     box: {
-      marginTop: 64
+      marginTop: 64,
+      backgroundColor: theme.palette.background.default
     },
     boxContainer: {
       display: 'grid',
@@ -58,7 +58,7 @@ export default function Basket() {
             options={basketList}
             getOptionLabel={(option) => option.title}
             style={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+            renderInput={(params) => <TextField {...params} label="Select your basket" variant="outlined" />}
           />
         </Grid>
       </Grid>
@@ -71,10 +71,10 @@ export default function Basket() {
       </Grid>
       <h2>Expert Setting</h2>
       <Grid className={classes.boxContainer}>
-        <Settings />
-        <Settings />
-        <Settings />
-        <Settings />
+        <Settings title={`Expert #1`}/>
+        <Settings title={`Expert #2`}/>
+        <Settings title={`Expert #3`}/>
+        <Settings title={`Expert #4`}/>
       </Grid>
     </>
   )
