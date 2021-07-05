@@ -1,10 +1,29 @@
 import React from 'react';
 import './App.css';
 import Main from './pages/Main';
+import Admin from './pages/Admin';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 function App() {
   return (
-   <Main />
+    <Router>
+      <Switch>
+        <Route path="/home">
+          <Main />
+        </Route>
+        <Route path="/admin">
+          <Admin />
+        </Route>
+        <Route path="/">
+          <Main />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

@@ -15,11 +15,13 @@ const useStyle = makeStyles((theme: Theme) =>
   })
 );
 
-const Layout: React.FC = ({ children }) => {
+const Layout: React.FC<{ header?: () => JSX.Element }> = ({ children, header = () => null }) => {
   const classes = useStyle();
   return (
     <Container className={classes.root} component='div'>
-      <Header />
+      <Header>
+        {header()}
+      </Header>
       {children}
       <Footer />
     </Container>
