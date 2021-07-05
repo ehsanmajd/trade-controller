@@ -100,10 +100,10 @@ export default function Index() {
             {mode === 'edit' && <>
               <TableCell><Button variant='contained' color='secondary'>-</Button></TableCell>
               <TableCell>#</TableCell>
-              <TableCell><TextField label='Name' name='name' onChange={handleInputChange} /></TableCell>
-              <TableCell><TextField label='Username' name='username' onChange={handleInputChange} /></TableCell>
-              <TableCell><TextField label='Password' name='password' type='password' onChange={handleInputChange} /></TableCell>
-              <TableCell><Checkbox name='active' onChange={handleInputChange} /></TableCell>
+              <TableCell><TextField value={name} label='Name' name='name' onChange={handleInputChange} /></TableCell>
+              <TableCell><TextField value={username} label='Username' name='username' onChange={handleInputChange} /></TableCell>
+              <TableCell><TextField value={password} label='Password' name='password' type='password' onChange={handleInputChange} /></TableCell>
+              <TableCell><Checkbox checked={active} name='active' onChange={handleInputChange} /></TableCell>
               <TableCell>
                 <Button
                   variant='contained'
