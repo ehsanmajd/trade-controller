@@ -3,6 +3,7 @@ import React from 'react'
 import Footer from '../Footer'
 import Header from '../Header'
 
+
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({
     "@global": {
@@ -17,6 +18,7 @@ const useStyle = makeStyles((theme: Theme) =>
 
 const Layout: React.FC<{ header?: () => JSX.Element }> = ({ children, header = () => null }) => {
   const classes = useStyle();
+
   return (
     <Container className={classes.root} component='div'>
       <Header>

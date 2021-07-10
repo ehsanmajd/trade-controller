@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <div style={{textAlign: 'center'}}>
       <br />
-      © Copyright 2021. all rights reserved.
+      Copyright © mybasket.trader 2021.
       <hr />
       <br />
       <br />

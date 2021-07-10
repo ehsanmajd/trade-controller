@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import UserInfo from '../components/UserInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,6 +21,7 @@ const FullWidthGrid: React.FC = ({ children }) => {
 
   return (
     <div className={classes.root}>
+      <UserInfo />
       {children}
     </div>
   );
