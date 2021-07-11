@@ -2,6 +2,7 @@ import './App.css';
 import Main from './pages/Main';
 import Admin from './pages/Admin';
 import SignIn from './pages/SignIn';
+import Setting from './pages/Setting';
 import {
   BrowserRouter as Router,
   Switch,
@@ -34,6 +35,9 @@ function App() {
             </Route>}
             {user.loggedIn && <Route path="/signout">
               <SignOut />
+            </Route>}
+            {user.loggedIn && <Route path="/setting">
+              <Setting />
             </Route>}
             {user.loggedIn && <Route path="/">
               <Main />

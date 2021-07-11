@@ -1,6 +1,6 @@
 import axios from 'axios';
-const BASE_URL = 'http://localhost:3001';
-const axiosApiInstance = axios.create();
+export const BASE_URL = 'http://localhost:3001';
+export const axiosApiInstance = axios.create();
 
 const refreshAccessToken = () => {
   return new Promise(resolve => {
@@ -83,3 +83,4 @@ export const signOut = async (refreshToken: string) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/signout', { refreshToken });
   return data;
 }
+

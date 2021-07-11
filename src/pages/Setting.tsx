@@ -1,13 +1,11 @@
 import Layout from '../Layout'
-import MainPage from '../components/pages/basket'
+import Servers from '../components/pages/server'
 import Header from './Header';
 
-
-export default function Main() {
-  
+export default function Setting() {
   return (
     <Layout ExtraHeader={Header}>
-      <MainPage />
+      <Servers />
     </Layout>
   )
 }

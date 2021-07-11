@@ -1,5 +1,5 @@
 import { Container, createStyles, makeStyles, Theme } from '@material-ui/core'
-import React from 'react'
+import React,{FC} from 'react'
 import Footer from '../Footer'
 import Header from '../Header'
 
@@ -16,13 +16,13 @@ const useStyle = makeStyles((theme: Theme) =>
   })
 );
 
-const Layout: React.FC<{ header?: () => JSX.Element }> = ({ children, header = () => null }) => {
+const Layout: React.FC<{ ExtraHeader?: FC }> = ({ children, ExtraHeader = () => null }) => {
   const classes = useStyle();
 
   return (
     <Container className={classes.root} component='div'>
       <Header>
-        {header()}
+        {<ExtraHeader />}
       </Header>
       {children}
       <Footer />
