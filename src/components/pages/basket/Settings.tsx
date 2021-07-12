@@ -242,10 +242,9 @@ const VALUES: Inputs = {
 }
 
 export default function Settings({ structure = SAMPLE, title, value = VALUES }: SettingsProps) {
-  const { handleSubmit, control } = useForm<Inputs>({
-    defaultValues: VALUES
+  const { handleSubmit, control, setValue } = useForm<Inputs>({
+    defaultValues: value
   });
-
 
   const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
   return (

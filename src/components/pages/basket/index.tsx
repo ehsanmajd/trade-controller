@@ -101,8 +101,9 @@ export default function Basket() {
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {
-              selectedBasket && baskets.find(x => x.name === selectedBasket)?.parameters.map(args => {
+              selectedBasket && baskets.find(x => x.name === selectedBasket)?.parameters.map((args, index) => {
                 return <Settings
+                  key={`${selectedBasket}-${index}`}
                   title={`Expert #2`}
                   structure={args.map(arg => ({
                     name: arg.name,
