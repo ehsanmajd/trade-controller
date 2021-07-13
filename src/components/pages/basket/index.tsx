@@ -68,7 +68,6 @@ export default function Basket() {
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
-  const serverId = basket?.serverId;
 
   useEffect(
     () => {

@@ -1,7 +1,7 @@
 import { MenuItem, Select } from '@material-ui/core';
 import { Button, createStyles, InputLabel, makeStyles, TextField, Theme } from '@material-ui/core'
 import React from 'react'
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import DetailContainer from './DetailContainer';
 
 
