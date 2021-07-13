@@ -37,26 +37,38 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface BasketModel {
+
+type ParameterType = {
+  value: unknown;
+  name: string;
+  type: string;
+  options: {
+    key: string;
+    value: number;
+  }[]
+};
+
+type ParameterFileType = {
+  params: ParameterType[];
+  id: string;
+}
+export interface BasketModel {
+  serverId?: string;
   name: string;
   info: {
 
   },
-  parameters: {
-    value: number;
-    name: string;
-    type: string;
-    options: {
-      key: string;
-      value: number;
-    }[]
-  }[][]
+  parameters: ParameterFileType[]
 }
 
 export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [baskets, setBaskets] = useState<BasketModel[]>([]);
+
+  const basket = baskets.find(x => x.name === selectedBasket);
+  const parameterFiles = basket?.parameters;
+  const serverId = basket?.serverId;
 
   useEffect(
     () => {
@@ -73,6 +85,18 @@ export default function Basket() {
   function handleBasketChange(e, value) {
     setSelectedBasket(value.name);
   }
+
+  async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string) {
+
+
+    Object.keys(data)
+      .forEach(key => {
+        model.find(x => x.name === key)!.value = data[key];
+      });
+    const basket = baskets.find(x => x.name === selectedBasket);
+    await service.updateExpert(basket.serverId, selectedBasket, filePath, model);
+  }
+
 
 
   return (
@@ -101,11 +125,11 @@ export default function Basket() {
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {
-              selectedBasket && baskets.find(x => x.name === selectedBasket)?.parameters.map((args, index) => {
+              selectedBasket && parameterFiles.map((args, index) => {
                 return <Settings
                   key={`${selectedBasket}-${index}`}
                   title={`Expert #2`}
-                  structure={args.map(arg => ({
+                  structure={args.params.map(arg => ({
                     name: arg.name,
                     type: arg.type as any,
                     component: arg.type === 'enum' ? 'Dropdown' : (arg.type === 'bool' ? 'Checkbox' : 'Textbox'),
@@ -116,10 +140,11 @@ export default function Basket() {
                       }))
                     }
                   }))}
-                  value={args.reduce((acc, item) => {
+                  value={args.params.reduce((acc, item) => {
                     acc[item.name] = item.value;
                     return acc;
                   }, {})}
+                  onSubmit={(data) => handleSubmit(data, args.params, args.id)}
                 />
               })
             }

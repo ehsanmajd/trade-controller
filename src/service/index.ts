@@ -89,3 +89,13 @@ export const getBaskets = async () => {
   return data;
 }
 
+export const updateExpert = async (serverId: string, basketName: string, fileId: string, content: unknown) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/update-expert', {
+    fileId,
+    content,
+    serverId,
+    basketName
+  });
+  return data;
+}
+

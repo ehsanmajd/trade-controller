@@ -39,6 +39,7 @@ interface SettingsProps {
   structure?: Input[];
   value?: object;
   title: string;
+  onSubmit: (data: Record<string, unknown>) => void;
 }
 
 const Components = {
@@ -241,12 +242,15 @@ const VALUES: Inputs = {
   order_to_modify: 1,
 }
 
-export default function Settings({ structure = SAMPLE, title, value = VALUES }: SettingsProps) {
+export default function Settings({ structure = SAMPLE, title, value = VALUES, onSubmit }: SettingsProps) {
   const { handleSubmit, control } = useForm<Inputs>({
     defaultValues: value
   });
 
-  const onSubmit: SubmitHandler<Inputs> = data => console.log(data);
+  // const onSubmit: SubmitHandler<Inputs> = data => {
+  //   console.log(data);
+  //   onSubmit(data);
+  // }
   return (
     <DetailContainer>
       <h2>{title}</h2>
