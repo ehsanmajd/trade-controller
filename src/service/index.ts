@@ -1,5 +1,5 @@
 import axios from 'axios';
-export const BASE_URL = 'http://localhost:3001';
+export const BASE_URL = process.env.BACKEND_URL || 'http://localhost:3001';
 export const axiosApiInstance = axios.create();
 
 const refreshAccessToken = () => {
