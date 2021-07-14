@@ -3,6 +3,8 @@ import { Button, createStyles, InputLabel, makeStyles, TextField, Theme } from '
 import React from 'react'
 import { useForm, Controller } from "react-hook-form";
 import DetailContainer from './DetailContainer';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from "yup";
 
 
 
@@ -43,9 +45,7 @@ interface SettingsProps {
 }
 
 const Components = {
-  'Textbox': props =>
-    <TextField {...props} />
-  ,
+  'Textbox': React.forwardRef((props, ref) => <TextField {...props} ref={ref as any} />),
   'Checkbox': (props) => {
     return <><InputLabel id={`label-${props.name}`}>{props.label}</InputLabel>
       <Select
@@ -242,15 +242,37 @@ const VALUES: Inputs = {
   order_to_modify: 1,
 }
 
+const MESSAGES = {
+  int: 'Enter an Integer number',
+  positive: 'Only positive numbers allowed'
+}
+
+const typeMap = {
+  int: yup.number().integer(MESSAGES['int']).min(0, MESSAGES['positive']).required(),
+  double: yup.number().min(0, MESSAGES['positive']).required(),
+}
+
 export default function Settings({ structure = SAMPLE, title, value = VALUES, onSubmit }: SettingsProps) {
-  const { handleSubmit, control } = useForm<Inputs>({
-    defaultValues: value
+  const shape = structure.reduce((acc, item) => {
+    const validation = typeMap[item.type];
+    if (!validation) {
+      return acc;
+    }
+    return {
+      ...acc,
+      [item.name]: typeMap[item.type]
+    }
+  }, {});
+  const schema = yup.object().shape(shape);
+  const { handleSubmit, control, register } = useForm<Inputs>({
+    defaultValues: value,
+    resolver: yupResolver(schema),
+    reValidateMode: 'onChange',
+    shouldUseNativeValidation: false,
+    shouldFocusError: true,
+    mode: 'onChange'
   });
 
-  // const onSubmit: SubmitHandler<Inputs> = data => {
-  //   console.log(data);
-  //   onSubmit(data);
-  // }
   return (
     <DetailContainer>
       <h2>{title}</h2>
@@ -259,17 +281,22 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
           structure.map(s => {
             return <Row key={s.name}>{
               <Controller
-                name={s.name as any}
+                // @ts-ignore
+                name={s.name}
                 control={control}
-                render={({ field }) => React.createElement(Components[s.component], {
-                  fullWidth: true,
-                  label: s.label ?? s.name,
-                  ...(s.attributes || {}),
-                  ...field
-                })}
+                render={({ field, fieldState }) => {
+                  return React.createElement(Components[s.component], {
+                    fullWidth: true,
+                    label: s.label ?? s.name,
+                    ...(s.attributes || {}),
+                    ...field,
+                    error: !!fieldState.error,
+                    helperText: fieldState.error?.message
+                  })
+                }}
+                // @ts-ignore
+                {...register(s.name)}
               />
-
-
             }</Row>
           })
         }

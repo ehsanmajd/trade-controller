@@ -129,7 +129,7 @@ export default function Basket() {
                   key={`${selectedBasket}-${index}`}
                   title={`Expert #2`}
                   structure={args.params.map(arg => ({
-                    name: arg.name,
+                    name: arg.name as any,
                     type: arg.type as any,
                     component: arg.type === 'enum' ? 'Dropdown' : (arg.type === 'bool' ? 'Checkbox' : 'Textbox'),
                     attributes: {
