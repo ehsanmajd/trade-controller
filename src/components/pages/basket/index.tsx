@@ -1,11 +1,14 @@
 import { createStyles, Grid, makeStyles } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import IconButton from '@material-ui/core/IconButton';
 import { Theme } from '@material-ui/core';
 import DetailBox from './DetailBox';
 import Settings from './Settings';
 import { useEffect, useState } from 'react';
 import * as service from '../../../service';
+import Back from '@material-ui/icons/ArrowBack';
+import Forward from '@material-ui/icons/ArrowForward';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
         gridTemplateColumns: '1fr 1fr 1fr 1fr',
         gridTemplateRows: '1fr'
       },
+    },
+    baskets: {
+      dispay: 'flex'
     }
   }),
 );
@@ -79,15 +85,11 @@ export default function Basket() {
     []
   )
 
-
-
   function handleBasketChange(e, value) {
-    setSelectedBasket(value.name);
+    setSelectedBasket(value?.name);
   }
 
   async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string) {
-
-
     Object.keys(data)
       .forEach(key => {
         model.find(x => x.name === key)!.value = data[key];
@@ -95,14 +97,28 @@ export default function Basket() {
     const basket = baskets.find(x => x.name === selectedBasket);
     await service.updateExpert(basket.serverId, selectedBasket, filePath, model);
   }
+  const index = baskets.findIndex(x => x.name === selectedBasket);
 
+  function navigate(mode: 'back' | 'forward') {
+    setSelectedBasket(mode === 'back' ?
+      baskets[index - 1].name :
+      baskets[index + 1].name
+    );
+  }
 
 
   return (
     <>
       <Grid container justify='center' className={classes.root}>
-        <Grid justify='center' spacing={1} md={1} className={classes.box} component='div'>
+        <Grid container justify='space-between' spacing={1} md={6} className={classes.box} component='div'>
+          <IconButton
+            disabled={index <= 0}
+            onClick={() => navigate('back')}
+          >
+            <Back color='primary' />
+          </IconButton>
           <Autocomplete
+            value={basket || { name: '' }}
             id="combo-box-demo"
             options={baskets}
             getOptionLabel={basket => basket.name}
@@ -110,6 +126,11 @@ export default function Basket() {
             onChange={handleBasketChange}
             renderInput={(params) => <TextField {...params} label="Select your basket" variant="outlined" />}
           />
+          <IconButton
+            onClick={() => navigate('forward')}
+            disabled={(index === -1 && !basket) || index === baskets.length - 1}>
+            <Forward color='primary' />
+          </IconButton>
         </Grid>
       </Grid>
       {selectedBasket &&
