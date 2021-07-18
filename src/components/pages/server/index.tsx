@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { makeStyles,Theme } from '@material-ui/core/styles';
+import { makeStyles, Theme } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Checkbox from '@material-ui/core/Checkbox';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -12,34 +11,26 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Remove from '@material-ui/icons/Remove'
 import Add from '@material-ui/icons/Add'
-import ToggleOn from '@material-ui/icons/ToggleOn'
-import ToggleOff from '@material-ui/icons/ToggleOff'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import Cancel from '@material-ui/icons/Cancel'
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import CheckBoxOutlineBlank from '@material-ui/icons/CheckBoxOutlineBlank';
-import * as service from '../../../service/server';
+import * as service from '../../../service';
+import Chips from '../../Chips';
+import { User, Server } from '../../../types/user';
 
-const useStyles = makeStyles((theme: Theme)=>({
+const useStyles = makeStyles((theme: Theme) => ({
   table: {
     minWidth: 650,
   },
-  root:{
-    marginTop:theme.spacing(10)
+  root: {
+    marginTop: theme.spacing(10)
   }
 }));
 
-interface Server {
-  id: string;
-  name: string;
-  address:string;
-  active: boolean;
-}
+
 
 const EMPTY_FORM_VALUES = {
-  name: '',
   address: '',
-  active: true
+  users: []
 }
 
 export default function Index() {
@@ -47,7 +38,7 @@ export default function Index() {
   const [form, setForm] = useState(EMPTY_FORM_VALUES);
   const [servers, setServers] = useState<Server[]>([]);
   const classes = useStyles();
-  const { name, address, active } = form;
+  const { address, users } = form;
 
   const handleCancel = () => {
     setForm(EMPTY_FORM_VALUES);
@@ -66,22 +57,24 @@ export default function Index() {
   }
 
   const handleSubmit = async () => {
-    await service.addServer(name, address);
+    await service.addServer(users.map(x => x.key), address);
     setMode('view');
     setForm(EMPTY_FORM_VALUES);
     reset();
   }
 
+  const handleChange = (v: any) => {
+    setForm({
+      ...form,
+      users: v
+    })
+  }
 
   const reset = async () => {
     const servers = await service.loadServers();
     setServers(servers);
   }
 
-  const toggleActive = async (id: string) => {
-    await service.toggleActive(id);
-    reset();
-  }
 
   useEffect(
     () => {
@@ -90,6 +83,18 @@ export default function Index() {
     []
   )
 
+  const mapUserToChip = (user: User) => {
+    return {
+      label: user.username,
+      key: user.id
+    }
+  }
+
+  const usersDatasource = async (keyword: string) => {
+    const users = await service.searchUsers(keyword);
+    return users.map(mapUserToChip);
+  }
+
   return (
     <TableContainer className={classes.root} component={Paper}>
       <Table className={classes.table} size="small">
@@ -97,9 +102,8 @@ export default function Index() {
           <TableRow>
             <TableCell> </TableCell>
             <TableCell>Index</TableCell>
-            <TableCell>Name</TableCell>
             <TableCell>Address</TableCell>
-            <TableCell>Active</TableCell>
+            <TableCell>Users</TableCell>
             <TableCell align="center">Actions</TableCell>
           </TableRow>
         </TableHead>
@@ -110,19 +114,13 @@ export default function Index() {
                 <IconButton><Remove /></IconButton>
               </TableCell>
               <TableCell>{index + 1}</TableCell>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
               <TableCell>{row.address}</TableCell>
-              <TableCell>{row.active ? <CheckBoxIcon color='action' /> : <CheckBoxOutlineBlank color='action' />}</TableCell>
-              <TableCell align="center">
-                <IconButton
-                  onClick={() => toggleActive(row.id)}
-                  title={row.active ? 'Deactivate' : 'Activate'}
-                >
-                  {row.active && <ToggleOn color='primary' />}
-                  {!row.active && <ToggleOff color='secondary' />}
-                </IconButton>
+              <TableCell>
+                <Chips
+                  datasource={usersDatasource}
+                  value={row.users.map(mapUserToChip)}
+                  addDisabled
+                />
               </TableCell>
             </TableRow>
           ))}
@@ -133,9 +131,15 @@ export default function Index() {
                 ><Remove /></IconButton>
               </TableCell>
               <TableCell>#</TableCell>
-              <TableCell><TextField value={name} label='Name' name='name' onChange={handleInputChange} /></TableCell>
               <TableCell><TextField value={address} label='Address' name='address' onChange={handleInputChange} /></TableCell>
-              <TableCell><Checkbox checked={active} name='active' onChange={handleInputChange} /></TableCell>
+              <TableCell>
+                <Chips
+                  datasource={usersDatasource}
+                  value={users}
+                  addDisabled={false}
+                  onChange={handleChange}
+                />
+              </TableCell>
               <TableCell>
                 <IconButton
                   onClick={handleSubmit}

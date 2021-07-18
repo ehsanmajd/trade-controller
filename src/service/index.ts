@@ -99,3 +99,23 @@ export const updateExpert = async (serverId: string, basketName: string, fileId:
   return data;
 }
 
+
+export const searchUsers = async (keyword: string) => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/users/search?keyword=' + keyword);
+  return data;
+}
+
+
+export const loadServers = async () => {
+  const { data: servers } = await axiosApiInstance.get(BASE_URL + '/server');
+  return servers;
+}
+
+export const addServer =
+  async (users: unknown[], address: string) => {
+    const { data } = await axiosApiInstance.post(BASE_URL + '/server/add', {
+      address,
+      users
+    });
+    return data;
+  }

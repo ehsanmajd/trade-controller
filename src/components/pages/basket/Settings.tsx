@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import DetailContainer from './DetailContainer';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import InputNumber from './InputNumber';
 
 
 
@@ -45,7 +46,7 @@ interface SettingsProps {
 }
 
 const Components = {
-  'Textbox': React.forwardRef((props, ref) => <TextField {...props} ref={ref as any} />),
+  'Textbox': React.forwardRef((props, ref) => <InputNumber {...props} ref={ref as any} />),
   'Checkbox': (props) => {
     return <><InputLabel id={`label-${props.name}`}>{props.label}</InputLabel>
       <Select
