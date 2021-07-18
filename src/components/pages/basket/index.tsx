@@ -136,19 +136,19 @@ export default function Basket() {
       {selectedBasket &&
         <>
           <h2>Basket Summary</h2>
-          <Grid className={classes.boxContainer}>
+          {/* <Grid className={classes.boxContainer}>
             <DetailBox />
             <DetailBox />
             <DetailBox />
             <DetailBox />
-          </Grid>
+          </Grid> */}
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {
               selectedBasket && parameterFiles.map((args, index) => {
                 return <Settings
                   key={`${selectedBasket}-${index}`}
-                  title={`Expert #2`}
+                  title={`Expert ${index + 1}`}
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
                     type: arg.type as any,
