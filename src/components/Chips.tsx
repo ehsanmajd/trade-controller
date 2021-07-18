@@ -4,7 +4,6 @@ import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-import * as service from '../service'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,17 +33,9 @@ interface Props {
 export default function ChipsArray({ datasource, value, onChange = () => undefined, addDisabled = false }: Props) {
   const classes = useStyles();
   const [mode, setMode] = React.useState<'view' | 'edit'>('view');
-  const [open, setOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const [inputValue, setInputValue] = React.useState('');
   const [users, setUsers] = React.useState([]);
-  // const [chipData, setChipData] = React.useState<ChipData[]>([
-  //   { key: 0, label: 'Angular' },
-  //   { key: 1, label: 'jQuery' },
-  //   { key: 2, label: 'Polymer' },
-  //   { key: 3, label: 'React' },
-  //   { key: 4, label: 'Vue.js' },
-  // ]);
 
   const handleDelete = (chipToDelete: Value) => () => {
     onChange(value.filter((chip) => chip.key !== chipToDelete.key));
@@ -64,7 +55,7 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
         setLoading(false);
       })();
     },
-    [inputValue]
+    [inputValue, datasource]
   );
 
   return (

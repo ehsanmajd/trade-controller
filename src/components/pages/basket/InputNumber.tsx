@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
 import TextField from '@material-ui/core/TextField'
-import { useEffect } from 'react';
 
 const Persian = {
   0: '۰',
@@ -31,14 +29,13 @@ const English = {
 }
 
 
-export default (props) => {
-  const [val, setVal] = useState(props.value || '');
+export default function InputNumber(props) {
   const handleChange = (e) => {
     const newValue = (e.target.value || '').toString();
     const oldValue = (props.value || '').toString();
     if (newValue.length > oldValue.length) {
       const lastCharacter = newValue[newValue.length - 1];
-      if(!Persian[lastCharacter]) {
+      if (!Persian[lastCharacter]) {
         return;
       }
     }
