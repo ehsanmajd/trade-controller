@@ -12,7 +12,8 @@ const Persian = {
   6: '۶',
   7: '۷',
   8: '۸',
-  9: '۹'
+  9: '۹',
+  '.': '.'
 };
 
 const English = {
@@ -25,7 +26,8 @@ const English = {
   '۶': '6',
   '۷': '7',
   '۸': '8',
-  '۹': '9'
+  '۹': '9',
+  '.': '.'
 }
 
 
@@ -39,8 +41,6 @@ export default (props) => {
       if(!Persian[lastCharacter]) {
         return;
       }
-      setVal(`${newValue}${(Persian[lastCharacter] || lastCharacter).slice(0, newValue.length - 2)  || lastCharacter}`)
-   
     }
     props.onChange({
       ...e,
@@ -51,17 +51,8 @@ export default (props) => {
     })
   }
 
-  useEffect(
-    () => {
-      setVal(() => {
-        return (props.value || '').toString().split('').map(c => Persian[c] || c).join('')
-      })
-    },
-    [props.value]
-  );
-
   return (
-    <TextField {...props}  value={val} onChange={handleChange} />
+    <TextField {...props} value={(props.value || '').toString().split('').map(c => Persian[c] || c).join('')} onChange={handleChange} />
   )
 
 }
