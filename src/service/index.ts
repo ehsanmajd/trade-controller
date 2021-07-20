@@ -50,13 +50,13 @@ axiosApiInstance.interceptors.response.use((response) => {
 
 
 export const loadUsers = async () => {
-  const { data: users } = await axiosApiInstance.get(BASE_URL + '/');
+  const { data: users } = await axiosApiInstance.get(BASE_URL + '/users');
   return users;
 }
 
 export const addUser =
   async (name: string, username: string, password: string) => {
-    const { data } = await axiosApiInstance.post(BASE_URL + '/add', {
+    const { data } = await axiosApiInstance.post(BASE_URL + '/users/add', {
       name,
       username,
       password,
@@ -67,7 +67,7 @@ export const addUser =
   }
 
 export const toggleActive = async (id: string) => {
-  const { data } = await axiosApiInstance.post(BASE_URL + '/toggle-active', { id });
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/toggle-active', { id });
   return data;
 }
 
@@ -75,12 +75,12 @@ export const login = async (username: string, password: string) => {
   if (!username || !password) {
     return;
   }
-  const { data } = await axiosApiInstance.post(BASE_URL + '/login', { username, password });
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/login', { username, password });
   return data;
 }
 
 export const signOut = async (refreshToken: string) => {
-  const { data } = await axiosApiInstance.post(BASE_URL + '/signout', { refreshToken });
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/signout', { refreshToken });
   return data;
 }
 
@@ -90,7 +90,7 @@ export const getBaskets = async () => {
 }
 
 export const updateExpert = async (serverId: string, basketName: string, fileId: string, content: unknown) => {
-  const { data } = await axiosApiInstance.post(BASE_URL + '/update-expert', {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/baskets/update-expert', {
     fileId,
     content,
     serverId,
@@ -99,12 +99,10 @@ export const updateExpert = async (serverId: string, basketName: string, fileId:
   return data;
 }
 
-
 export const searchUsers = async (keyword: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/users/search?keyword=' + keyword);
   return data;
 }
-
 
 export const loadServers = async () => {
   const { data: servers } = await axiosApiInstance.get(BASE_URL + '/server');
