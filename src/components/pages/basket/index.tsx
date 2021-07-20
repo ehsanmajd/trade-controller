@@ -3,7 +3,6 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
 import { Theme } from '@material-ui/core';
-import DetailBox from './DetailBox';
 import Settings from './Settings';
 import { useEffect, useState } from 'react';
 import * as service from '../../../service';
