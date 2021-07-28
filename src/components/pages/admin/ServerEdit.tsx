@@ -5,6 +5,8 @@ import Table from '@material-ui/core/Table/Table';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import { Add, Cancel, CheckCircle, Remove } from '@material-ui/icons';
 import * as service from '../../../service'
+import { useCallback } from 'react';
+import Link from '@material-ui/core/Link/Link';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -99,10 +101,13 @@ export default function ServerEdit({ userId, onClose }: Props) {
     reset();
   }
 
-  const reset = async () => {
-    const servers = await service.getServersByUserId(userId);
-    setServers(servers);
-  }
+  const reset = useCallback(
+    async () => {
+      const servers = await service.getServersByUserId(userId);
+      setServers(servers);
+    },
+    [userId, setServers]
+  )
 
   const deleteServer = async (serverId: string) => {
     await service.deleteServer(serverId);
@@ -113,7 +118,7 @@ export default function ServerEdit({ userId, onClose }: Props) {
     () => {
       reset();
     },
-    [userId]
+    [reset]
   );
 
   return (
@@ -163,7 +168,7 @@ export default function ServerEdit({ userId, onClose }: Props) {
                         </IconButton>
                       </>
                       :
-                      <a href='#' onClick={() => gotoEditMode(server.id)}>Edit</a>
+                      <Link href='#' onClick={() => gotoEditMode(server.id)}>Edit</Link>
                     }
                   </TableCell>
                 </TableRow>

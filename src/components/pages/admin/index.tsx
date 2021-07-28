@@ -19,6 +19,8 @@ import Remove from '@material-ui/icons/Remove'
 import Add from '@material-ui/icons/Add'
 import Modal from '@material-ui/core/Modal'
 import ServerEdit from './ServerEdit';
+import { useCallback } from 'react';
+import Link from '@material-ui/core/Link/Link';
 
 const useStyles = makeStyles({
   table: {
@@ -89,10 +91,13 @@ export default function Index() {
   }
 
 
-  const reset = async () => {
-    const users = await service.loadUsers();
-    setUsers(users);
-  }
+  const reset = useCallback(
+    async () => {
+      const users = await service.loadUsers();
+      setUsers(users);
+    },
+    [setUsers]
+  );
 
   const toggleActive = async (id: string) => {
     // API CALL
@@ -118,7 +123,7 @@ export default function Index() {
     () => {
       reset();
     },
-    []
+    [reset]
   )
 
   return (
@@ -189,8 +194,8 @@ export default function Index() {
                         {user.active && <ToggleOn color='primary' />}
                         {!user.active && <ToggleOff color='secondary' />}
                       </IconButton>
-                      <a href='#' className={classes.link} onClick={() => editServers(user)}>Servers</a> /
-                      <a href='#' className={classes.link} onClick={() => gotoEditMode(user.id)}>Edit</a>
+                      <Link href='#' className={classes.link} onClick={() => editServers(user)}>Servers</Link> /
+                      <Link href='#' className={classes.link} onClick={() => gotoEditMode(user.id)}>Edit</Link>
                     </>
                   }
 
