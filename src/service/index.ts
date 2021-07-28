@@ -117,3 +117,30 @@ export const addServer =
     });
     return data;
   }
+
+export const addServerForUser =
+  async (userId: string, address: string) => {
+    const { data } = await axiosApiInstance.post(BASE_URL + '/server/add-for-user', {
+      address,
+      userId
+    });
+    return data;
+  }
+
+export const getServersByUserId = async (userId: string) => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/server/' + userId);
+  return data as { id: string, address: string }[];
+}
+
+export const updateServer = async (id: string, address: string) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/server/update', {
+    address,
+    id
+  });
+  return data;
+}
+
+export const deleteServer = async (id: string) => {
+  const { data } = await axiosApiInstance.delete(BASE_URL + '/server/' + id);
+  return data;
+}

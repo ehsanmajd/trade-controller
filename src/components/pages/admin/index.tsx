@@ -17,11 +17,18 @@ import ToggleOff from '@material-ui/icons/ToggleOff'
 import VerifiedUser from '@material-ui/icons/VerifiedUser'
 import Remove from '@material-ui/icons/Remove'
 import Add from '@material-ui/icons/Add'
+import Modal from '@material-ui/core/Modal'
+import ServerEdit from './ServerEdit';
 
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
   },
+  link: {
+    '&:visited': {
+      color: 'blue'
+    }
+  }
 });
 
 
@@ -46,6 +53,8 @@ export default function Index() {
   const [mode, setMode] = useState<'view' | 'edit'>('view')
   const [form, setForm] = useState(EMPTY_FORM_VALUES);
   const [users, setUsers] = useState<User[]>([]);
+  const [openServersDialog, setOpenServersDialog] = useState(false);
+  const [selectedUserToEditServers, setSelectedUserToEditServers] = useState(null);
 
   const { name, username, password, active } = form
   const classes = useStyles();
@@ -83,6 +92,11 @@ export default function Index() {
     // API CALL
     await service.toggleActive(id);
     reset();
+  }
+
+  const editServers = (user: User) => {
+    setOpenServersDialog(true);
+    setSelectedUserToEditServers(user.id);
   }
 
   useEffect(
@@ -127,6 +141,7 @@ export default function Index() {
                   {row.active && <ToggleOn color='primary' />}
                   {!row.active && <ToggleOff color='secondary' />}
                 </IconButton>
+                <a href='#' className={classes.link} onClick={() => editServers(row)}>Users</a>
               </TableCell>
             </TableRow>
           ))}
@@ -166,6 +181,9 @@ export default function Index() {
           </TableRow>
         </TableBody>
       </Table>
+      <Modal open={openServersDialog}>
+         <ServerEdit userId={selectedUserToEditServers} onClose={() => setOpenServersDialog(false)} />
+      </Modal>
     </TableContainer>
   );
 
