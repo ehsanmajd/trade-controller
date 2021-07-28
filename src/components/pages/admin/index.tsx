@@ -50,11 +50,12 @@ interface User {
 }
 
 export default function Index() {
-  const [mode, setMode] = useState<'view' | 'edit'>('view')
+  const [mode, setMode] = useState<'view' | 'edit' | 'add'>('view')
   const [form, setForm] = useState(EMPTY_FORM_VALUES);
   const [users, setUsers] = useState<User[]>([]);
   const [openServersDialog, setOpenServersDialog] = useState(false);
   const [selectedUserToEditServers, setSelectedUserToEditServers] = useState(null);
+  const [selectedUserIdToEdit, setSelectedUserIdToEdit] = useState(null);
 
   const { name, username, password, active } = form
   const classes = useStyles();
@@ -62,10 +63,11 @@ export default function Index() {
   const handleCancel = () => {
     setForm(EMPTY_FORM_VALUES);
     setMode('view');
+    setSelectedUserIdToEdit(null);
   }
 
   const handleAdd = () => {
-    setMode('edit');
+    setMode('add');
   }
 
   const handleInputChange = (e: any) => {
@@ -76,9 +78,13 @@ export default function Index() {
   }
 
   const handleSubmit = async () => {
-    await service.addUser(name, username, password);
-    setMode('view');
-    setForm(EMPTY_FORM_VALUES);
+    if (mode === 'add') {
+      await service.addUser(name, username, password);
+    }
+    else if (mode === 'edit') {
+      await service.updateUser(selectedUserIdToEdit, name, username);
+    }
+    handleCancel();
     reset();
   }
 
@@ -97,6 +103,15 @@ export default function Index() {
   const editServers = (user: User) => {
     setOpenServersDialog(true);
     setSelectedUserToEditServers(user.id);
+  }
+
+  const gotoEditMode = (userId: string) => {
+    setSelectedUserIdToEdit(userId);
+    setForm({
+      ...EMPTY_FORM_VALUES,
+      ...users.find(x => x.id === userId)
+    })
+    setMode('edit');
   }
 
   useEffect(
@@ -121,32 +136,70 @@ export default function Index() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users.map((row, index) => (
-            <TableRow key={row.id}>
-              <TableCell width='25px'>
-                <IconButton><Remove /></IconButton>
-              </TableCell>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell>{row.username}</TableCell>
-              {mode === 'edit' && <TableCell>******</TableCell>}
-              <TableCell>{row.active && <VerifiedUser color='action' />}</TableCell>
-              <TableCell align="center">
-                <IconButton
-                  onClick={() => toggleActive(row.id)}
-                  title={row.active ? 'Deactivate' : 'Activate'}
-                >
-                  {row.active && <ToggleOn color='primary' />}
-                  {!row.active && <ToggleOff color='secondary' />}
-                </IconButton>
-                <a href='#' className={classes.link} onClick={() => editServers(row)}>Users</a>
-              </TableCell>
-            </TableRow>
-          ))}
+          {users.map((user, index) => {
+            const editMode = mode === 'edit' && user.id === selectedUserIdToEdit;
+            return (
+              <TableRow key={user.id}>
+                <TableCell width='25px'>
+                  <IconButton><Remove /></IconButton>
+                </TableCell>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell component="th" scope="row">
+                  {editMode ?
+                    <TextField value={name} label='Name' name='name' onChange={handleInputChange} />
+                    :
+                    user.name
+                  }
+                </TableCell>
+                <TableCell>
+                  {editMode ?
+                    <TextField value={username} label='Username' name='username' onChange={handleInputChange} />
+                    :
+                    user.username
+                  }
+                </TableCell>
+                {mode === 'edit' && <TableCell>******</TableCell>}
+                <TableCell>
+                  {editMode ?
+                    <Checkbox checked={active} name='active' onChange={handleInputChange} />
+                    :
+                    user.active && <VerifiedUser color='action' />
+                  }
+                </TableCell>
+                <TableCell align="center">
+                  {editMode ?
+                    <>
+                      <IconButton
+                        onClick={handleSubmit}
+                      >
+                        <CheckCircle color='primary' />
+                      </IconButton>
+                      <IconButton
+                        onClick={handleCancel}
+                      >
+                        <Cancel color='secondary' />
+                      </IconButton>
+                    </>
+                    :
+                    <>
+                      <IconButton
+                        onClick={() => toggleActive(user.id)}
+                        title={user.active ? 'Deactivate' : 'Activate'}
+                      >
+                        {user.active && <ToggleOn color='primary' />}
+                        {!user.active && <ToggleOff color='secondary' />}
+                      </IconButton>
+                      <a href='#' className={classes.link} onClick={() => editServers(user)}>Servers</a> /
+                      <a href='#' className={classes.link} onClick={() => gotoEditMode(user.id)}>Edit</a>
+                    </>
+                  }
+
+                </TableCell>
+              </TableRow>
+            )
+          })}
           <TableRow>
-            {mode === 'edit' && <>
+            {mode === 'add' && <>
               <TableCell>
                 <IconButton
                 ><Remove /></IconButton>
@@ -182,7 +235,7 @@ export default function Index() {
         </TableBody>
       </Table>
       <Modal open={openServersDialog}>
-         <ServerEdit userId={selectedUserToEditServers} onClose={() => setOpenServersDialog(false)} />
+        <ServerEdit userId={selectedUserToEditServers} onClose={() => setOpenServersDialog(false)} />
       </Modal>
     </TableContainer>
   );

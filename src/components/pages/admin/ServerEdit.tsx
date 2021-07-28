@@ -95,8 +95,7 @@ export default function ServerEdit({ userId, onClose }: Props) {
     else if (mode === 'edit') {
       await service.updateServer(userId, address);
     }
-    setMode('view');
-    setForm(EMPTY_FORM_VALUES);
+    handleCancel();
     reset();
   }
 
@@ -135,11 +134,13 @@ export default function ServerEdit({ userId, onClose }: Props) {
               return (
                 <TableRow key={server.id}>
                   <TableCell width='25px'>
-                    <IconButton onClick={() => {
-                      if (!editMode) {
-                        deleteServer(server.id)
-                      }
-                    }}><Remove /></IconButton>
+                    <IconButton
+                      onClick={() => {
+                        if (!editMode) {
+                          deleteServer(server.id)
+                        }
+                      }}
+                    ><Remove /></IconButton>
                   </TableCell>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>

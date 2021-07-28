@@ -66,6 +66,18 @@ export const addUser =
     return data;
   }
 
+export const updateUser =
+  async (id: string, name: string, username: string) => {
+    const { data } = await axiosApiInstance.post(BASE_URL + '/users/update', {
+      id,
+      name,
+      username,
+      email: '',
+      phone: '',
+    });
+    return data;
+  }
+
 export const toggleActive = async (id: string) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/users/toggle-active', { id });
   return data;
