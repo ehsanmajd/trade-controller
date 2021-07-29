@@ -30,9 +30,16 @@ const English = {
 
 
 export default function InputNumber(props) {
+  const normalizeValue = (v: number | string) => {
+    if (typeof v === 'string') {
+      return (v || '').trim() || '';
+    }
+    return v ?? (typeof v === 'number' ? 0 : '');
+  }
+  const val = normalizeValue(props.value);
   const handleChange = (e) => {
-    const newValue = (e.target.value || '').toString();
-    const oldValue = (props.value || '').toString();
+    const newValue = normalizeValue(e.target.value).toString();
+    const oldValue = val.toString();
     if (newValue.length > oldValue.length) {
       const lastCharacter = newValue[newValue.length - 1];
       if (!Persian[lastCharacter]) {
@@ -49,7 +56,7 @@ export default function InputNumber(props) {
   }
 
   return (
-    <TextField {...props} value={(props.value || '').toString().split('').map(c => Persian[c] || c).join('')} onChange={handleChange} />
+    <TextField {...props} value={val.toString().split('').map(c => Persian[c] || c).join('')} onChange={handleChange} />
   )
 
 }

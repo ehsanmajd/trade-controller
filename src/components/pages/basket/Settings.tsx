@@ -274,6 +274,10 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
     mode: 'onChange'
   });
 
+  console.log('====================================');
+  console.log(value);
+  console.log('====================================');
+
   return (
     <DetailContainer>
       <h2>{title}</h2>

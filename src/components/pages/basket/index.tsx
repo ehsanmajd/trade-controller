@@ -56,6 +56,7 @@ type ParameterType = {
 type ParameterFileType = {
   params: ParameterType[];
   id: string;
+  headerValue: string;
 }
 export interface BasketModel {
   serverId?: string;
@@ -88,13 +89,13 @@ export default function Basket() {
     setSelectedBasket(value?.name);
   }
 
-  async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string) {
+  async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string, headerValue: string) {
     Object.keys(data)
       .forEach(key => {
         model.find(x => x.name === key)!.value = data[key];
       });
     const basket = baskets.find(x => x.name === selectedBasket);
-    await service.updateExpert(basket.serverId, selectedBasket, filePath, model);
+    await service.updateExpert(basket.serverId, selectedBasket, filePath, model, headerValue);
   }
   const index = baskets.findIndex(x => x.name === selectedBasket);
 
@@ -163,7 +164,7 @@ export default function Basket() {
                     acc[item.name] = item.value;
                     return acc;
                   }, {})}
-                  onSubmit={(data) => handleSubmit(data, args.params, args.id)}
+                  onSubmit={(data) => handleSubmit(data, args.params, args.id, args.headerValue)}
                 />
               })
             }
