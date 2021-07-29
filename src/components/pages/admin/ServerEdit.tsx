@@ -110,7 +110,7 @@ export default function ServerEdit({ userId, onClose }: Props) {
   )
 
   const deleteServer = async (serverId: string) => {
-    await service.deleteServer(serverId);
+    await service.deleteServer(serverId, userId);
     reset();
   }
 
