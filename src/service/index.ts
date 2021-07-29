@@ -145,10 +145,11 @@ export const getServersByUserId = async (userId: string) => {
   return data as { id: string, address: string }[];
 }
 
-export const updateServer = async (id: string, address: string) => {
+export const updateServer = async (id: string, address: string, userId: string) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/server/update', {
     address,
-    id
+    id,
+    userId
   });
   return data;
 }

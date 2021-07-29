@@ -95,7 +95,7 @@ export default function ServerEdit({ userId, onClose }: Props) {
       await service.addServerForUser(userId, address);
     }
     else if (mode === 'edit') {
-      await service.updateServer(userId, address);
+      await service.updateServer(selectedServerIdToEdit, address, userId);
     }
     handleCancel();
     reset();
