@@ -284,6 +284,10 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
       <form onSubmit={handleSubmit(onSubmit)}>
         {
           structure.map(s => {
+            console.log('====================================');
+            console.log('name: ', s.name);
+            console.log('component: ', s.component);
+            console.log('====================================');
             return <Row key={s.name}>{
               <Controller
                 // @ts-ignore
