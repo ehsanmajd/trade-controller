@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import * as service from '../../../service';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
+import Info from '../../Info';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,9 +70,11 @@ export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [baskets, setBaskets] = useState<BasketModel[]>([]);
+  const [savedExpert, setSavedExpert] = useState<string>('');
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
+  const index = baskets.findIndex(x => x.name === selectedBasket);
 
   useEffect(
     () => {
@@ -87,6 +90,10 @@ export default function Basket() {
     setSelectedBasket(value?.name);
   }
 
+  function getExpertName(model: ParameterType[]): string {
+    return model.find(x => x.name === 'strategy_serial')?.value.toString() || 'Unknow';
+  }
+
   async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string, headerValue: string) {
     Object.keys(data)
       .forEach(key => {
@@ -94,16 +101,16 @@ export default function Basket() {
       });
     const basket = baskets.find(x => x.name === selectedBasket);
     await service.updateExpert(basket.serverId, selectedBasket, filePath, model, headerValue);
+    const title = getExpertName(model);
+    setSavedExpert(title);
   }
-  const index = baskets.findIndex(x => x.name === selectedBasket);
-
+  
   function navigate(mode: 'back' | 'forward') {
     setSelectedBasket(mode === 'back' ?
       baskets[index - 1].name :
       baskets[index + 1].name
     );
   }
-
 
   return (
     <>
@@ -144,7 +151,7 @@ export default function Basket() {
           <Grid className={classes.boxContainer}>
             {
               selectedBasket && parameterFiles.map((args, index) => {
-                const title = args.params.find(x => x.name === 'strategy_serial')?.value || 'Unknow';
+                const title = getExpertName(args.params);
                 return <Settings
                   key={`${selectedBasket}-${index}`}
                   title={`EA: "${title}"`}
@@ -168,6 +175,7 @@ export default function Basket() {
               })
             }
           </Grid>
+          <Info message={`The changes has been successfully applied to EA: "${savedExpert}".`} open={!!savedExpert} onClose={() => setSavedExpert('')} />
         </>
       }
     </>
