@@ -146,9 +146,10 @@ export default function Basket() {
           <Grid className={classes.boxContainer}>
             {
               selectedBasket && parameterFiles.map((args, index) => {
+                const title = args.params.find(x => x.name === 'strategy_serial')?.value;
                 return <Settings
                   key={`${selectedBasket}-${index}`}
-                  title={`Expert ${index + 1}`}
+                  title={`EA: "${title}"`}
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
                     type: arg.type as any,
