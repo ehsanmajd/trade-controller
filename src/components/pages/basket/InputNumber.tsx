@@ -1,20 +1,6 @@
 import TextField from '@material-ui/core/TextField'
 
-const Persian = {
-  0: '۰',
-  1: '۱',
-  2: '۲',
-  3: '۳',
-  4: '۴',
-  5: '۵',
-  6: '۶',
-  7: '۷',
-  8: '۸',
-  9: '۹',
-  '.': '.'
-};
-
-const English = {
+const Mapping = {
   '۰': '0',
   '۱': '1',
   '۲': '2',
@@ -25,7 +11,17 @@ const English = {
   '۷': '7',
   '۸': '8',
   '۹': '9',
-  '.': '.'
+  '.': '.',
+  '0': '0',
+  '1': '1',
+  '2': '2',
+  '3': '3',
+  '4': '4',
+  '5': '5',
+  '6': '6',
+  '7': '7',
+  '8': '8',
+  '9': '9',
 }
 
 
@@ -42,7 +38,7 @@ export default function InputNumber(props) {
     const oldValue = val.toString();
     if (newValue.length > oldValue.length) {
       const lastCharacter = newValue[newValue.length - 1];
-      if (!Persian[lastCharacter]) {
+      if (!Mapping[lastCharacter]) {
         return;
       }
     }
@@ -50,13 +46,13 @@ export default function InputNumber(props) {
       ...e,
       target: {
         ...e.target,
-        value: newValue.split('').map(x => English[x] || x).join('')
+        value: newValue.split('').map(x => Mapping[x] || x).join('')
       }
     })
   }
 
   return (
-    <TextField {...props} value={val.toString().split('').map(c => Persian[c] || c).join('')} onChange={handleChange} />
+    <TextField {...props} value={val} onChange={handleChange} />
   )
 
 }

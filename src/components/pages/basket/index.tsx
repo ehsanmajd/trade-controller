@@ -9,7 +9,6 @@ import * as service from '../../../service';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -41,7 +40,6 @@ const useStyles = makeStyles((theme: Theme) =>
     }
   }),
 );
-
 
 type ParameterType = {
   value: unknown;
