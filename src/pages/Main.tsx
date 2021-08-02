@@ -1,6 +1,6 @@
 import Layout from '../Layout'
 import MainPage from '../components/pages/basket'
-import Header from './Header';
+import Header from '../Header';
 
 
 export default function Main() {

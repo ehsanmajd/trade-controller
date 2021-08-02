@@ -1,6 +1,6 @@
 import Layout from '../Layout'
 import Servers from '../components/pages/server'
-import Header from './Header';
+import Header from '../Header';
 
 export default function Setting() {
   return (
