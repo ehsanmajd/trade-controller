@@ -31,8 +31,8 @@ const Row = ({ label, value, color }: Props) => {
   const classes = useStyles();
   return (
     <Grid container alignItems='center' className={classes.row}>
-      <Grid md={4} xs={4}><b>{label}</b></Grid>
-      <Grid md={8} xs={8}>
+      <Grid md={4} xs={6}><b>{label}</b></Grid>
+      <Grid md={8} xs={6}>
         {color && <span style={{ color: color }}>{value}</span>}
         {!color && value}
       </Grid>
