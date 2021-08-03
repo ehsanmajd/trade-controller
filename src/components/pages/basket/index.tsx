@@ -102,10 +102,7 @@ export default function Basket() {
 
   useEffect(
     () => {
-      service.getBaskets()
-        .then((baskets: BasketModel[]) => {
-          setBaskets(baskets);
-        })
+      refresh();
     },
     []
   )
@@ -139,6 +136,13 @@ export default function Basket() {
       baskets[index - 1].name :
       baskets[index + 1].name
     );
+  }
+
+  function refresh() {
+    service.getBaskets()
+      .then((baskets: BasketModel[]) => {
+        setBaskets(baskets);
+      })
   }
 
   const backDisabled = index <= 0;
@@ -180,7 +184,7 @@ export default function Basket() {
       </Grid>
       {selectedBasket &&
         <>
-          <BasketInfo data={basket.info} />
+          <BasketInfo data={basket.info} onRefresh={refresh} />
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {

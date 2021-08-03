@@ -1,5 +1,7 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import { Refresh } from '@material-ui/icons';
 import React from 'react'
 import ProgressBar from '../../PorgressBar';
 
@@ -52,6 +54,7 @@ interface Itemmain {
 
 export type BasketInfoModel = Record<string, Itemmain>;
 interface BasketInfoProps {
+  onRefresh: () => void;
   data?: {
     main: BasketInfoModel;
     extra?: BasketInfoModel[];
@@ -102,13 +105,13 @@ const INIT_STATE = {
   }
 }
 
-export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
+export default function BasketInfo({ data = INIT_STATE, onRefresh }: BasketInfoProps) {
   const { main, extra } = data || {};
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <h2>Basket Summary</h2>
+      <h2>Basket Summary <IconButton onClick={() => onRefresh()}><Refresh /></IconButton></h2>
       <Grid container>
         <Column>
           <Row label='Balance' value={main['Balance']?.value} color='#506dbe' />
