@@ -77,6 +77,19 @@ export interface BasketModel {
   parameters: ParameterFileType[]
 }
 
+const getRelatedComponent = (type: string) => {
+  if (type === 'enum') {
+    return 'Dropdown';
+  }
+  if (type === 'bool') {
+    return 'Checkbox';
+  }
+  if (type === 'label' || type === 'lable') {
+    return 'Label';
+  }
+  return 'Textbox';
+}
+
 export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
@@ -102,15 +115,20 @@ export default function Basket() {
   }
 
   function getExpertName(model: ParameterType[]): string {
-    return model.find(x => x.name === 'strategy_serial')?.value.toString() || 'Unknow';
+    const symbol = model.find(x => x.name === 'symbol')?.type;
+
+    const strategy = model.find(x => x.name === 'strategy_serial')?.value.toString() || 'Unknow';
+    return `${strategy} ${symbol ? `(${symbol})` : ''}`
   }
 
   async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string, headerValue: string) {
+
     Object.keys(data)
       .forEach(key => {
         model.find(x => x.name === key)!.value = data[key];
       });
     const basket = baskets.find(x => x.name === selectedBasket);
+    model = model.filter(x => x.name !== 'symbol');
     await service.updateExpert(basket.serverId, selectedBasket, filePath, model, headerValue);
     const title = getExpertName(model);
     setSavedExpert(title);
@@ -174,7 +192,7 @@ export default function Basket() {
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
                     type: arg.type as any,
-                    component: arg.type === 'enum' ? 'Dropdown' : (arg.type === 'bool' ? 'Checkbox' : 'Textbox'),
+                    component: getRelatedComponent(arg.type),
                     attributes: {
                       datasource: arg.options?.map(item => ({
                         label: item.key,
