@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import UserInfo from '../components/UserInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,7 +20,7 @@ const Logo: React.FC = ({ children }) => {
 
   return (
     <div className={classes.root}>
-      <img src='/images/logo.png' height='64px' width='auto' />
+      <img src='/images/logo.png' height='64px' width='auto' alt='logo' />
     </div>
   );
 }

@@ -59,48 +59,50 @@ interface BasketInfoProps {
 }
 
 const INIT_STATE = {
-  'Balance': {
-    value: 1974.19
-  },
-  'Equity': {
-    value: 1619.30
-  },
-  'Margin': {
-    value: 178.75
-  },
-  'Free_Margin': {
-    value: 1440.55
-  },
-  'Margin_Level': {
-    value: 905.90
-  },
-  'Total_Orders': {
-    value: 18
-  },
-  'Total_Sell': {
-    value: 0
-  },
-  'Total_Buy': {
-    value: 0
-  },
-  'Sell_Buy_Diff': {
-    value: 0.00,
-  },
-  'Total_Sell_Profit': {
-    value: 0.00,
-    color: '#e8173d'
-  },
-  'Total_Buy_Profit': {
-    value: 0.00,
-    color: '#e8173d'
-  },
-  'Total_Profit': {
-    value: 0.00,
-    color: '#e8173d'
+  main: {
+    'Balance': {
+      value: 1974.19
+    },
+    'Equity': {
+      value: 1619.30
+    },
+    'Margin': {
+      value: 178.75
+    },
+    'Free_Margin': {
+      value: 1440.55
+    },
+    'Margin_Level': {
+      value: 905.90
+    },
+    'Total_Orders': {
+      value: 18
+    },
+    'Total_Sell': {
+      value: 0
+    },
+    'Total_Buy': {
+      value: 0
+    },
+    'Sell_Buy_Diff': {
+      value: 0.00,
+    },
+    'Total_Sell_Profit': {
+      value: 0.00,
+      color: '#e8173d'
+    },
+    'Total_Buy_Profit': {
+      value: 0.00,
+      color: '#e8173d'
+    },
+    'Total_Profit': {
+      value: 0.00,
+      color: '#e8173d'
+    }
   }
 }
 
-export default function BasketInfo({ data }: BasketInfoProps) {
+export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
   const { main, extra } = data || {};
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
