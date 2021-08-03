@@ -1,4 +1,5 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 import React from 'react'
 import ProgressBar from '../../PorgressBar';
 
@@ -11,6 +12,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      padding: '16px 0',
       borderBottomColor: theme.palette.grey[400],
       borderBottomStyle: 'solid',
       borderBottomWidth: '1px'
@@ -29,9 +31,9 @@ const Row = ({ label, value, color }: Props) => {
   const classes = useStyles();
   return (
     <Grid container alignItems='center' className={classes.row}>
-      <Grid md={4} xs={4}>{label}</Grid>
+      <Grid md={4} xs={4}><b>{label}</b></Grid>
       <Grid md={8} xs={8}>
-        {color && <span style={{color: color}}>{value}</span>}
+        {color && <span style={{ color: color }}>{value}</span>}
         {!color && value}
       </Grid>
     </Grid>
@@ -43,13 +45,17 @@ const Column: React.FC = ({ children }) => {
   return <Grid className={classes.column} md={6} xs={12}>{children}</Grid>
 }
 
-interface ItemData {
+interface Itemmain {
   value: number;
   color?: string;
-
 }
+
+export type BasketInfoModel = Record<string, Itemmain>;
 interface BasketInfoProps {
-  data?: Record<string, ItemData>
+  data?: {
+    main: BasketInfoModel;
+    extra?: BasketInfoModel[];
+  }
 }
 
 const INIT_STATE = {
@@ -65,7 +71,7 @@ const INIT_STATE = {
   'Free_Margin': {
     value: 1440.55
   },
-  'Margin_Level(%)': {
+  'Margin_Level': {
     value: 905.90
   },
   'Total_Orders': {
@@ -94,28 +100,38 @@ const INIT_STATE = {
   }
 }
 
-export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
+export default function BasketInfo({ data }: BasketInfoProps) {
+  const { main, extra } = data || {};
+  const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
   return (
-    <>
+    <div className={classes.root}>
       <h2>Basket Summary</h2>
-      <Grid className={classes.root} container>
+      <Grid container>
         <Column>
-          <Row label='Balance' value={ data['Balance']?.value} />
-          <Row label='Equity' value={<ProgressBar left={data['Equity']?.value} right={data['Balance']?.value - data['Equity']?.value} />} />
-          <Row label='Margin' value={<ProgressBar left={data['Margin']?.value} right={data['Free_Margin']?.value} />} />
-          <Row label='Margin_Level(%)' value='125' />
-          <Row label='Total_Orders' value={data['Total_Orders']?.value} />
+          <Row label='Balance' value={main['Balance']?.value} color='#506dbe' />
+          <Row label='Equity' value={<ProgressBar left={main['Equity']?.value} right={main['Balance']?.value - main['Equity']?.value} hideRight />} />
+          <Row label='Margin' value={<ProgressBar left={main['Margin']?.value} right={main['Free_Margin']?.value} />} />
+          <Row label='Margin_Level' value={main['Margin_Level']?.value} />
+          <Row label='Total_Market_Orders' value={main['Total_Market_Orders']?.value} />
         </Column>
         <Column>
-          <Row label='Total_Sell' value={data['Total_Sell']?.value} />
-          <Row label='Total_Buy' value={data['Total_Buy']?.value} />
-          <Row label='Sell_Buy_Diff' value={data['Sell_Buy_Diff']?.value} />
-          <Row label='Total_Sell_Profit' value={data['Total_Sell_Profit']?.value} color={data['Total_Sell_Profit']?.color} />
-          <Row label='Total_Buy_Profit' value={data['Total_Buy_Profit']?.value} color={data['Total_Buy_Profit']?.color} />
-          <Row label='Total_Profit' value={data['Total_Profit']?.value} color={data['Total_Profit']?.color} />
+          <Row label='Total_Sell_Lots' value={main['Total_Sell_Lots']?.value} />
+          <Row label='Total_Buy_Lots' value={main['Total_Buy_Lots']?.value} />
+          <Row label='Sell_Buy_Diff_Lots' value={main['Sell_Buy_Diff_Lots']?.value} />
+          <Row label='Total_Sell_Profit' value={main['Total_Sell_Profit']?.value} color={main['Total_Sell_Profit']?.color} />
+          <Row label='Total_Buy_Profit' value={main['Total_Buy_Profit']?.value} color={main['Total_Buy_Profit']?.color} />
+          <Row label='Total_Profit' value={main['Total_Profit']?.value} color={main['Total_Profit']?.color} />
         </Column>
       </Grid>
-    </>
+      {expanded && <Grid container>
+        {extra.map(extraData => {
+          return <Column>{Object.keys(extraData).map(key => <Row label={key} value={extraData[key]?.value} color={extraData[key]?.color} />)}</Column>
+        })}
+      </Grid>}
+      {extra && <Grid container justify='center'>
+        <Grid><Button variant='outlined' onClick={() => setExpanded(p => !p)}>{`Load ${expanded ? 'less' : 'more'} ...`}</Button></Grid>
+      </Grid>}
+    </div>
   )
 }

@@ -9,7 +9,7 @@ import * as service from '../../../service';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import Info from '../../Info';
-import BasketInfo from './BasketInfo';
+import BasketInfo, { BasketInfoModel } from './BasketInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -71,8 +71,9 @@ export interface BasketModel {
   serverId?: string;
   name: string;
   info: {
-
-  },
+    main: BasketInfoModel;
+    extra?: BasketInfoModel[];
+  };
   parameters: ParameterFileType[]
 }
 
@@ -161,8 +162,7 @@ export default function Basket() {
       </Grid>
       {selectedBasket &&
         <>
-          
-          <BasketInfo />
+          <BasketInfo data={basket.info} />
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {
