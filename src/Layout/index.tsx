@@ -1,17 +1,35 @@
 import { Container, createStyles, makeStyles, Theme } from '@material-ui/core'
-import React,{FC} from 'react'
+import React, { FC } from 'react'
+import UserInfo from '../components/UserInfo';
 import Footer from '../Footer'
-import Header from '../Header'
+import Header from '../Header';
+import Logo from './Logo'
 
 
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({
     "@global": {
       body: {
-        backgroundImage: 'url("/images/background.jpg")'
       }
     },
     root: {
+    },
+    headerTop: {
+      display: 'flex',
+      borderBottomStyle: 'solid',
+      borderBottomWidth: '1px',
+      borderColor: theme.palette.grey[600]
+    },
+    pageHeaderMenu: {
+
+    },
+    menu: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    main: {
+
     }
   })
 );
@@ -21,10 +39,18 @@ const Layout: React.FC<{ ExtraHeader?: FC }> = ({ children, ExtraHeader = () => 
 
   return (
     <Container className={classes.root} component='div'>
-      <Header>
-        {<ExtraHeader />}
-      </Header>
-      {children}
+      <header>
+        <div className={classes.headerTop}>
+          <Logo />
+          <div className={classes.menu}><UserInfo /></div>
+        </div>
+        <div className={classes.pageHeaderMenu}>
+          <Header />
+        </div>
+      </header>
+      <main className={classes.main}>
+        {children}
+      </main>
       <Footer />
     </Container>
   )

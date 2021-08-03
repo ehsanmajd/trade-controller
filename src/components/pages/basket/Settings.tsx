@@ -6,6 +6,7 @@ import DetailContainer from './DetailContainer';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import InputNumber from './InputNumber';
+import TextField from '@material-ui/core/TextField';
 
 
 
@@ -13,7 +14,7 @@ import InputNumber from './InputNumber';
 type InputTypes = 'string' | 'number' | 'boolean';
 
 interface Input {
-  component: 'Textbox' | 'Dropdown' | 'Checkbox';
+  component: 'Textbox' | 'Dropdown' | 'Checkbox' | 'Label';
   type: InputTypes;
   name: string;
   label?: string;
@@ -46,6 +47,7 @@ interface SettingsProps {
 }
 
 const Components = {
+  'Label': (props) => <TextField {...props} InputProps={{ readOnly: true }} />,
   'Textbox': React.forwardRef((props, ref) => <InputNumber {...props} ref={ref as any} />),
   'Checkbox': (props) => {
     return <><InputLabel id={`label-${props.name}`}>{props.label}</InputLabel>
@@ -274,16 +276,12 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
     mode: 'onChange'
   });
 
-  console.log('====================================');
-  console.log(value);
-  console.log('====================================');
-
   return (
     <DetailContainer>
       <h2>{title}</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         {
-          structure.map(s => {
+          structure.filter(x => x.name !== 'symbol').map(s => {
             console.log('====================================');
             console.log('name: ', s.name);
             console.log('component: ', s.component);

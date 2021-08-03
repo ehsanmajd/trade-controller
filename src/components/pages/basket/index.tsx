@@ -9,13 +9,20 @@ import * as service from '../../../service';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import Info from '../../Info';
+import BasketInfo, { BasketInfoModel } from './BasketInfo';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    selector: {
       flexGrow: 1,
+      paddingTop: '48px',
+      borderBottomStyle: 'solid',
+      borderBottomWidth: '1px',
+      borderColor: theme.palette.grey[500],
+      paddingBottom: '48px'
     },
     box: {
+      width: '100%',
       marginTop: 64,
       backgroundColor: theme.palette.background.default
     },
@@ -38,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     baskets: {
       dispay: 'flex'
+    },
+    chevron: {
+      fontSize: '14px'
     }
   }),
 );
@@ -61,9 +71,23 @@ export interface BasketModel {
   serverId?: string;
   name: string;
   info: {
-
-  },
+    main: BasketInfoModel;
+    extra?: BasketInfoModel[];
+  };
   parameters: ParameterFileType[]
+}
+
+const getRelatedComponent = (type: string) => {
+  if (type === 'enum') {
+    return 'Dropdown';
+  }
+  if (type === 'bool') {
+    return 'Checkbox';
+  }
+  if (type === 'label' || type === 'lable') {
+    return 'Label';
+  }
+  return 'Textbox';
 }
 
 export default function Basket() {
@@ -91,20 +115,25 @@ export default function Basket() {
   }
 
   function getExpertName(model: ParameterType[]): string {
-    return model.find(x => x.name === 'strategy_serial')?.value.toString() || 'Unknow';
+    const symbol = model.find(x => x.name === 'symbol')?.type;
+
+    const strategy = model.find(x => x.name === 'strategy_serial')?.value.toString() || 'Unknow';
+    return `${strategy} ${symbol ? `(${symbol})` : ''}`
   }
 
   async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string, headerValue: string) {
+
     Object.keys(data)
       .forEach(key => {
         model.find(x => x.name === key)!.value = data[key];
       });
     const basket = baskets.find(x => x.name === selectedBasket);
+    model = model.filter(x => x.name !== 'symbol');
     await service.updateExpert(basket.serverId, selectedBasket, filePath, model, headerValue);
     const title = getExpertName(model);
     setSavedExpert(title);
   }
-  
+
   function navigate(mode: 'back' | 'forward') {
     setSelectedBasket(mode === 'back' ?
       baskets[index - 1].name :
@@ -112,16 +141,13 @@ export default function Basket() {
     );
   }
 
+  const backDisabled = index <= 0;
+  const nextDisabled = (index === -1 && !basket) || index === baskets.length - 1;
+
   return (
     <>
-      <Grid container justify='center' className={classes.root}>
-        <Grid container justify='space-between' spacing={1} md={6} className={classes.box} component='div'>
-          <IconButton
-            disabled={index <= 0}
-            onClick={() => navigate('back')}
-          >
-            <Back color='primary' />
-          </IconButton>
+      <Grid container justify='center' className={classes.selector}>
+        <Grid md={6} xs={7} container justify='center'>
           <Autocomplete
             value={basket || { name: '' }}
             id="combo-box-demo"
@@ -131,22 +157,30 @@ export default function Basket() {
             onChange={handleBasketChange}
             renderInput={(params) => <TextField {...params} label="Select your basket" variant="outlined" />}
           />
-          <IconButton
-            onClick={() => navigate('forward')}
-            disabled={(index === -1 && !basket) || index === baskets.length - 1}>
-            <Forward color='primary' />
-          </IconButton>
+        </Grid>
+        <Grid md={6} xs={5} container justify='space-evenly'>
+          <Grid md={6} xs={6}>
+            <IconButton
+              disabled={backDisabled}
+              onClick={() => navigate('back')}
+            >
+              <span className={classes.chevron}>Back</span>&nbsp;
+              <Back color={backDisabled ? 'disabled' : 'primary'} />
+            </IconButton>
+          </Grid>
+          <Grid md={6} xs={6}>
+            <IconButton
+              onClick={() => navigate('forward')}
+              disabled={nextDisabled}>
+              <Forward color={nextDisabled ? 'disabled' : 'primary'} />&nbsp;
+              <span className={classes.chevron}>Next</span>
+            </IconButton>
+          </Grid>
         </Grid>
       </Grid>
       {selectedBasket &&
         <>
-          <h2>Basket Summary</h2>
-          {/* <Grid className={classes.boxContainer}>
-            <DetailBox />
-            <DetailBox />
-            <DetailBox />
-            <DetailBox />
-          </Grid> */}
+          <BasketInfo data={basket.info} />
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {
@@ -158,7 +192,7 @@ export default function Basket() {
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
                     type: arg.type as any,
-                    component: arg.type === 'enum' ? 'Dropdown' : (arg.type === 'bool' ? 'Checkbox' : 'Textbox'),
+                    component: getRelatedComponent(arg.type),
                     attributes: {
                       datasource: arg.options?.map(item => ({
                         label: item.key,
