@@ -10,6 +10,7 @@ import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import Info from '../../Info';
 import BasketInfo, { BasketInfoModel } from './BasketInfo';
+import { Refresh } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -151,18 +152,19 @@ export default function Basket() {
   return (
     <>
       <Grid container justify='center' className={classes.selector}>
-        <Grid md={6} xs={7} container justify='center'>
+        <Grid md={6} xs={6} container justify='center'>
           <Autocomplete
             value={basket || { name: '' }}
             id="combo-box-demo"
             options={baskets}
             getOptionLabel={basket => basket.name}
-            style={{ width: 300 }}
+            style={{ flex: '1', maxWidth: '300px' }}
             onChange={handleBasketChange}
             renderInput={(params) => <TextField {...params} label="Select your basket" variant="outlined" />}
           />
+          <IconButton onClick={() => refresh()}><Refresh /></IconButton>
         </Grid>
-        <Grid md={6} xs={5} container justify='space-evenly'>
+        <Grid md={6} xs={6} container justify='space-evenly'>
           <Grid md={6} xs={6}>
             <IconButton
               disabled={backDisabled}
@@ -184,7 +186,7 @@ export default function Basket() {
       </Grid>
       {selectedBasket &&
         <>
-          <BasketInfo data={basket.info} onRefresh={refresh} />
+          <BasketInfo data={basket.info} />
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {

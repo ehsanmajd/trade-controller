@@ -54,7 +54,6 @@ interface Itemmain {
 
 export type BasketInfoModel = Record<string, Itemmain>;
 interface BasketInfoProps {
-  onRefresh: () => void;
   data?: {
     main: BasketInfoModel;
     extra?: BasketInfoModel[];
@@ -105,13 +104,13 @@ const INIT_STATE = {
   }
 }
 
-export default function BasketInfo({ data = INIT_STATE, onRefresh }: BasketInfoProps) {
+export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
   const { main, extra } = data || {};
   const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <h2>Basket Summary <IconButton onClick={() => onRefresh()}><Refresh /></IconButton></h2>
+      <h2>Basket Summary</h2>
       <Grid container>
         <Column>
           <Row label='Balance' value={main['Balance']?.value} color='#506dbe' />
