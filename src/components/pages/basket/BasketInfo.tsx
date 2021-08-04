@@ -1,7 +1,5 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import { Refresh } from '@material-ui/icons';
 import React from 'react'
 import ProgressBar from '../../PorgressBar';
 
