@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import * as service from '../../../service';
 import { Redirect } from 'react-router-dom'
-import { useUserContext } from '../../../UserContext';
+import { useUserContext } from '../../../context/UserContext';
 
 
 const useStyles = makeStyles((theme) => ({

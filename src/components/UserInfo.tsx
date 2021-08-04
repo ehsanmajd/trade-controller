@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUserContext } from '../UserContext';
+import { useUserContext } from '../context/UserContext';
 import { Link } from 'react-router-dom';
 
 const UserInfo: React.FC = () => {

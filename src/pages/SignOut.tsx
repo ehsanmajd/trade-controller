@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useUserContext } from '../UserContext';
+import { useUserContext } from '../context/UserContext';
 import * as service from '../service';
 
 const SignOut: React.FC = () => {
