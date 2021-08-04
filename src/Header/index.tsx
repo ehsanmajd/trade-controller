@@ -49,7 +49,7 @@ const Header: FC = () => {
     <Grid item xs={12} sm={3}>
       {refreshTime && <Grid container justify='center'>
         <Grid container justify='center' alignItems='center' wrap='nowrap'>
-          <label>Last update time: {refreshTime.toLocaleTimeString()}</label>
+          <label>Last updated time: {refreshTime.toLocaleTimeString()}</label>
           <span><IconButton onClick={() => refresh()}><Refresh /></IconButton></span>
         </Grid>
       </Grid>}
