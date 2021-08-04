@@ -1,4 +1,7 @@
 import { Redirect } from 'react-router-dom';
-export default () => {
+
+const DefaultPage = () => {
   return <Redirect to='/home' />
 }
+
+export default DefaultPage;
