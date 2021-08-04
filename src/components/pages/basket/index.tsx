@@ -147,8 +147,9 @@ export default function Basket() {
   }
 
   async function refresh() {
-    setRefreshTime(new Date());
+    const timeStamp = new Date();
     const baskets: BasketModel[] = await service.getBaskets();
+    setRefreshTime(timeStamp);
     setBaskets(baskets);
     return baskets;
   }
