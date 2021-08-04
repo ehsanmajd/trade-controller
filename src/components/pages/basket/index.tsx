@@ -9,8 +9,9 @@ import * as service from '../../../service';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import Info from '../../Info';
-import BasketInfo, { BasketInfoModel } from './BasketInfo';
-import { Refresh } from '@material-ui/icons';
+import BasketInfo from './BasketInfo';
+import { ParameterType } from '../../../types/baskets';
+import { useBasketsContext } from '../../../context/BasketsContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,30 +57,8 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-type ParameterType = {
-  value: unknown;
-  name: string;
-  type: string;
-  options: {
-    key: string;
-    value: number;
-  }[]
-};
 
-type ParameterFileType = {
-  params: ParameterType[];
-  id: string;
-  headerValue: string;
-}
-export interface BasketModel {
-  serverId?: string;
-  name: string;
-  info: {
-    main: BasketInfoModel;
-    extra?: BasketInfoModel[];
-  };
-  parameters: ParameterFileType[]
-}
+
 
 const getRelatedComponent = (type: string) => {
   if (type === 'enum') {
@@ -97,9 +76,9 @@ const getRelatedComponent = (type: string) => {
 export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
-  const [baskets, setBaskets] = useState<BasketModel[]>([]);
   const [savedExpert, setSavedExpert] = useState<string>('');
-  const [refreshTime, setRefreshTime] = useState<Date | null>(null);
+  const { data, refresh } = useBasketsContext();
+  const { baskets, refreshTime } = data;
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
@@ -108,10 +87,16 @@ export default function Basket() {
   useEffect(
     () => {
       (async () => {
-        const baskets = await refresh();
-        setSelectedBasket(baskets?.[0]?.name || null);
+        if (!refreshTime) {
+          const baskets = await refresh();
+          setSelectedBasket(baskets?.[0]?.name || null);
+        }
+        else {
+          setSelectedBasket(baskets?.[0]?.name || null);          
+        }
       })();
     },
+    // eslint-disable-next-line 
     []
   )
 
@@ -146,14 +131,6 @@ export default function Basket() {
     );
   }
 
-  async function refresh() {
-    const timeStamp = new Date();
-    const baskets: BasketModel[] = await service.getBaskets();
-    setRefreshTime(timeStamp);
-    setBaskets(baskets);
-    return baskets;
-  }
-
   const backDisabled = index <= 0;
   const nextDisabled = (index === -1 && !basket) || index === baskets.length - 1;
 
@@ -170,7 +147,6 @@ export default function Basket() {
             onChange={handleBasketChange}
             renderInput={(params) => <TextField {...params} label="Select your basket" variant="outlined" />}
           />
-          <IconButton onClick={() => refresh()}><Refresh /></IconButton>
         </Grid>
         <Grid md={6} xs={6} container justify='space-evenly'>
           <Grid md={6} xs={6}>
@@ -192,12 +168,10 @@ export default function Basket() {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container justify='center' className={classes.timeStamp}>
-        {refreshTime && <span>Last retrieved data time: {refreshTime.toLocaleTimeString()}</span>}
-      </Grid>
       {selectedBasket &&
         <>
           <BasketInfo data={basket.info} />
+          <hr />
           <h2>Expert Setting</h2>
           <Grid className={classes.boxContainer}>
             {

@@ -1,6 +1,7 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import React from 'react'
+import { BasketInfoModel } from '../../../types/baskets';
 import ProgressBar from '../../PorgressBar';
 
 interface Props {
@@ -13,9 +14,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: '16px 0',
-      borderBottomColor: theme.palette.grey[400],
-      borderBottomStyle: 'solid',
-      borderBottomWidth: '1px',
       fontSize: '15px'
     },
     column: {
@@ -46,12 +44,6 @@ const Column: React.FC = ({ children }) => {
   return <Grid className={classes.column} md={6} xs={12}>{children}</Grid>
 }
 
-interface Itemmain {
-  value: number;
-  color?: string;
-}
-
-export type BasketInfoModel = Record<string, Itemmain>;
 interface BasketInfoProps {
   data?: {
     main: BasketInfoModel;

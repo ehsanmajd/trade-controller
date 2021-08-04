@@ -2,7 +2,7 @@ import React from 'react';
 import {
   useHistory
 } from "react-router-dom";
-import { useUserContext } from '../UserContext';
+import { useUserContext } from '../context/UserContext';
 import jwt_decode from "jwt-decode";
 
 interface Token {
