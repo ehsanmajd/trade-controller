@@ -281,6 +281,7 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
     () => {
       reset(value);
     },
+    // eslint-disable-next-line 
     [value]
   );
   return (
