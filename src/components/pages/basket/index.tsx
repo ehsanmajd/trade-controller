@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chevron: {
       fontSize: '14px'
+    },
+    timeStamp: {
+      padding: '16px'
     }
   }),
 );
@@ -96,6 +99,7 @@ export default function Basket() {
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [baskets, setBaskets] = useState<BasketModel[]>([]);
   const [savedExpert, setSavedExpert] = useState<string>('');
+  const [refreshTime, setRefreshTime] = useState<Date | null>(null);
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
@@ -103,7 +107,10 @@ export default function Basket() {
 
   useEffect(
     () => {
-      refresh();
+      (async () => {
+        const baskets = await refresh();
+        setSelectedBasket(baskets?.[0]?.name || null);
+      })();
     },
     []
   )
@@ -139,11 +146,11 @@ export default function Basket() {
     );
   }
 
-  function refresh() {
-    service.getBaskets()
-      .then((baskets: BasketModel[]) => {
-        setBaskets(baskets);
-      })
+  async function refresh() {
+    setRefreshTime(new Date());
+    const baskets: BasketModel[] = await service.getBaskets();
+    setBaskets(baskets);
+    return baskets;
   }
 
   const backDisabled = index <= 0;
@@ -183,6 +190,9 @@ export default function Basket() {
             </IconButton>
           </Grid>
         </Grid>
+      </Grid>
+      <Grid container justify='center' className={classes.timeStamp}>
+        {refreshTime && <span>Last retrieved data time: {refreshTime.toLocaleTimeString()}</span>}
       </Grid>
       {selectedBasket &&
         <>
