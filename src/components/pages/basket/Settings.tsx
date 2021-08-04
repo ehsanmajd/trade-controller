@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import InputNumber from './InputNumber';
 import TextField from '@material-ui/core/TextField';
+import { useEffect } from 'react';
 
 
 
@@ -267,7 +268,7 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
     }
   }, {});
   const schema = yup.object().shape(shape);
-  const { handleSubmit, control, register } = useForm<Inputs>({
+  const { handleSubmit, control, register, reset } = useForm<Inputs>({
     defaultValues: value,
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -276,6 +277,12 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
     mode: 'onChange'
   });
 
+  useEffect(
+    () => {
+      reset(value);
+    },
+    [value]
+  );
   return (
     <DetailContainer>
       <h2>{title}</h2>
