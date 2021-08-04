@@ -113,8 +113,8 @@ export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
       <Grid container>
         <Column>
           <Row label='Balance' value={main['Balance']?.value} color='#506dbe' />
-          <Row label='Equity' value={<ProgressBar left={+main['Equity']?.value} right={+main['Balance']?.value - +main['Equity']?.value} hideRight />} />
-          <Row label='Margin' value={<ProgressBar left={+main['Margin']?.value} right={+main['Free_Margin']?.value} />} />
+          <Row label='Equity' value={<ProgressBar leftColor='#506dbe' rightColor='#b43232' left={+main['Equity']?.value} right={+main['Balance']?.value - +main['Equity']?.value} hideRight />} />
+          <Row label='Margin' value={<ProgressBar leftColor='#b43232' rightColor='#506dbe' left={+main['Margin']?.value} right={+main['Free_Margin']?.value} />} />
           <Row label='Margin_Level' value={main['Margin_Level']?.value} />
           <Row label='Total_Market_Orders' value={main['Total_Market_Orders']?.value} />
         </Column>

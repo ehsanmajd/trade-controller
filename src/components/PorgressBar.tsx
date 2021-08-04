@@ -14,11 +14,9 @@ const useStyles = makeStyles((theme: Theme) =>
       lineHeight: '24px',
       borderTopLeftRadius: '8px',
       borderBottomLeftRadius: '8px',
-      backgroundColor: '#506dbe',
       textAlign: 'center',
       fontWeight: 'bolder',
       '&:last-child': {
-        backgroundColor: '#db7392',
         borderTopLeftRadius: 0,
         borderBottomLeftRadius: 0,
         borderTopRightRadius: '8px',
@@ -32,12 +30,14 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
+  leftColor: string;
   left: number;
+  rightColor: string;
   right: number;
   hideRight?: boolean;
 }
 
-const ProgressBar: React.FC<Props> = ({ left, right, hideRight }) => {
+const ProgressBar: React.FC<Props> = ({ left, right, hideRight, leftColor, rightColor }) => {
   const leftFlex = Math.floor(((left * 100) / (left + right)));
   const rightFlex = 100 - leftFlex;
   const classes = useStyles();
@@ -45,8 +45,8 @@ const ProgressBar: React.FC<Props> = ({ left, right, hideRight }) => {
     <Grid container>
       <label className={classes.label}>{left.toFixed(2)}</label> 
       <Grid container className={classes.wrapper}>
-        <div title={left.toFixed(2)} className={classes.segment} style={{ flex: `${leftFlex}` }}> </div>
-        <div title={right.toFixed(2)} className={classes.segment} style={{ flex: `${rightFlex}` }}> </div>
+        <div title={left.toFixed(2)} className={classes.segment} style={{ flex: `${leftFlex}`, backgroundColor: leftColor }}> </div>
+        <div title={right.toFixed(2)} className={classes.segment} style={{ flex: `${rightFlex}`, backgroundColor: rightColor }}> </div>
       </Grid>
       {!hideRight && <label className={classes.label}>{right.toFixed(2)}</label>}
     </Grid>
