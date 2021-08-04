@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: '16px 0',
       borderBottomColor: theme.palette.grey[400],
       borderBottomStyle: 'solid',
-      borderBottomWidth: '1px'
+      borderBottomWidth: '1px',
+      fontSize: '15px'
     },
     column: {
       padding: '24px',
