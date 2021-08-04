@@ -106,7 +106,7 @@ export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
         <Column>
           <Row label='Balance' value={main['Balance']?.value} color='#506dbe' />
           <Row label='Equity' value={<ProgressBar leftColor='#506dbe' rightColor='#b43232' left={+main['Equity']?.value} right={+main['Balance']?.value - +main['Equity']?.value} hideRight />} />
-          <Row label='Margin' value={<ProgressBar leftColor='#b43232' rightColor='#506dbe' right={+main['Margin']?.value} left={+main['Free_Margin']?.value} />} />
+          <Row label='Margin' value={<ProgressBar rightColor='#b43232' leftColor='#506dbe' right={+main['Margin']?.value} left={+main['Free_Margin']?.value} />} />
           <Row label='Margin_Level' value={main['Margin_Level']?.value} />
           <Row label='Total_Market_Orders' value={main['Total_Market_Orders']?.value} />
         </Column>
