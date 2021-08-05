@@ -13,6 +13,9 @@ const useStyle = makeStyles((theme: Theme) =>
       }
     },
     root: {
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh'
     },
     headerTop: {
       display: 'flex',
@@ -29,7 +32,7 @@ const useStyle = makeStyles((theme: Theme) =>
       alignItems: 'center',
     },
     main: {
-
+      flex: 1
     }
   })
 );

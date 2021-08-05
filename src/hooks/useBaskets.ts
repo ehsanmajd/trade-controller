@@ -13,6 +13,7 @@ export function useBaskets() {
     setRefreshTime(timeStamp);
     setBaskets(baskets);
     return baskets;
+
   }, []);
 
   useInterval(refresh, 20 * 1000);
