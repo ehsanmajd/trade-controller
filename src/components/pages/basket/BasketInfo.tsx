@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme: Theme) =>
     column: {
       boxSizing: 'border-box',
       [theme.breakpoints.down('lg')]: {
-        fontSize: '16px',
-        padding: '8px'
+        fontSize: '15px',
+        padding: '16px'
       },
       [theme.breakpoints.down('md')]: {
         fontSize: '15px',
