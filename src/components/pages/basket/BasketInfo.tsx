@@ -14,11 +14,29 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: '16px 0',
-      fontSize: '15px'
+      
     },
     column: {
-      padding: '24px',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      [theme.breakpoints.down('lg')]: {
+        fontSize: '16px',
+        padding: '8px'
+      },
+      [theme.breakpoints.down('md')]: {
+        fontSize: '15px',
+        padding: '12px'
+      },
+      [theme.breakpoints.down('sm')]: {
+        fontSize: '15px',
+        padding: '12px'
+      },
+      [theme.breakpoints.down('xs')]: {
+        fontSize: '14px',
+        padding: 0
+      },
+      [theme.breakpoints.up('xl')]: {
+        padding: '24px'
+      }
     },
     row: {
       lineHeight: '36px'
