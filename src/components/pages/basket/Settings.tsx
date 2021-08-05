@@ -10,8 +10,6 @@ import TextField from '@material-ui/core/TextField';
 import { useEffect } from 'react';
 
 
-
-
 type InputTypes = 'string' | 'number' | 'boolean';
 
 interface Input {
@@ -21,8 +19,6 @@ interface Input {
   label?: string;
   attributes?: any;
 }
-
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -268,7 +264,7 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
     }
   }, {});
   const schema = yup.object().shape(shape);
-  const { handleSubmit, control, register, reset } = useForm<Inputs>({
+  const { handleSubmit, control, register, reset, formState } = useForm<Inputs>({
     defaultValues: value,
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -279,7 +275,9 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
 
   useEffect(
     () => {
-      reset(value);
+      if (!formState.isDirty) {
+        reset(value);
+      }
     },
     // eslint-disable-next-line 
     [value]
@@ -290,10 +288,6 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
       <form onSubmit={handleSubmit(onSubmit)}>
         {
           structure.filter(x => x.name !== 'symbol').map(s => {
-            console.log('====================================');
-            console.log('name: ', s.name);
-            console.log('component: ', s.component);
-            console.log('====================================');
             return <Row key={s.name}>{
               <Controller
                 // @ts-ignore
