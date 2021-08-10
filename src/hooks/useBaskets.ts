@@ -10,9 +10,6 @@ export function useBaskets() {
   const { data: user } = useUserContext();
 
   const refresh = useCallback(async function () {
-    if (!user.loggedIn) {
-      return;
-    }
     const timeStamp = new Date();
     const baskets: BasketModel[] = await service.getBaskets();
     setRefreshTime(timeStamp);
