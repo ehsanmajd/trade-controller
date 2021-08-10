@@ -17,6 +17,9 @@ export function useBaskets() {
     if (prevBaskets === undefined) {
       baskets = baskets.filter(x => x.success);
     }
+    else {
+      baskets = baskets.filter(x => prevBaskets.some(p => p.serverId === x.serverId));
+    }
     setRefreshTime(timeStamp);
     setBaskets(baskets);
     return baskets;
