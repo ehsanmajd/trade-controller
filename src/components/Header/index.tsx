@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'bold'
     },
     error: {
-      color: theme.palette.error.contrastText
+      color: theme.palette.error.main
     }
 
   }),
