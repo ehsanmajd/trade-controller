@@ -11,20 +11,24 @@ export function useBaskets() {
   const [baskets, setBaskets] = useState<BasketModel[]>([]);
   const { data: user } = useUserContext();
 
-  useEffect(() => {
-    rendered.current = true;
-  }, []);
+
 
   const refresh = useCallback(async function () {
     const timeStamp = new Date();
     let baskets: BasketModel[] = await service.getBaskets();
     if (!rendered.current) {
+      console.log('not renderd yet');
+
       baskets = baskets.filter(x => x.success);
     }
     setRefreshTime(timeStamp);
     setBaskets(baskets);
     return baskets;
   }, [user]);
+
+  useEffect(() => {
+    rendered.current = true;
+  }, []);
 
   useInterval(refresh, 20 * 1000);
 
