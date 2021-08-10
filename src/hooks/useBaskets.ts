@@ -29,6 +29,10 @@ export function useBaskets() {
 
   const hasError = baskets.some(x => !x.success);
 
+  console.log('prv', prevBaskets);
+  console.log('cur', baskets);
+  
+
   return {
     refreshTime,
     baskets,
