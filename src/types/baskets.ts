@@ -22,11 +22,12 @@ export type ParameterFileType = {
   headerValue: string;
 }
 export interface BasketModel {
-  serverId?: string;
+  serverId: string;
   name: string;
   info: {
     main: BasketInfoModel;
     extra?: BasketInfoModel[];
   };
-  parameters: ParameterFileType[]
+  parameters: ParameterFileType[];
+  success: boolean;
 }

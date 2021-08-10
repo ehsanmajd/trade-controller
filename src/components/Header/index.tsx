@@ -3,6 +3,7 @@ import { Refresh } from '@material-ui/icons';
 import { FC } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useBasketsContext } from '../../context/BasketsContext';
+import { usePrevious } from '../../hooks/usePrevious';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -14,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     selected: {
       fontWeight: 'bold'
+    },
+    error: {
+      color: theme.palette.error.contrastText
     }
 
   }),
@@ -23,8 +27,9 @@ const Header: FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation();
-  const { data, refresh } = useBasketsContext();
+  const { data, refresh, hasError } = useBasketsContext();
   const { refreshTime } = data;
+  const prevRefreshTime = usePrevious(refreshTime);
 
   const getClassNames = (route) => {
     const paperClasses = [classes.paper];
@@ -49,7 +54,10 @@ const Header: FC = () => {
     <Grid item xs={12} sm={3}>
       {refreshTime && <Grid container justify='center'>
         <Grid container justify='center' alignItems='center' wrap='nowrap'>
-          <label>Last updated time: {refreshTime.toLocaleTimeString()}</label>
+          <label className={hasError ? classes.error : ''} >Last updated time:
+            {!hasError && refreshTime.toLocaleTimeString()}
+            {hasError && (prevRefreshTime ? prevRefreshTime.toLocaleDateString() : '')}
+          </label>
           <span><IconButton onClick={() => refresh()}><Refresh /></IconButton></span>
         </Grid>
       </Grid>}

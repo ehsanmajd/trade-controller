@@ -20,9 +20,12 @@ export function useBaskets() {
 
   useInterval(refresh, 20 * 1000);
 
+  const hasError = baskets.some(x => !x.success);
+
   return {
     refreshTime,
     baskets,
-    refresh
+    refresh,
+    hasError
   }
 }

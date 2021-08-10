@@ -12,6 +12,7 @@ import Info from '../../Info';
 import BasketInfo from './BasketInfo';
 import { ParameterType } from '../../../types/baskets';
 import { useBasketsContext } from '../../../context/BasketsContext';
+import { usePrevious } from '../../../hooks/usePrevious';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -77,8 +78,10 @@ export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [savedExpert, setSavedExpert] = useState<string>('');
-  const { data, refresh } = useBasketsContext();
-  const { baskets, refreshTime } = data;
+  const { data, refresh, hasError } = useBasketsContext();
+  const prevData = usePrevious(data); 
+  const baskets = hasError ? (prevData?.baskets || []) : data.baskets; 
+  const refreshTime = hasError ? (prevData?.refreshTime || '') : data.refreshTime; 
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
