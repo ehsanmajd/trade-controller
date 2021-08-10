@@ -26,11 +26,11 @@ export function useBaskets() {
     return baskets;
   }, [user]);
 
+  useInterval(refresh, 20 * 1000);
+
   useEffect(() => {
     rendered.current = true;
   }, []);
-
-  useInterval(refresh, 20 * 1000);
 
   const hasError = baskets.some(x => !x.success);
 
