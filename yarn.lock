@@ -9294,6 +9294,11 @@ react-hook-form@^7.9.0:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.10.0.tgz#665c9897957a2a8bbf720cef9e913ba1b22b0e86"
   integrity sha512-J6jJDw61TDNG0cEyLlYKUTPTwJH1Gfp8S8+m5Dt3mLY5vEy7UwKr60rl11ESofKmliFH8DconTVFnZgblhGvyg==
 
+react-hook-thunk-reducer@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/react-hook-thunk-reducer/-/react-hook-thunk-reducer-0.2.4.tgz#b10bc27157836750e5cbf513bcaf0be02412406c"
+  integrity sha512-cuK5GkdhDjSaBrDZMP17bp8YVClrxHf8U39j1OOjCQksi6LgN+M5cRuNfGsEqqn1lvkhl48p2O5X35+BIrf47Q==
+
 react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"

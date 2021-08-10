@@ -56,7 +56,7 @@ const Header: FC = () => {
         <Grid container justify='center' alignItems='center' wrap='nowrap'>
           <label className={hasError ? classes.error : ''} >Last updated time:
             {!hasError && refreshTime.toLocaleTimeString()}
-            {hasError && (prevRefreshTime ? prevRefreshTime.toLocaleDateString() : '')}
+            {hasError && (prevRefreshTime ? prevRefreshTime.toLocaleTimeString() : '')}
           </label>
           <span><IconButton onClick={() => refresh()}><Refresh /></IconButton></span>
         </Grid>

@@ -58,9 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
-
-
 const getRelatedComponent = (type: string) => {
   if (type === 'enum') {
     return 'Dropdown';
@@ -78,29 +75,26 @@ export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [savedExpert, setSavedExpert] = useState<string>('');
-  const { data, refresh, hasError } = useBasketsContext();
-  const prevData = usePrevious(data); 
-  const baskets = hasError ? (prevData?.baskets || []) : data.baskets; 
-  const refreshTime = hasError ? (prevData?.refreshTime || '') : data.refreshTime; 
+  const { data, hasError, refresh } = useBasketsContext();
+  const prevData = usePrevious(data);
+  const baskets = hasError ? (prevData?.baskets || []) : data.baskets;
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
   const index = baskets.findIndex(x => x.name === selectedBasket);
 
+  useEffect(() => {
+    refresh();
+  }, [])
+
   useEffect(
     () => {
-      (async () => {
-        if (!refreshTime) {
-          const baskets = await refresh();
-          setSelectedBasket(baskets?.[0]?.name || null);
-        }
-        else {
-          setSelectedBasket(baskets?.[0]?.name || null);          
-        }
-      })();
+      if (!selectedBasket && baskets && baskets.length) {
+        setSelectedBasket(baskets?.[0]?.name);
+      }
     },
     // eslint-disable-next-line 
-    []
+    [baskets]
   )
 
   function handleBasketChange(e, value) {
@@ -142,6 +136,7 @@ export default function Basket() {
       <Grid container justify='center' className={classes.selector}>
         <Grid md={6} xs={6} container justify='center'>
           <Autocomplete
+            disabled={hasError}
             value={basket || { name: '' }}
             id="combo-box-demo"
             options={baskets}
@@ -181,6 +176,7 @@ export default function Basket() {
               selectedBasket && parameterFiles.map((args, index) => {
                 const title = getExpertName(args.params);
                 return <Settings
+                  disabled={hasError}
                   key={`${selectedBasket}-${index}`}
                   title={`EA: "${title}"`}
                   structure={args.params.map(arg => ({
