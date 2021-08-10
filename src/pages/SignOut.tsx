@@ -12,6 +12,7 @@ const SignOut: React.FC = () => {
         window.localStorage.getItem('rt')
       ).then(
         () => {
+          window.localStorage.removeItem('rt')
           setUser({
             loggedIn: false,
             name: '',

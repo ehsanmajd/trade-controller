@@ -9,7 +9,9 @@ export function useInterval(fn: Function, interval: number) {
         },
         interval
       );
-      return () => clearInterval(timerId);
+      return () => {
+        clearInterval(timerId);
+      }
     },
     [interval, fn]
   );

@@ -1,4 +1,4 @@
-import Layout from '../Layout'
+import Layout from '../components/Layout'
 import Admin from '../components/pages/admin'
 
 export default function Main() {

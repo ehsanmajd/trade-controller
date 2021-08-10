@@ -2,7 +2,7 @@ import { createStyles, Grid, IconButton, makeStyles, Paper, Theme } from '@mater
 import { Refresh } from '@material-ui/icons';
 import { FC } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useBasketsContext } from '../context/BasketsContext';
+import { useBasketsContext } from '../../context/BasketsContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,7 +34,7 @@ const Header: FC = () => {
     return paperClasses.join(' ');
   }
 
-  const HeaderPaper = ({ name, path }) => <Paper className={getClassNames(path)} onClick={() => history.push('/' + path)}>{name}</Paper>;
+  const HeaderPaper = ({ name, path }) => <Paper className={getClassNames(path)} onClick={() => history.push('/dashboard/' + path)}>{name}</Paper>;
 
   return <Grid container spacing={1} justify='flex-start' alignItems='center'>
     <Grid item xs={4} sm={3}>

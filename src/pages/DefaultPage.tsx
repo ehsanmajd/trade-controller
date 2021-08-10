@@ -1,7 +1,7 @@
 import { Redirect } from 'react-router-dom';
 
 const DefaultPage = () => {
-  return <Redirect to='/home' />
+  return <Redirect to='/dashboard/home' />
 }
 
 export default DefaultPage;

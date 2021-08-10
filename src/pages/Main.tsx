@@ -1,12 +1,9 @@
-import Layout from '../Layout'
+import Layout from '../components/Layout'
 import MainPage from '../components/pages/basket'
-import Header from '../Header';
-
 
 export default function Main() {
-  
   return (
-    <Layout ExtraHeader={Header}>
+    <Layout>
       <MainPage />
     </Layout>
   )

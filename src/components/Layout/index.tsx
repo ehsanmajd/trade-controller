@@ -1,6 +1,6 @@
 import { Container, createStyles, makeStyles, Theme } from '@material-ui/core'
-import React, { FC } from 'react'
-import UserInfo from '../components/UserInfo';
+import React from 'react'
+import UserInfo from '../UserInfo';
 import Footer from '../Footer'
 import Header from '../Header';
 import Logo from './Logo'
@@ -37,7 +37,7 @@ const useStyle = makeStyles((theme: Theme) =>
   })
 );
 
-const Layout: React.FC<{ ExtraHeader?: FC }> = ({ children, ExtraHeader = () => null }) => {
+const Layout: React.FC = ({ children }) => {
   const classes = useStyle();
 
   return (
