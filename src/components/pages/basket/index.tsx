@@ -83,9 +83,13 @@ export default function Basket() {
   const parameterFiles = basket?.parameters;
   const index = baskets.findIndex(x => x.name === selectedBasket);
 
-  useEffect(() => {
-    refresh();
-  }, [])
+  useEffect(
+    () => {
+      refresh();
+    },
+    // eslint-disable-next-line 
+    []
+  );
 
   useEffect(
     () => {

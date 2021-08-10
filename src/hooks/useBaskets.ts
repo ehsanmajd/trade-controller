@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import { BasketModel } from "../types/baskets";
 import * as service from '../service'
 import useThunkReducer from 'react-hook-thunk-reducer';
@@ -26,7 +26,6 @@ function reducer(state: State, action: any) {
           baskets: newBaskets
         }
       }
-      break;
     default:
       return state;
   }
