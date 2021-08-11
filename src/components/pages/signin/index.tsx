@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const [form, setForm] = React.useState({
-    username: '_Admin',
-    password: '1qaz!QAZ'
+    username: '',
+    password: ''
   });
 
   const { setData: setUser, data: user } = useUserContext();
