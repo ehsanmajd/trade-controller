@@ -122,19 +122,19 @@ export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
       <h2>Basket Summary</h2>
       <Grid container>
         <Column>
-          <Row label='Balance' value={main['Balance']?.value} color='#506dbe' />
-          <Row label='Equity' value={<ProgressBar leftColor='#506dbe' rightColor='#b43232' left={+main['Equity']?.value} right={+main['Balance']?.value - +main['Equity']?.value} hideRight />} />
-          <Row label='Margin' value={<ProgressBar rightColor='#b43232' leftColor='#506dbe' right={+main['Margin']?.value} left={+main['Free_Margin']?.value} />} />
-          <Row label='Margin_Level' value={main['Margin_Level']?.value} />
-          <Row label='Total_Market_Orders' value={main['Total_Market_Orders']?.value} />
+          <Row label='Balance' value={main?.['Balance']?.value} color='#506dbe' />
+          <Row label='Equity' value={<ProgressBar leftColor='#506dbe' rightColor='#b43232' left={+main?.['Equity']?.value} right={+main?.['Balance']?.value - +main?.['Equity']?.value} hideRight />} />
+          <Row label='Margin' value={<ProgressBar rightColor='#b43232' leftColor='#506dbe' right={+main?.['Margin']?.value} left={+main?.['Free_Margin']?.value} />} />
+          <Row label='Margin_Level' value={main?.['Margin_Level']?.value} />
+          <Row label='Total_Market_Orders' value={main?.['Total_Market_Orders']?.value} />
         </Column>
         <Column>
-          <Row label='Total_Sell_Lots' value={main['Total_Sell_Lots']?.value} />
-          <Row label='Total_Buy_Lots' value={main['Total_Buy_Lots']?.value} />
-          <Row label='Sell_Buy_Diff_Lots' value={main['Sell_Buy_Diff_Lots']?.value} />
-          <Row label='Total_Sell_Profit' value={main['Total_Sell_Profit']?.value} color={main['Total_Sell_Profit']?.color} />
-          <Row label='Total_Buy_Profit' value={main['Total_Buy_Profit']?.value} color={main['Total_Buy_Profit']?.color} />
-          <Row label='Total_Profit' value={main['Total_Profit']?.value} color={main['Total_Profit']?.color} />
+          <Row label='Total_Sell_Lots' value={main?.['Total_Sell_Lots']?.value} />
+          <Row label='Total_Buy_Lots' value={main?.['Total_Buy_Lots']?.value} />
+          <Row label='Sell_Buy_Diff_Lots' value={main?.['Sell_Buy_Diff_Lots']?.value} />
+          <Row label='Total_Sell_Profit' value={main?.['Total_Sell_Profit']?.value} color={main?.['Total_Sell_Profit']?.color} />
+          <Row label='Total_Buy_Profit' value={main?.['Total_Buy_Profit']?.value} color={main?.['Total_Buy_Profit']?.color} />
+          <Row label='Total_Profit' value={main?.['Total_Profit']?.value} color={main?.['Total_Profit']?.color} />
         </Column>
       </Grid>
       {expanded && <Grid container>
