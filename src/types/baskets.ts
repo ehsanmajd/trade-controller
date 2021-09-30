@@ -31,3 +31,22 @@ export interface BasketModel {
   parameters: ParameterFileType[];
   success: boolean;
 }
+
+export type UserAccessType = {
+  userId: string;
+  username: string;
+  accessType: AccessType;
+}
+
+export enum AccessType {
+  User = 1,
+  Investor = 2
+}
+
+export type BasketUsers = {
+  basketId: string;
+  basketName: string;
+  users: UserAccessType[];
+};
+
+export type BasketUserResponse = BasketUsers[];

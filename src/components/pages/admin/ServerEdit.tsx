@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   userId: string;
   onClose: () => void;
+  onOpenBasket: (serverId: string) => void;
 }
 
 interface Server {
@@ -53,7 +54,7 @@ const EMPTY_FORM_VALUES = {
   address: ''
 }
 
-export default function ServerEdit({ userId, onClose }: Props) {
+export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
   const [mode, setMode] = useState<'view' | 'edit' | 'add'>('view');
   const [form, setForm] = useState(EMPTY_FORM_VALUES);
   const classes = useStyles();
@@ -168,7 +169,11 @@ export default function ServerEdit({ userId, onClose }: Props) {
                         </IconButton>
                       </>
                       :
-                      <Link href='#' onClick={() => gotoEditMode(server.id)}>Edit</Link>
+                      <>
+                        <Link href='#' onClick={() => gotoEditMode(server.id)}>Edit</Link>
+                        &nbsp;
+                        <Link href='#' onClick={() => onOpenBasket(server.id)}>Baskets</Link>
+                      </>
                     }
                   </TableCell>
                 </TableRow>

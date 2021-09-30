@@ -19,6 +19,7 @@ import Remove from '@material-ui/icons/Remove'
 import Add from '@material-ui/icons/Add'
 import Modal from '@material-ui/core/Modal'
 import ServerEdit from './ServerEdit';
+import BasketEdit from './BasketEdit';
 import { useCallback } from 'react';
 import Link from '@material-ui/core/Link/Link';
 
@@ -56,8 +57,10 @@ export default function Index() {
   const [form, setForm] = useState(EMPTY_FORM_VALUES);
   const [users, setUsers] = useState<User[]>([]);
   const [openServersDialog, setOpenServersDialog] = useState(false);
+  const [openBasketsDialog, setOpenBasketsDialog] = useState(false);
   const [selectedUserToEditServers, setSelectedUserToEditServers] = useState(null);
   const [selectedUserIdToEdit, setSelectedUserIdToEdit] = useState(null);
+  const [selectedServerIdToEdit, setSelectedServerIdToEdit] = useState(null);
 
   const { name, username, password, active } = form
   const classes = useStyles();
@@ -90,7 +93,6 @@ export default function Index() {
     reset();
   }
 
-
   const reset = useCallback(
     async () => {
       const users = await service.loadUsers();
@@ -110,6 +112,12 @@ export default function Index() {
     setSelectedUserToEditServers(user.id);
   }
 
+  const handleOpenBasket = serverId => {
+    setSelectedServerIdToEdit(serverId);
+    setOpenServersDialog(false);
+    setOpenBasketsDialog(true);
+  }
+
   const gotoEditMode = (userId: string) => {
     setSelectedUserIdToEdit(userId);
     setForm({
@@ -119,12 +127,26 @@ export default function Index() {
     setMode('edit');
   }
 
+  const handleClose = () => {
+    setOpenServersDialog(false);
+    setOpenBasketsDialog(false);
+    setSelectedServerIdToEdit(null);
+    setSelectedUserIdToEdit(null);
+  }
+
+  const handleCloseBasketModal = () => {
+    setOpenBasketsDialog(false);
+    setOpenServersDialog(true);
+  }
+
   useEffect(
     () => {
       reset();
     },
     [reset]
   )
+
+  const modalOpen = openBasketsDialog || openServersDialog;
 
   return (
     <TableContainer component={Paper}>
@@ -239,8 +261,11 @@ export default function Index() {
           </TableRow>
         </TableBody>
       </Table>
-      <Modal open={openServersDialog}>
-        <ServerEdit userId={selectedUserToEditServers} onClose={() => setOpenServersDialog(false)} />
+      <Modal open={modalOpen}>
+        <>
+          {openServersDialog && <ServerEdit userId={selectedUserToEditServers} onOpenBasket={handleOpenBasket} onClose={handleClose} />}
+          {openBasketsDialog && <BasketEdit userId={selectedUserToEditServers} serverId={selectedServerIdToEdit} onClose={handleCloseBasketModal} />}
+        </>
       </Modal>
     </TableContainer>
   );

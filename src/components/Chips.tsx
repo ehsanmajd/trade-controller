@@ -45,18 +45,14 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
     !addDisabled && setMode('edit');
   }
 
-  React.useEffect(
-    () => {
-      (async () => {
-        setLoading(true);
-        const users = await datasource(inputValue)
-        
-        setUsers(users);
-        setLoading(false);
-      })();
-    },
-    [inputValue, datasource]
-  );
+
+  function handleChange(_, newValue: Value) {
+    if (newValue) {
+      if (!value.some(x => x.key === newValue.key)) {
+        onChange([...value, newValue]);
+      }
+    }
+  }
 
   return (
     <Paper component="ul" className={classes.root} onClick={gotoEditMode}>
@@ -78,15 +74,19 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
         filterOptions={x => x}
         autoComplete
         loading={loading}
-        inputValue={inputValue}
         includeInputInList
-        onChange={(event, newValue: Value) => onChange([...value, newValue])}
+        onChange={handleChange}
+        onInputChange={async (event: object, value: string, reason: string) => {
+          if (reason === 'input') {
+            const users = await datasource(value);
+            setUsers(users);
+          }
+        }}
         renderInput={params => (
           <TextField
             {...params}
             label="Search for users"
             variant="outlined"
-            onChange={event => setInputValue(event.target.value)}
             fullWidth
           />
         )}
