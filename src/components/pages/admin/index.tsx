@@ -10,6 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import { TextField, Checkbox } from '@material-ui/core';
 import { useState, useEffect } from 'react';
 import * as service from '../../../service';
+import * as adminServices from '../../../service/admin';
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import Cancel from '@material-ui/icons/Cancel'
 import ToggleOn from '@material-ui/icons/ToggleOn'
@@ -33,7 +34,6 @@ const useStyles = makeStyles({
     }
   }
 });
-
 
 const EMPTY_FORM_VALUES = {
   name: '',
@@ -84,10 +84,10 @@ export default function Index() {
 
   const handleSubmit = async () => {
     if (mode === 'add') {
-      await service.addUser(name, username, password);
+      await adminServices.addUser(name, username, password);
     }
     else if (mode === 'edit') {
-      await service.updateUser(selectedUserIdToEdit, name, username);
+      await adminServices.updateUser(selectedUserIdToEdit, name, username);
     }
     handleCancel();
     reset();
@@ -102,8 +102,7 @@ export default function Index() {
   );
 
   const toggleActive = async (id: string) => {
-    // API CALL
-    await service.toggleActive(id);
+    await adminServices.toggleActive(id);
     reset();
   }
 

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { BasketUserResponse, BasketUsers } from '../types/baskets';
 import { getAccessToken, getRefreshToken, setAccessToken } from '../utils/token';
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 export const axiosApiInstance = axios.create();
@@ -50,39 +49,9 @@ axiosApiInstance.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
-
 export const loadUsers = async () => {
   const { data: users } = await axiosApiInstance.get(BASE_URL + '/users');
   return users;
-}
-
-export const addUser =
-  async (name: string, username: string, password: string) => {
-    const { data } = await axiosApiInstance.post(BASE_URL + '/users/add', {
-      name,
-      username,
-      password,
-      email: '',
-      phone: '',
-    });
-    return data;
-  }
-
-export const updateUser =
-  async (id: string, name: string, username: string) => {
-    const { data } = await axiosApiInstance.post(BASE_URL + '/users/update', {
-      id,
-      name,
-      username,
-      email: '',
-      phone: '',
-    });
-    return data;
-  }
-
-export const toggleActive = async (id: string) => {
-  const { data } = await axiosApiInstance.post(BASE_URL + '/users/toggle-active', { id });
-  return data;
 }
 
 export const login = async (username: string, password: string) => {
@@ -147,11 +116,6 @@ export const getServersByUserId = async (userId: string) => {
   return data as { id: string, address: string }[];
 }
 
-export const getBasketsByServerIdForAdmin = async (serverId: string) => {
-  const { data } = await axiosApiInstance.get(BASE_URL + `/baskets/${serverId}`);
-  return data as BasketUserResponse;
-}
-
 export const updateServer = async (id: string, address: string, userId: string) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/server/update', {
     address,
@@ -165,14 +129,6 @@ export const deleteServer = async (id: string, userId: string) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/server/delete', {
     userId,
     serverId: id
-  });
-  return data;
-}
-
-export const updateBasketPermissions = async (serverId: string, baskets: Omit<BasketUsers, 'basketName'>[]) => {
-  const { data } = await axiosApiInstance.post(BASE_URL + '/permissions/update', {
-    serverId,
-    baskets
   });
   return data;
 }

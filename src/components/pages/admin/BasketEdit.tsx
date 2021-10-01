@@ -4,6 +4,7 @@ import { TableContainer, Paper, TableCell, TableHead, TableRow } from '@material
 import Table from '@material-ui/core/Table/Table';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import * as service from '../../../service'
+import * as adminServices from '../../../service/admin'
 import { useCallback } from 'react';
 import Chips from '../../Chips';
 import { AccessType, BasketUsers, UserAccessType } from '../../../types/baskets';
@@ -54,14 +55,14 @@ export default function BasketEdit({ userId, serverId, onClose }: Props) {
 
 
   const handleSubmit = async () => {
-    await service.updateBasketPermissions(serverId, basketsUser);
+    await adminServices.updateBasketPermissions(serverId, basketsUser);
     onClose();
 
   }
 
   const reset = useCallback(
     async () => {
-      const basketsUser = await service.getBasketsByServerIdForAdmin(serverId);
+      const basketsUser = await adminServices.getBasketsByServerIdForAdmin(serverId);
       setBasketsUser(basketsUser);
     },
     [userId, setBasketsUser]
