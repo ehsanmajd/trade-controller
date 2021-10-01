@@ -11,7 +11,7 @@ const Admin: React.FC = ({ children }) => {
   }
   const token = jwt_decode(accessToken) as Token;
   
-  if (token.roles.indexOf('admin') !== -1) {
+  if (token.roles.indexOf('admin') === -1) {
     // TODO: Uncomment carefully :)
     // return <Redirect to='/dashboard/access-denied' />
   }
