@@ -1,10 +1,13 @@
 import Layout from '../components/Layout'
-import Admin from '../components/pages/admin'
+import AdminPanel from '../components/pages/admin'
+import AdminAuth from '../components/AdminAuth'
 
 export default function Main() {
   return (
     <Layout>
-      <Admin />
+      <AdminAuth>
+        <AdminPanel />
+      </AdminAuth>
     </Layout>
   )
 }

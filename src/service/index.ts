@@ -1,17 +1,18 @@
 import axios from 'axios';
 import { BasketUserResponse, BasketUsers } from '../types/baskets';
+import { getAccessToken, getRefreshToken, setAccessToken } from '../utils/token';
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 export const axiosApiInstance = axios.create();
 
 const refreshAccessToken = () => {
   return new Promise(resolve => {
-    const refreshToken = window.localStorage.getItem('rt');
+    const refreshToken = getRefreshToken();
     if (refreshToken) {
       fetch(BASE_URL + '/auth', {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ token: window.localStorage.getItem('rt') }),
+        body: JSON.stringify({ token: refreshToken }),
         method: 'POST'
       })
         .then(x => x.json())
@@ -23,7 +24,7 @@ const refreshAccessToken = () => {
 
 axiosApiInstance.interceptors.request.use(
   async config => {
-    const accessToken = window.localStorage.getItem('at');
+    const accessToken = getAccessToken();
     config.headers = {
       'Authorization': `Bearer ${accessToken}`,
       'Accept': 'application/json',
@@ -42,7 +43,7 @@ axiosApiInstance.interceptors.response.use((response) => {
   if (error.response.status === 403 && !originalRequest._retry) {
     originalRequest._retry = true;
     const access_token = await refreshAccessToken() as string;
-    window.localStorage.setItem('at', access_token);
+    setAccessToken(access_token);
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + access_token;
     return axiosApiInstance(originalRequest);
   }

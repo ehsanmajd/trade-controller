@@ -9,6 +9,7 @@ import {
 import Admin from "../../pages/Admin";
 import Auth from "../Auth";
 import SignOut from "../../pages/SignOut";
+import AccessDenied from '../../pages/AccessDenied';
 
 interface Props {
   routePrefix: string;
@@ -33,6 +34,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
           </Route>
           <Route path={`${routePrefix}/signout`}>
             <SignOut />
+          </Route>
+          <Route path={`${routePrefix}/access-denied`}>
+            <AccessDenied />
           </Route>
         </Switch>
       </BasketProvider>

@@ -4,13 +4,7 @@ import {
 } from "react-router-dom";
 import { useUserContext } from '../context/UserContext';
 import jwt_decode from "jwt-decode";
-
-interface Token {
-  exp: number;
-  userId: string;
-  name: string;
-  username: string;
-}
+import { Token } from '../types/token';
 
 const Auth: React.FC = ({ children }) => {
   const history = useHistory();
