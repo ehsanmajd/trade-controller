@@ -34,7 +34,6 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
   const classes = useStyles();
   const [mode, setMode] = React.useState<'view' | 'edit'>('view');
   const [loading, setLoading] = React.useState(false);
-  const [inputValue, setInputValue] = React.useState('');
   const [users, setUsers] = React.useState([]);
 
   const handleDelete = (chipToDelete: Value) => () => {
@@ -85,9 +84,10 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
         renderInput={params => (
           <TextField
             {...params}
-            label="Search for users"
+            label=""
             variant="outlined"
             fullWidth
+            size='small'
           />
         )}
         renderOption={option => {
