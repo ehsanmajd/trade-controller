@@ -30,6 +30,7 @@ export interface BasketModel {
   };
   parameters: ParameterFileType[];
   success: boolean;
+  accessType?: AccessType;
 }
 
 export type UserAccessType = {

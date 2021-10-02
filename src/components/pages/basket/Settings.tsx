@@ -42,6 +42,7 @@ interface SettingsProps {
   title: string;
   onSubmit: (data: Record<string, unknown>) => void;
   disabled?: boolean;
+  readonly: boolean;
 }
 
 const Components = {
@@ -253,7 +254,7 @@ const typeMap = {
   double: yup.number().min(0, MESSAGES['positive']).required(),
 }
 
-export default function Settings({ structure = SAMPLE, title, value = VALUES, onSubmit, disabled = false }: SettingsProps) {
+export default function Settings({ structure = SAMPLE, readonly, title, value = VALUES, onSubmit, disabled = false }: SettingsProps) {
   const shape = structure.reduce((acc, item) => {
     const validation = typeMap[item.type];
     if (!validation) {
@@ -310,7 +311,7 @@ export default function Settings({ structure = SAMPLE, title, value = VALUES, on
             }</Row>
           })
         }
-        <Button disabled={disabled} type="submit" variant='contained' color='primary'>Save</Button>
+        {!readonly && <Button disabled={disabled} type="submit" variant='contained' color='primary'>Save</Button>}
       </form>
     </DetailContainer>
   )

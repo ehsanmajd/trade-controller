@@ -10,7 +10,7 @@ import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import Info from '../../Info';
 import BasketInfo from './BasketInfo';
-import { ParameterType } from '../../../types/baskets';
+import { AccessType, ParameterType } from '../../../types/baskets';
 import { useBasketsContext } from '../../../context/BasketsContext';
 import { usePrevious } from '../../../hooks/usePrevious';
 
@@ -180,6 +180,7 @@ export default function Basket() {
               selectedBasket && parameterFiles.map((args, index) => {
                 const title = getExpertName(args.params);
                 return <Settings
+                  readonly={basket.accessType === AccessType.Investor}
                   disabled={hasError}
                   key={`${selectedBasket}-${index}`}
                   title={`EA: "${title}"`}

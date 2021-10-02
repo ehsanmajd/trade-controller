@@ -89,9 +89,9 @@ export default function BasketEdit({ userId, serverId, onClose }: Props) {
     }
   }
 
-  const usersDatasource = async (keyword: string) => {
+  const usersDatasource = async (keyword: string, invalidUsers: UserAccessType[]) => {
     const users = await service.searchUsers(keyword);
-    return users.map(mapUserToChip);
+    return users.filter(x => !invalidUsers.some(u => u.userId === x.id)).map(mapUserToChip);
   }
 
   const [
@@ -151,14 +151,14 @@ export default function BasketEdit({ userId, serverId, onClose }: Props) {
                   </TableCell>
                   <TableCell>
                     <Chips
-                      datasource={usersDatasource}
+                      datasource={keyword => usersDatasource(keyword, basketUser.users)}
                       value={users.map(mapUserAccessToChip)}
                       onChange={(items) => handleUsersChange(basketUser.basketId, items)}
                     />
                   </TableCell>
                   <TableCell>
                     <Chips
-                      datasource={usersDatasource}
+                      datasource={keyword => usersDatasource(keyword, basketUser.users)}
                       value={investors.map(mapUserAccessToChip)}
                       onChange={(items) => handleInvestorsChange(basketUser.basketId, items)}
                     />
