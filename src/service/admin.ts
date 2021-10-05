@@ -45,3 +45,21 @@ export const toggleActive = async (id: string) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/users/toggle-active', { id });
   return data;
 }
+
+export const addServer =
+  async (userId: string, address: string) => {
+    const { data } = await axiosApiInstance.post(BASE_URL + '/server', {
+      address,
+      userId
+    });
+    return data;
+  }
+
+export const updateServer = async (id: string, address: string, userId: string) => {
+  const { data } = await axiosApiInstance.put(BASE_URL + '/server', {
+    address,
+    id,
+    userId
+  });
+  return data;
+}

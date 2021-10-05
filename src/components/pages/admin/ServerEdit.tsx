@@ -4,7 +4,8 @@ import { TableContainer, Paper, TableCell, TableHead, TableRow, IconButton, Text
 import Table from '@material-ui/core/Table/Table';
 import TableBody from '@material-ui/core/TableBody/TableBody';
 import { Add, Cancel, CheckCircle, Remove } from '@material-ui/icons';
-import * as service from '../../../service'
+import * as service from '../../../service';
+import * as adminServices from '../../../service/admin';
 import { useCallback } from 'react';
 import Link from '@material-ui/core/Link/Link';
 
@@ -93,10 +94,10 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
 
   const handleSubmit = async () => {
     if (mode === 'add') {
-      await service.addServerForUser(userId, address);
+      await adminServices.addServer(userId, address);
     }
     else if (mode === 'edit') {
-      await service.updateServer(selectedServerIdToEdit, address, userId);
+      await adminServices.updateServer(selectedServerIdToEdit, address, userId);
     }
     handleCancel();
     reset();

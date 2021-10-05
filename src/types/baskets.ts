@@ -51,3 +51,11 @@ export type BasketUsers = {
 };
 
 export type BasketUserResponse = BasketUsers[];
+
+export interface UserBasketPermission {
+  id: string;
+  basketId: string;
+  accessType: AccessType;
+  address: string;
+  basketName: string;
+}
