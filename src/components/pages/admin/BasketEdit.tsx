@@ -65,8 +65,8 @@ export default function BasketEdit({ userId, serverId, onClose }: Props) {
       const basketsUser = await adminServices.getBasketsByServerIdForAdmin(serverId);
       setBasketsUser(basketsUser);
     },
-    [userId, setBasketsUser]
-  )
+    [serverId, setBasketsUser]
+  );
 
   useEffect(
     () => {

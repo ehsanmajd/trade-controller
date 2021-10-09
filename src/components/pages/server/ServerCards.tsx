@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BasketModel, UserAccessType } from '../../../types/baskets';
 import ServerCard from './ServerCard';
 import * as services from '../../../service';
-import { Card, CardContent, makeStyles, Typography, Button, TextField } from '@material-ui/core';
+import { Card, CardContent, makeStyles,  Button, TextField } from '@material-ui/core';
 import Row from '../../Row';
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -36,7 +36,7 @@ const schema = yup.object().shape({
 const AddServer: React.FC<AddButtonProp> = ({ onAdd }) => {
   const classes = useStyles();
   const [mode, setMode] = useState<'view' | 'edit'>('view');
-  const { handleSubmit, control, register, reset, formState } = useForm<FormItems>({
+  const { handleSubmit, control, register, reset } = useForm<FormItems>({
     defaultValues: {
       address: ''
     },

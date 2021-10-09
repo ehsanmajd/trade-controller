@@ -35,7 +35,6 @@ interface Props {
 export default function ChipsArray({ datasource, value, onChange = () => undefined, addDisabled = false }: Props) {
   const classes = useStyles();
   const [mode, setMode] = React.useState<'view' | 'edit'>('view');
-  const [loading, setLoading] = React.useState(false);
   const [users, setUsers] = React.useState([]);
 
   const handleDelete = (chipToDelete: Value) => () => {
@@ -74,7 +73,6 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
         getOptionLabel={option => option.label}
         filterOptions={x => x}
         autoComplete
-        loading={loading}
         includeInputInList
         onChange={handleChange}
         onInputChange={async (event: object, value: string, reason: string) => {
