@@ -93,6 +93,11 @@ export const loadMyServers = async () => {
   return servers;
 }
 
+export const loadMyBaskets = async () => {
+  const { data: servers } = await axiosApiInstance.get(BASE_URL + '/server?v2=1');
+  return servers;
+}
+
 export const loadSharedServers = async () => {
   const { data: servers } = await axiosApiInstance.get(BASE_URL + '/server?shared=true');
   return servers;
@@ -106,20 +111,25 @@ export const addServer =
     return data;
   }
 
+export const deleteMyServer = async (id: string) => {
+  const { data } = await axiosApiInstance.delete(BASE_URL + '/server/' + id);
+  return data;
+}
+
 export const getServersByUserId = async (userId: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/server/' + userId);
   return data as { id: string, address: string }[];
 }
 
-export const deleteServer = async (id: string, userId: string) => {
-  const { data } = await axiosApiInstance.post(BASE_URL + '/server/delete', {
-    userId,
-    serverId: id
-  });
+export const deleteSharedBasket = async (id: string) => {
+  const { data } = await axiosApiInstance.delete(BASE_URL + `/permission/${id}`);
   return data;
 }
 
-export const deleteSharedBasket = async (id: string) => {
-  const { data } = await axiosApiInstance.delete(BASE_URL + `/permission/${id}`);
+export const updateServer = async (id: string, address: string) => {
+  const { data } = await axiosApiInstance.put(BASE_URL + `/server/`, {
+    id,
+    address
+  });
   return data;
 }

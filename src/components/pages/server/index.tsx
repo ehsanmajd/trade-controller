@@ -1,5 +1,5 @@
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import BasketList from './BasketList';
+import ServerCards from './ServerCards';
 import SharedBaskets from './SharedBaskets'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,7 +23,7 @@ export default function Index() {
 
   return (
     <>
-      <BasketList />
+      <ServerCards />
       <hr />
       <hr />
       <SharedBaskets />

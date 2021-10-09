@@ -63,3 +63,8 @@ export const updateServer = async (id: string, address: string, userId: string) 
   });
   return data;
 }
+
+export const deleteServer = async (id: string, userId: string) => {
+  const { data } = await axiosApiInstance.delete(BASE_URL + `/server/${id}/${userId}`);
+  return data;
+}

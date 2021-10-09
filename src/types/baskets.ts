@@ -22,6 +22,7 @@ export type ParameterFileType = {
   headerValue: string;
 }
 export interface BasketModel {
+  basketId: string;
   serverId: string;
   name: string;
   info: {
@@ -31,6 +32,7 @@ export interface BasketModel {
   parameters: ParameterFileType[];
   success: boolean;
   accessType?: AccessType;
+  address: string;
 }
 
 export type UserAccessType = {

@@ -1,6 +1,7 @@
-import { MenuItem, Select } from '@material-ui/core';
-import { Button, createStyles, InputLabel, makeStyles, Theme } from '@material-ui/core'
 import React from 'react'
+import { MenuItem, Select } from '@material-ui/core';
+import { Button, InputLabel } from '@material-ui/core'
+import Row from '../../Row';
 import { useForm, Controller } from "react-hook-form";
 import DetailContainer from './DetailContainer';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -18,22 +19,6 @@ interface Input {
   name: string;
   label?: string;
   attributes?: any;
-}
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    row: {
-      marginTop: 4,
-      marginBottom: 4,
-      padding: 2,
-      boxSizing: 'border-box'
-    },
-  }),
-);
-
-const Row: React.FC = ({ children }) => {
-  const classes = useStyles();
-  return <div className={classes.row}>{children}</div>
 }
 
 interface SettingsProps {

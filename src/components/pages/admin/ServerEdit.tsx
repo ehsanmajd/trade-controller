@@ -112,7 +112,7 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
   )
 
   const deleteServer = async (serverId: string) => {
-    await service.deleteServer(serverId, userId);
+    await adminServices.deleteServer(serverId, userId);
     reset();
   }
 
