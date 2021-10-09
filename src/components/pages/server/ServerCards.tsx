@@ -7,6 +7,7 @@ import Row from '../../Row';
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
+import { useBasketsContext } from '../../../context/BasketsContext';
 
 const useStyles = makeStyles({
   root: {
@@ -104,6 +105,7 @@ interface ServerInfo {
 const ServerCards: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [servers, setServers] = useState<ServerInfo[]>([]);
+  const { reset: resetBaskets } = useBasketsContext();
 
   const load = async () => {
     const baskets = await services.loadMyServers() as (BasketModel &
@@ -136,7 +138,7 @@ const ServerCards: React.FC = () => {
       }
       return acc;
     }, []);
-
+    resetBaskets();
     setServers(servers);
     setLoading(false);
   }

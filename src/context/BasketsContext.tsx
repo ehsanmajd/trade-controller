@@ -8,6 +8,7 @@ export interface BasketsContextDataModel {
 export interface UserContextModel {
   data: BasketsContextDataModel;
   refresh: () => void;
+  reset: () => void;
   hasError: boolean;
 }
 
@@ -17,7 +18,8 @@ export const BasketsContext = React.createContext<UserContextModel>({
     refreshTime: null
   },
   refresh: () => undefined,
-  hasError: false
+  hasError: false,
+  reset: () => undefined
 });
 
 export const useBasketsContext = () => React.useContext(BasketsContext);

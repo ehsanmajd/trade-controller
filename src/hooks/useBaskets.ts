@@ -8,6 +8,11 @@ interface State {
   baskets: BasketModel[];
 }
 
+const INIT_STATE = {
+  baskets: [],
+  refreshTime: null
+};
+
 function reducer(state: State, action: any) {
   switch (action.type) {
     case 'REFRESH':
@@ -26,6 +31,8 @@ function reducer(state: State, action: any) {
           baskets: newBaskets
         }
       }
+    case 'RESET':
+      return INIT_STATE;
     default:
       return state;
   }
@@ -42,10 +49,7 @@ const refreshActionCreator = () => {
 export function useBaskets() {
   // const [refreshTime, setRefreshTime] = useState<Date | null>(null);
   // const [baskets, setBaskets] = useState<BasketModel[]>([]);
-  const [{ refreshTime, baskets }, dispatch] = useThunkReducer(reducer, {
-    baskets: [],
-    refreshTime: null
-  });
+  const [{ refreshTime, baskets }, dispatch] = useThunkReducer(reducer, INIT_STATE);
 
   // const refresh = useCallback(async function () {
   //   const timeStamp = new Date();
@@ -66,17 +70,19 @@ export function useBaskets() {
   //   return baskets;
   // }, [prevBaskets]);
 
-  
+
   const hasError = baskets.some(x => !x.success);
-  
-  
+
+
   const refresh = useCallback(() => dispatch(refreshActionCreator()), [dispatch]);
+  const reset = useCallback(() => dispatch({ type: 'RESET' }), [dispatch]);
   // useInterval(refresh, 20 * 1000);
 
   return {
     refreshTime,
     baskets,
     refresh,
-    hasError
+    hasError,
+    reset
   }
 }

@@ -68,7 +68,7 @@ export const signOut = async (refreshToken: string) => {
 }
 
 export const getBaskets = async () => {
-  const { data } = await axiosApiInstance.get(BASE_URL + '/baskets');
+  const { data } = await axiosApiInstance.get(BASE_URL + '/baskets?v2=1');
   return data;
 }
 
