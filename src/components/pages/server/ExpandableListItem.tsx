@@ -4,10 +4,18 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/';
 import { AccessType, UserAccessType } from '../../../types/baskets';
 import Chips from '../../Chips';
 import * as services from '../../../service';
 import { User } from '../../../types/user';
+import { useUserContext } from '../../../context/UserContext';
+
+const useStyles = makeStyles({
+  section: {
+    flex: 1
+  },
+});
 
 interface Props {
   name: string;
@@ -17,6 +25,8 @@ interface Props {
 }
 
 const ExpandableListItem: React.FC<Props> = ({ name, users: basketUsers = [], onBasketChange, disabled = true }) => {
+  const classes = useStyles();
+  const currentUser = useUserContext();
   const users = basketUsers.filter(x => x.accessType === AccessType.User);
   const investors = basketUsers.filter(x => x.accessType === AccessType.Investor);
 
@@ -36,7 +46,10 @@ const ExpandableListItem: React.FC<Props> = ({ name, users: basketUsers = [], on
 
   const usersDatasource = async (keyword: string) => {
     const users = await services.searchUsers(keyword);
-    return users.filter(x => !basketUsers.some(u => u.userId === x.id)).map(mapUserToChip);
+    return users
+      .filter(x => x.id !== currentUser.data.userId)
+      .filter(x => !basketUsers.some(u => u.userId === x.id))
+      .map(mapUserToChip);
   }
 
   const handleChange = (items, accessType: AccessType) => {
@@ -58,7 +71,7 @@ const ExpandableListItem: React.FC<Props> = ({ name, users: basketUsers = [], on
         <Typography>{name}</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <div>
+        <div className={classes.section}>
           <h6>Users:</h6>
           <Chips
             datasource={usersDatasource}
@@ -67,7 +80,7 @@ const ExpandableListItem: React.FC<Props> = ({ name, users: basketUsers = [], on
             disabled={disabled}
           />
         </div>
-        <div>
+        <div className={classes.section}>
           <h6>Investors:</h6>
           <Chips
             datasource={usersDatasource}
