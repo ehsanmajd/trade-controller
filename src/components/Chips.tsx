@@ -4,6 +4,9 @@ import Chip from '@material-ui/core/Chip';
 import Paper from '@material-ui/core/Paper';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useDebounce } from '../hooks/useDebounce';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +18,9 @@ const useStyles = makeStyles((theme: Theme) =>
       // padding: theme.spacing(0.5),
       marginLeft: '3px',
       marginRight: '3px',
-      padding: 0
+      padding: 0,
+      minWidth: '40px',
+      minHeight: '20px'
     },
     chip: {
       margin: theme.spacing(0.5),
@@ -29,20 +34,28 @@ interface Props {
   datasource?: (k: string) => Promise<Value[]>;
   value: Value[];
   onChange?: (v: Value[]) => void;
-  addDisabled?: boolean;
+  disabled?: boolean;
 }
 
-export default function ChipsArray({ datasource, value, onChange = () => undefined, addDisabled = false }: Props) {
+export default function ChipsArray({
+  datasource,
+  value,
+  onChange = () => undefined,
+  disabled = false
+}: Props) {
   const classes = useStyles();
   const [mode, setMode] = React.useState<'view' | 'edit'>('view');
   const [users, setUsers] = React.useState([]);
+  const [keyword, setKeyword] = useState('');
+
+  const debouncedKeyword = useDebounce(keyword);
 
   const handleDelete = (chipToDelete: Value) => () => {
     onChange(value.filter((chip) => chip.key !== chipToDelete.key));
   };
 
   const gotoEditMode = () => {
-    !addDisabled && setMode('edit');
+    !disabled && setMode('edit');
   }
 
 
@@ -54,6 +67,28 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
     }
   }
 
+  useEffect(
+    () => {
+      setMode(disabled ? 'view' : 'edit');
+    },
+    [disabled]
+  );
+
+  useEffect(
+    () => {
+      (
+        async () => {
+          if (!debouncedKeyword) {
+            return;
+          }
+          const users = await datasource(debouncedKeyword);
+          setUsers(users);
+        }
+      )()
+    },
+    [debouncedKeyword]
+  );
+
   return (
     <Paper component="ul" className={classes.root} onClick={gotoEditMode}>
       {value.map((data) => {
@@ -64,11 +99,12 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
               onDelete={handleDelete(data)}
               className={classes.chip}
               size='small'
+              disabled={disabled}
             />
           </li>
         );
       })}
-      {(mode === 'edit' || value.length === 0) && <Autocomplete<Value>
+      {(mode === 'edit') && <Autocomplete<Value>
         options={users}
         getOptionLabel={option => option.label}
         filterOptions={x => x}
@@ -77,8 +113,7 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
         onChange={handleChange}
         onInputChange={async (event: object, value: string, reason: string) => {
           if (reason === 'input') {
-            const users = await datasource(value);
-            setUsers(users);
+            setKeyword(value);
           }
         }}
         renderInput={params => (
@@ -90,9 +125,7 @@ export default function ChipsArray({ datasource, value, onChange = () => undefin
             size='small'
           />
         )}
-        renderOption={option => {
-          return <div>{option.label}</div>;
-        }}
+        renderOption={option => option.label}
       />}
     </Paper>
   );

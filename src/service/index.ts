@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BasketUsers } from '../types/baskets';
 import { getAccessToken, getRefreshToken, setAccessToken } from '../utils/token';
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 export const axiosApiInstance = axios.create();
@@ -93,6 +94,11 @@ export const loadMyServers = async () => {
   return servers;
 }
 
+export const loadServer = async (serverId: string) => {
+  const { data: servers } = await axiosApiInstance.get(BASE_URL + '/server/' + serverId);
+  return servers;
+}
+
 export const loadMyBaskets = async () => {
   const { data: servers } = await axiosApiInstance.get(BASE_URL + '/server?v2=1');
   return servers;
@@ -116,11 +122,6 @@ export const deleteMyServer = async (id: string) => {
   return data;
 }
 
-export const getServersByUserId = async (userId: string) => {
-  const { data } = await axiosApiInstance.get(BASE_URL + '/server/' + userId);
-  return data as { id: string, address: string }[];
-}
-
 export const deleteSharedBasket = async (id: string) => {
   const { data } = await axiosApiInstance.delete(BASE_URL + `/permission/${id}`);
   return data;
@@ -130,6 +131,14 @@ export const updateServer = async (id: string, address: string) => {
   const { data } = await axiosApiInstance.put(BASE_URL + `/server/`, {
     id,
     address
+  });
+  return data;
+}
+
+export const updateBasketPermissions = async (serverId: string, baskets: Omit<BasketUsers, 'basketName'>[]) => {
+  const { data } = await axiosApiInstance.put(BASE_URL + '/permission', {
+    serverId,
+    baskets
   });
   return data;
 }

@@ -68,3 +68,8 @@ export const deleteServer = async (id: string, userId: string) => {
   const { data } = await axiosApiInstance.delete(BASE_URL + `/server/${id}/${userId}`);
   return data;
 }
+
+export const getServersByUserId = async (userId: string) => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/server/' + userId);
+  return data as { id: string, address: string }[];
+}

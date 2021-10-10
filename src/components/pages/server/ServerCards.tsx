@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BasketModel, UserAccessType } from '../../../types/baskets';
 import ServerCard from './ServerCard';
 import * as services from '../../../service';
-import { Card, CardContent, makeStyles,  Button, TextField } from '@material-ui/core';
+import { Card, CardContent, makeStyles, Button, TextField } from '@material-ui/core';
 import Row from '../../Row';
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -150,27 +150,6 @@ const ServerCards: React.FC = () => {
     []
   );
 
-  const handleBasketChange = (
-    server: ServerInfo,
-    baskets: {
-      basketId: string;
-      name: string;
-      users: UserAccessType[]
-    }[]
-  ) => {
-    setServers(servers => {
-      const index = servers.findIndex(x => x.id === server.id);
-      if (index !== -1) {
-        const temp = [...servers];
-        temp[index] = {
-          ...temp[index],
-          baskets
-        };
-        return temp;
-      }
-    });
-  }
-
   const handleAddServer = async (address: string) => {
     if (servers.some(x => x.address === address)) {
       // TODO: Warn user.
@@ -181,20 +160,12 @@ const ServerCards: React.FC = () => {
   }
 
   const handleDelete = async (serverId: string) => {
-    await services.deleteMyServer(serverId);
-    await load();
+    setServers(servers => {
+      return servers.filter(x => x.id !== serverId);
+    })
   }
 
-  const handleAddressSave = async (serverId: string, address: string) => {
-    if (servers.some(x => x.address === address)) {
-      // TODO: Warn user.
-      return;
-    }
-    await services.updateServer(serverId, address);
-    setLoading(true);
-    // TODO: load the updated server only
-    await load();
-  }
+  const addresses = servers.map(x => x.address);
 
   return (
     <>
@@ -209,14 +180,13 @@ const ServerCards: React.FC = () => {
       {
         !loading && servers.map(server => (
           <ServerCard
-            onDelete={() => handleDelete(server.id)}
             key={server.id}
             serverId={server.id}
             address={server.address}
             baskets={server.baskets}
-            onBasketChange={(users) => handleBasketChange(server, users)}
             hasError={server.hasError}
-            onAddressSave={(address) => handleAddressSave(server.id, address)}
+            onDelete={() => handleDelete(server.id)}
+            addresses={addresses}
           />
         ))
       }

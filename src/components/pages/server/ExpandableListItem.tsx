@@ -10,13 +10,13 @@ import * as services from '../../../service';
 import { User } from '../../../types/user';
 
 interface Props {
-  basketId: string;
   name: string;
   users: UserAccessType[];
   onBasketChange: (users: UserAccessType[]) => void;
+  disabled?: boolean;
 }
 
-const ExpandableListItem: React.FC<Props> = ({ basketId, name, users: basketUsers = [], onBasketChange }) => {
+const ExpandableListItem: React.FC<Props> = ({ name, users: basketUsers = [], onBasketChange, disabled = true }) => {
   const users = basketUsers.filter(x => x.accessType === AccessType.User);
   const investors = basketUsers.filter(x => x.accessType === AccessType.Investor);
 
@@ -64,6 +64,7 @@ const ExpandableListItem: React.FC<Props> = ({ basketId, name, users: basketUser
             datasource={usersDatasource}
             value={users.map(mapUserAccessToChip)}
             onChange={items => handleChange(items, AccessType.User)}
+            disabled={disabled}
           />
         </div>
         <div>
@@ -72,6 +73,7 @@ const ExpandableListItem: React.FC<Props> = ({ basketId, name, users: basketUser
             datasource={usersDatasource}
             value={investors.map(mapUserAccessToChip)}
             onChange={items => handleChange(items, AccessType.Investor)}
+            disabled={disabled}
           />
         </div>
       </AccordionDetails>
