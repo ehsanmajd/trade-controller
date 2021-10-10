@@ -17,7 +17,8 @@ const SignOut: React.FC = () => {
             loggedIn: false,
             name: '',
             username: '',
-            userId: null
+            userId: null,
+            roles: ['user']
           });
         }
       )

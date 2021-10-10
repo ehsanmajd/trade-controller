@@ -56,7 +56,8 @@ export default function SignIn() {
     setUser({
       loggedIn: true,
       name: user.name,
-      username: user.username
+      username: user.username,
+      roles: user.roles
     });
   }
 

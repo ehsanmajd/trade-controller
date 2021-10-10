@@ -5,13 +5,14 @@ import {
 import { useUserContext } from '../context/UserContext';
 import jwt_decode from "jwt-decode";
 import { Token } from '../types/token';
+import { getAccessToken } from '../utils/token';
 
 const Auth: React.FC = ({ children }) => {
   const history = useHistory();
   const { data: user, setData: setUser } = useUserContext();
   React.useEffect(
     () => {
-      const accessToken = window.localStorage.getItem('at');
+      const accessToken = getAccessToken();
       if (accessToken) {
         const token = jwt_decode(accessToken) as Token;
         if (Date.now() < token.exp * 1000) {
@@ -19,7 +20,8 @@ const Auth: React.FC = ({ children }) => {
             username: token.username,
             name: token.name,
             userId: token.userId,
-            loggedIn: true
+            loggedIn: true,
+            roles: token.roles
           });
           return;
         }

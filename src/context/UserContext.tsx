@@ -5,6 +5,7 @@ export interface UserContextDataModel {
   username?: string;
   name?: string;
   loggedIn: boolean;
+  roles: string[];
 }
 export interface UserContextModel {
   data: UserContextDataModel;
@@ -15,7 +16,8 @@ export const UserContext = React.createContext<UserContextModel>({
   data: {
     username: '',
     name: '',
-    loggedIn: false
+    loggedIn: false,
+    roles: ['user']
   },
   setData: () => undefined
 });

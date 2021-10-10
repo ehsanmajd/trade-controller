@@ -13,7 +13,8 @@ import GuestUserRouter from './components/Routers/GuestUserRouter';
 
 function App() {
   const [user, setUser] = React.useState<UserContextDataModel>({
-    loggedIn: false
+    loggedIn: false,
+    roles: []
   });
 
   return (
