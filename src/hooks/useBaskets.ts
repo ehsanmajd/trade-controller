@@ -47,32 +47,8 @@ const refreshActionCreator = () => {
 }
 
 export function useBaskets() {
-  // const [refreshTime, setRefreshTime] = useState<Date | null>(null);
-  // const [baskets, setBaskets] = useState<BasketModel[]>([]);
   const [{ refreshTime, baskets }, dispatch] = useThunkReducer(reducer, INIT_STATE);
-
-  // const refresh = useCallback(async function () {
-  //   const timeStamp = new Date();
-  //   let baskets: BasketModel[] = await service.getBaskets();
-  //   console.log('setting baskets', [...baskets]);
-  //   console.log('setting prev', prevBaskets);
-  //   if (prevBaskets === undefined) {
-  //     baskets = baskets.filter(x => x.success);
-  //   }
-  //   else {
-  //     baskets = baskets.filter(x => prevBaskets.some(p => p.serverId === x.serverId));
-  //   }
-
-  //   ReactDOM.unstable_batchedUpdates(() => {
-  //     setRefreshTime(timeStamp);
-  //     setBaskets(baskets);
-  //   })
-  //   return baskets;
-  // }, [prevBaskets]);
-
-
   const hasError = baskets.some(x => !x.success);
-
 
   const refresh = useCallback(() => dispatch(refreshActionCreator()), [dispatch]);
   const reset = useCallback(() => dispatch({ type: 'RESET' }), [dispatch]);
