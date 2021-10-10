@@ -116,7 +116,13 @@ export default function Basket() {
 
     Object.keys(data)
       .forEach(key => {
-        model.find(x => x.name === key)!.value = data[key];
+        const temp = model.find(x => x.name === key)!;
+        if (temp.type === 'bool') {
+          temp.value = data[key] ? 'true': 'false';
+        }
+        else {
+          temp.value = data[key];
+        }
       });
     const basket = baskets.find(x => x.name === selectedBasket);
     model = model.filter(x => x.name !== 'symbol');
