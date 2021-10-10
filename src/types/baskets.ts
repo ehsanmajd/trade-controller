@@ -20,6 +20,7 @@ export type ParameterFileType = {
   params: ParameterType[];
   id: string;
   headerValue: string;
+  updating: boolean;
 }
 export interface BasketModel {
   basketId: string;

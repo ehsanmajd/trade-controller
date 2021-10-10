@@ -1,5 +1,5 @@
 import { Box, createStyles, makeStyles, Theme } from '@material-ui/core';
-import React from 'react'
+import React, { CSSProperties } from 'react'
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -16,10 +16,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DetailContainer: React.FC = ({ children }) => {
+const DetailContainer: React.FC<{ style?: CSSProperties }> = ({ children, style }) => {
   const classes = useStyles();
   return (
-    <Box className={classes.root}>{children}</Box>
+    <Box style={style} className={classes.root}>{children}</Box>
   )
 }
 

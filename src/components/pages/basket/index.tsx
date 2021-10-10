@@ -185,8 +185,10 @@ export default function Basket() {
             {
               selectedBasket && parameterFiles.map((args, index) => {
                 const title = getExpertName(args.params);
+                const updating = args.updating;
                 return <Settings
-                  readonly={basket.accessType === AccessType.Investor}
+                  updating={updating}
+                  readonly={updating || basket.accessType === AccessType.Investor}
                   disabled={hasError}
                   key={`${selectedBasket}-${index}`}
                   title={`EA: "${title}"`}

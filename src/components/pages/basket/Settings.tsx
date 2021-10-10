@@ -28,6 +28,7 @@ interface SettingsProps {
   onSubmit: (data: Record<string, unknown>) => void;
   disabled?: boolean;
   readonly: boolean;
+  updating: boolean;
 }
 
 const Components = {
@@ -239,7 +240,7 @@ const typeMap = {
   double: yup.number().min(0, MESSAGES['positive']).required(),
 }
 
-export default function Settings({ structure = SAMPLE, readonly, title, value = VALUES, onSubmit, disabled = false }: SettingsProps) {
+export default function Settings({ structure = SAMPLE, readonly, title, value = VALUES, onSubmit, disabled = false, updating }: SettingsProps) {
   const shape = structure.reduce((acc, item) => {
     const validation = typeMap[item.type];
     if (!validation) {
@@ -270,8 +271,9 @@ export default function Settings({ structure = SAMPLE, readonly, title, value = 
     [value]
   );
   return (
-    <DetailContainer>
+    <DetailContainer style={{backgroundColor: updating ? '#ccc' : undefined}}>
       <h2>{title}</h2>
+      {updating && <h3>Updating ...</h3>}
       <form onSubmit={handleSubmit(onSubmit)}>
         {
           structure.filter(x => x.name !== 'symbol').map(s => {
