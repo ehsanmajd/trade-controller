@@ -47,7 +47,7 @@ export default function Summary() {
       {baskets.map(basket => {
         return (
           <div key={basket.name} className={classes.baskets}>
-            <h2>Basket: {basket.name}</h2>
+            <h2>Basket: {basket.name} ({basket.parameters.length})</h2>
             <hr />
             <div>
               <BasketInfo data={basket.info} />

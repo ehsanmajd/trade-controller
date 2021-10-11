@@ -180,7 +180,7 @@ export default function Basket() {
         <>
           <BasketInfo data={basket.info} />
           <hr />
-          <h2>Expert Setting</h2>
+          <h2>Expert Setting ({parameterFiles.length})</h2>
           <Grid className={classes.boxContainer}>
             {
               selectedBasket && parameterFiles.map((args, index) => {
