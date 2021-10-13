@@ -112,13 +112,19 @@ export default function Basket() {
     return `${strategy} ${symbol ? `(${symbol})` : ''}`
   }
 
-  async function handleSubmit(data: Record<string, unknown>, model: ParameterType[], filePath: string, headerValue: string) {
+  async function handleSubmit(
+    basketId: string,
+    data: Record<string, unknown>,
+    model: ParameterType[],
+    filePath: string,
+    headerValue: string
+  ) {
 
     Object.keys(data)
       .forEach(key => {
         const temp = model.find(x => x.name === key)!;
         if (temp.type === 'bool') {
-          temp.value = data[key] ? 'true': 'false';
+          temp.value = data[key] ? 'true' : 'false';
         }
         else {
           temp.value = data[key];
@@ -126,7 +132,7 @@ export default function Basket() {
       });
     const basket = baskets.find(x => x.name === selectedBasket);
     model = model.filter(x => x.name !== 'symbol');
-    await service.updateExpert(basket.serverId, selectedBasket, filePath, model, headerValue);
+    await service.updateExpert(basket.serverId, basketId, selectedBasket, filePath, model, headerValue);
     const title = getExpertName(model);
     setSavedExpert(title);
   }
@@ -207,7 +213,7 @@ export default function Basket() {
                     acc[item.name] = item.value;
                     return acc;
                   }, {})}
-                  onSubmit={(data) => handleSubmit(data, args.params, args.id, args.headerValue)}
+                  onSubmit={(data) => handleSubmit(basket.basketId, data, args.params, args.id, args.headerValue)}
                 />
               })
             }
