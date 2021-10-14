@@ -73,3 +73,12 @@ export const getServersByUserId = async (userId: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/server/' + userId);
   return data as { id: string, address: string }[];
 }
+
+export const changePassword = async (userId: string, password: string) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + `/users/change-password`, {
+    userId,
+    password
+  });
+  return data;
+
+}

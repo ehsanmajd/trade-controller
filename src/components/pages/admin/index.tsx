@@ -23,6 +23,7 @@ import ServerEdit from './ServerEdit';
 import BasketEdit from './BasketEdit';
 import { useCallback } from 'react';
 import Link from '@material-ui/core/Link/Link';
+import ChangePassword from './ChangePassword';
 
 const useStyles = makeStyles({
   table: {
@@ -56,8 +57,7 @@ export default function Index() {
   const [mode, setMode] = useState<'view' | 'edit' | 'add'>('view')
   const [form, setForm] = useState(EMPTY_FORM_VALUES);
   const [users, setUsers] = useState<User[]>([]);
-  const [openServersDialog, setOpenServersDialog] = useState(false);
-  const [openBasketsDialog, setOpenBasketsDialog] = useState(false);
+  const [dialogueState, setDialougeState] = useState<'server' | 'change-password' | 'basket' | 'closed'>('closed');
   const [selectedUserToEditServers, setSelectedUserToEditServers] = useState(null);
   const [selectedUserIdToEdit, setSelectedUserIdToEdit] = useState(null);
   const [selectedServerIdToEdit, setSelectedServerIdToEdit] = useState(null);
@@ -107,14 +107,13 @@ export default function Index() {
   }
 
   const editServers = (user: User) => {
-    setOpenServersDialog(true);
+    setDialougeState('server');
     setSelectedUserToEditServers(user.id);
   }
 
   const handleOpenBasket = serverId => {
     setSelectedServerIdToEdit(serverId);
-    setOpenServersDialog(false);
-    setOpenBasketsDialog(true);
+    setDialougeState('basket');
   }
 
   const gotoEditMode = (userId: string) => {
@@ -127,15 +126,18 @@ export default function Index() {
   }
 
   const handleClose = () => {
-    setOpenServersDialog(false);
-    setOpenBasketsDialog(false);
+    setDialougeState('closed');
     setSelectedServerIdToEdit(null);
     setSelectedUserIdToEdit(null);
   }
 
   const handleCloseBasketModal = () => {
-    setOpenBasketsDialog(false);
-    setOpenServersDialog(true);
+    setDialougeState('server');
+  }
+
+  const gotoChangePasswordMode = (userId: string) => {
+    setSelectedUserIdToEdit(userId);
+    setDialougeState('change-password');
   }
 
   useEffect(
@@ -145,7 +147,7 @@ export default function Index() {
     [reset]
   )
 
-  const modalOpen = openBasketsDialog || openServersDialog;
+  const modalOpen = dialogueState !== 'closed';
 
   return (
     <TableContainer component={Paper}>
@@ -216,7 +218,8 @@ export default function Index() {
                         {!user.active && <ToggleOff color='secondary' />}
                       </IconButton>
                       <Link href='#' className={classes.link} onClick={() => editServers(user)}>Servers</Link> /
-                      <Link href='#' className={classes.link} onClick={() => gotoEditMode(user.id)}>Edit</Link>
+                      <Link href='#' className={classes.link} onClick={() => gotoEditMode(user.id)}>Edit</Link> /
+                      <Link href='#' className={classes.link} onClick={() => gotoChangePasswordMode(user.id)}>Change password</Link> 
                     </>
                   }
 
@@ -262,8 +265,9 @@ export default function Index() {
       </Table>
       <Modal open={modalOpen}>
         <>
-          {openServersDialog && <ServerEdit userId={selectedUserToEditServers} onOpenBasket={handleOpenBasket} onClose={handleClose} />}
-          {openBasketsDialog && <BasketEdit userId={selectedUserToEditServers} serverId={selectedServerIdToEdit} onClose={handleCloseBasketModal} />}
+          {dialogueState === 'server' && <ServerEdit userId={selectedUserToEditServers} onOpenBasket={handleOpenBasket} onClose={handleClose} />}
+          {dialogueState === 'basket' && <BasketEdit userId={selectedUserToEditServers} serverId={selectedServerIdToEdit} onClose={handleCloseBasketModal} />}
+          {dialogueState === 'change-password' && <ChangePassword userId={selectedUserIdToEdit} onClose={handleClose} />}
         </>
       </Modal>
     </TableContainer>
