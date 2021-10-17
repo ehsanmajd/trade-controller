@@ -120,12 +120,10 @@ export default function Basket() {
     filePath: string,
     headerValue: string
   ) {
-
+    let modelCopy = JSON.parse(JSON.stringify(model));
     Object.keys(data)
       .forEach(key => {
-        const temp = { 
-          ...model.find(x => x.name === key)! 
-        };
+        const temp = modelCopy.find(x => x.name === key)!;
         if (temp.type === 'bool') {
           temp.value = data[key] ? 'true' : 'false';
         }
@@ -134,10 +132,10 @@ export default function Basket() {
         }
       });
     const basket = baskets.find(x => x.name === selectedBasket);
-    model = model.filter(x => x.name !== 'symbol');
-    await service.updateExpert(basket.serverId, basketId, selectedBasket, filePath, model, headerValue);
+    modelCopy = modelCopy.filter(x => x.name !== 'symbol');
+    await service.updateExpert(basket.serverId, basketId, selectedBasket, filePath, modelCopy, headerValue);
     setSubmitCount(state => state + 1);
-    const title = getExpertName(model);
+    const title = getExpertName(modelCopy);
     setSavedExpert(title);
   }
 
