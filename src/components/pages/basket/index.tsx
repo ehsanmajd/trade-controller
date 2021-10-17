@@ -75,6 +75,7 @@ export default function Basket() {
   const classes = useStyles();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [savedExpert, setSavedExpert] = useState<string>('');
+  const [submitCount, setSubmitCount] = useState<number>(0);
   const { data, hasError, refresh } = useBasketsContext();
   const prevData = usePrevious(data);
   const baskets = hasError ? (prevData?.baskets || []) : data.baskets;
@@ -122,7 +123,9 @@ export default function Basket() {
 
     Object.keys(data)
       .forEach(key => {
-        const temp = model.find(x => x.name === key)!;
+        const temp = { 
+          ...model.find(x => x.name === key)! 
+        };
         if (temp.type === 'bool') {
           temp.value = data[key] ? 'true' : 'false';
         }
@@ -133,6 +136,7 @@ export default function Basket() {
     const basket = baskets.find(x => x.name === selectedBasket);
     model = model.filter(x => x.name !== 'symbol');
     await service.updateExpert(basket.serverId, basketId, selectedBasket, filePath, model, headerValue);
+    setSubmitCount(state => state + 1);
     const title = getExpertName(model);
     setSavedExpert(title);
   }
@@ -196,7 +200,7 @@ export default function Basket() {
                   updating={updating}
                   readonly={updating || basket.accessType === AccessType.Investor}
                   disabled={hasError}
-                  key={`${selectedBasket}-${index}`}
+                  key={`${selectedBasket}-${index}-${submitCount}`}
                   title={`EA: "${title}"`}
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
