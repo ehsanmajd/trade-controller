@@ -133,7 +133,18 @@ export default function Basket() {
       });
     const basket = baskets.find(x => x.name === selectedBasket);
     modelCopy = modelCopy.filter(x => x.name !== 'symbol');
-    await service.updateExpert(basket.serverId, basketId, selectedBasket, filePath, modelCopy, headerValue);
+    await service.updateExpert({
+      serverId: basket.serverId,
+      basketId,
+      basketName: selectedBasket,
+      fileId: filePath,
+      content: modelCopy,
+      headerValue,
+      prvContent: basket.parameters.find(x => x.id === filePath)
+        ?.params
+        .filter(x => x.name !== 'symbol')
+        .map(x => ({ name: x.name, value: x.value }))
+    });
     setSubmitCount(state => state + 1);
     const title = getExpertName(modelCopy);
     setSavedExpert(title);
