@@ -162,3 +162,8 @@ export const updateBasketPermissions = async (serverId: string, baskets: Omit<Ba
   });
   return data;
 }
+
+export const getBasketLogs = async (basketId: string) => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/logs/' + basketId);
+  return data;
+}

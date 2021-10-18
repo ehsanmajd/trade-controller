@@ -13,6 +13,7 @@ import BasketInfo from './BasketInfo';
 import { AccessType, ParameterType } from '../../../types/baskets';
 import { useBasketsContext } from '../../../context/BasketsContext';
 import { usePrevious } from '../../../hooks/usePrevious';
+import { getExpertName } from '../../../utils/expert'; 
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -104,13 +105,6 @@ export default function Basket() {
 
   function handleBasketChange(e, value) {
     setSelectedBasket(value?.name);
-  }
-
-  function getExpertName(model: ParameterType[]): string {
-    const symbol = model.find(x => x.name === 'symbol')?.type;
-
-    const strategy = model.find(x => x.name === 'strategy_serial')?.value?.toString() || 'Unknow';
-    return `${strategy} ${symbol ? `(${symbol})` : ''}`
   }
 
   async function handleSubmit(

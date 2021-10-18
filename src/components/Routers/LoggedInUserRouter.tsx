@@ -10,6 +10,7 @@ import Admin from "../../pages/Admin";
 import Auth from "../Auth";
 import SignOut from "../../pages/SignOut";
 import AccessDenied from '../../pages/AccessDenied';
+import Logs from '../../pages/Logs';
 
 interface Props {
   routePrefix: string;
@@ -28,6 +29,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
           </Route>
           <Route path={`${routePrefix}/summary`}>
             <Summary />
+          </Route>
+          <Route path={`${routePrefix}/logs`}>
+            <Logs />
           </Route>
           <Route path={`${routePrefix}/admin`}>
             <Admin />
