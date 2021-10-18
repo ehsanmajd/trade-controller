@@ -42,14 +42,17 @@ const Header: FC = () => {
   const HeaderPaper = ({ name, path }) => <Paper className={getClassNames(path)} onClick={() => history.push('/dashboard/' + path)}>{name}</Paper>;
 
   return <Grid container spacing={1} justify='flex-start' alignItems='center'>
-    <Grid item xs={4} sm={3}>
+    <Grid item xs={3} sm={3}>
       <HeaderPaper path='setting' name='Setting' />
     </Grid>
-    <Grid item xs={4} sm={3}>
+    <Grid item xs={3} sm={3}>
       <HeaderPaper path='home' name='Basket' />
     </Grid>
-    <Grid item xs={4} sm={3}>
+    <Grid item xs={3} sm={3}>
       <HeaderPaper path='summary' name='Summary' />
+    </Grid>
+    <Grid item xs={3} sm={3}>
+      <HeaderPaper path='logs' name='Logs' />
     </Grid>
     <Grid item xs={12} sm={3}>
       {refreshTime && <Grid container justify='center'>
