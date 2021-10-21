@@ -72,6 +72,24 @@ const Index: React.FC = () => {
   const nextDisabled = (index === -1 && !basket) || index === baskets.length - 1;
 
 
+  const categorizeLogs = () => {
+    const ids = [];
+    logs.forEach(log => {
+      const [, fileId] = log.entityId.split('____');
+      if (ids.indexOf(fileId) === -1) {
+        ids.push(fileId);
+      }
+    });
+
+    return ids.map((id) => {
+      return {
+        id,
+        records: logs.filter(log => log.entityId.split('____')[1] === id)
+      }
+    });
+  }
+
+
   useEffect(
     () => {
       (
@@ -141,11 +159,19 @@ const Index: React.FC = () => {
         </Grid>
       </Grid>
       {
-        basket?.parameters.map(expert => {
-          const expertLogs = logs.filter(x => x.entityId.split('____')[1] === expert.id);
+        categorizeLogs().map(expert => {
+          const expertName = (
+            () => {
+              const item = basket?.parameters.find(x => x.id === expert.id);
+              if (item) {
+                return getExpertName(item.params)
+              }
+              return expert.id;
+            }
+          )()
           return (
             <>
-              <h2>{getExpertName(expert.params)}</h2>
+              <h2>{expertName}</h2>
               <Table>
                 <TableHead>
                   <TableCell>Index</TableCell>
@@ -156,7 +182,7 @@ const Index: React.FC = () => {
                   <TableCell>New</TableCell>
                 </TableHead>
                 <TableBody>
-                  {expertLogs.map((log, index) => {
+                  {expert.records.map((log, index) => {
                     return (
                       <TableRow key={log.id}>
                         <TableCell>{index + 1}</TableCell>
@@ -172,14 +198,13 @@ const Index: React.FC = () => {
                       </TableRow>
                     )
                   })}
-                  {expertLogs.length === 0 && <TableCell>No logs found.</TableCell>}
+                  {expert.records.length === 0 && <TableCell>No logs found.</TableCell>}
                 </TableBody>
               </Table>
             </>
           )
         })
       }
-
     </Paper>
   )
 }
