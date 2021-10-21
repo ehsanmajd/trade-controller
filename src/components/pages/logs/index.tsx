@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 
+type LogDetail = { name: string, value: unknown }[];
+
 interface LogModel {
   id: string;
   type: string;
@@ -17,16 +19,40 @@ interface LogModel {
   ipAddress: string;
   date: Date;
   description: {
-    old: { name: string, value: unknown }[],
-    new: { name: string, value: unknown }[]
+    old: LogDetail,
+    new: LogDetail
   };
   entityId: string;
 }
 
-const visualize = (records: { name: string, value: unknown }[]) => {
+const visualize = (records: LogDetail) => {
   return records
     .reduce((acc, item) => {
       return `${acc}<br />${item.name}: ${item.value}`
+    }, '');
+}
+
+const compareAndVisualize = (old: LogDetail, current: LogDetail) => {
+  return current
+    .reduce((acc, item) => {
+      const oldValue = old.find(x => x.name === item.name)?.value;
+      const changed = (
+        () => {
+          if (oldValue === '0' && item.value === 'false') {
+            return false;
+          }
+          if (oldValue === '1' && item.value === 'true') {
+            return false;
+          }
+          return oldValue !== item.value
+        }
+      )();
+      if (!changed) {
+        return `${acc}<br />${item.name}: ${item.value}`
+      }
+      else {
+        return `${acc}<br />${item.name}: <span style='color:"red"'>${item.value}</span>`
+      }
     }, '');
 }
 
@@ -193,7 +219,7 @@ const Index: React.FC = () => {
                           <div dangerouslySetInnerHTML={{ __html: visualize(log.description.old) }}></div>
                         </TableCell>
                         <TableCell>
-                          <div dangerouslySetInnerHTML={{ __html: visualize(log.description.new) }}></div>
+                          <div dangerouslySetInnerHTML={{ __html: compareAndVisualize(log.description.old, log.description.new) }}></div>
                         </TableCell>
                       </TableRow>
                     )
