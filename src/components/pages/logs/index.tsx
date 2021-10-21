@@ -38,10 +38,10 @@ const compareAndVisualize = (old: LogDetail, current: LogDetail) => {
       const oldValue = old.find(x => x.name === item.name)?.value;
       const changed = (
         () => {
-          if (oldValue === '0' && item.value === 'false') {
+          if (oldValue?.toString() === '0' && item.value === 'false') {
             return false;
           }
-          if (oldValue === '1' && item.value === 'true') {
+          if (oldValue?.toString() === '1' && item.value === 'true') {
             return false;
           }
           return oldValue !== item.value
