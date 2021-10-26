@@ -13,7 +13,7 @@ import BasketInfo from './BasketInfo';
 import { AccessType, ParameterType } from '../../../types/baskets';
 import { useBasketsContext } from '../../../context/BasketsContext';
 import { usePrevious } from '../../../hooks/usePrevious';
-import { getExpertName } from '../../../utils/expert'; 
+import { getExpertName } from '../../../utils/expert';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -74,9 +74,9 @@ const getRelatedComponent = (type: string) => {
 
 export default function Basket() {
   const classes = useStyles();
+  const [selectedExpert, setSelectedExpert] = useState<string | null>(null);
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [savedExpert, setSavedExpert] = useState<string>('');
-  const [submitCount, setSubmitCount] = useState<number>(0);
   const { data, hasError, refresh } = useBasketsContext();
   const prevData = usePrevious(data);
   const baskets = hasError ? (prevData?.baskets || []) : data.baskets;
@@ -101,6 +101,28 @@ export default function Basket() {
     },
     // eslint-disable-next-line 
     [baskets]
+  )
+
+  useEffect(
+    () => {
+      const handleOutsideClick = (e) => {
+        let parent = e.target.parentElement;
+        do {
+          const classList = Array.from(parent.classList);
+          if (classList.indexOf('expert') !== -1) {
+            break;
+          }
+          parent = parent.parentElement;
+        } while (parent !== null);
+        if (parent === null) {
+          setSelectedExpert(null);
+        }
+      }
+
+      document.body.addEventListener('click', handleOutsideClick)
+      return () => document.body.removeEventListener('click', handleOutsideClick)
+    },
+    []
   )
 
   function handleBasketChange(e, value) {
@@ -139,7 +161,6 @@ export default function Basket() {
         .filter(x => x.name !== 'symbol')
         .map(x => ({ name: x.name, value: x.value }))
     });
-    setSubmitCount(state => state + 1);
     const title = getExpertName(modelCopy);
     setSavedExpert(title);
   }
@@ -200,10 +221,11 @@ export default function Basket() {
                 const title = getExpertName(args.params);
                 const updating = args.updating;
                 return <Settings
+                  preventUpdate={args.id === selectedExpert}
                   updating={updating}
                   readonly={updating || basket.accessType === AccessType.Investor}
                   disabled={hasError}
-                  key={`${selectedBasket}-${index}-${submitCount}`}
+                  key={`${selectedBasket}-${index}`}
                   title={`EA: "${title}"`}
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
@@ -221,6 +243,7 @@ export default function Basket() {
                     return acc;
                   }, {})}
                   onSubmit={(data) => handleSubmit(basket.basketId, data, args.params, args.id, args.headerValue)}
+                  onFocus={() => setSelectedExpert(args.id)}
                 />
               })
             }

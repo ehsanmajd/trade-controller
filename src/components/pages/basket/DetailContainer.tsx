@@ -16,10 +16,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const DetailContainer: React.FC<{ style?: CSSProperties }> = ({ children, style }) => {
+const DetailContainer: React.FC<{ style?: CSSProperties, className?: string }> = ({ children, style, className }) => {
   const classes = useStyles();
   return (
-    <Box style={style} className={classes.root}>{children}</Box>
+    <Box style={style} className={`${classes.root} ${className ?? ''}`}>{children}</Box>
   )
 }
 

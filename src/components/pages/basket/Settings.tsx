@@ -29,6 +29,8 @@ interface SettingsProps {
   disabled?: boolean;
   readonly: boolean;
   updating: boolean;
+  onFocus: VoidFunction;
+  preventUpdate: boolean;
 }
 
 const Components = {
@@ -240,7 +242,17 @@ const typeMap = {
   double: yup.number().min(0, MESSAGES['positive']).required(),
 }
 
-export default function Settings({ structure = SAMPLE, readonly, title, value = VALUES, onSubmit, disabled = false, updating }: SettingsProps) {
+export default function Settings({
+  structure = SAMPLE,
+  readonly,
+  title,
+  value = VALUES,
+  onSubmit,
+  disabled = false,
+  updating,
+  onFocus,
+  preventUpdate
+}: SettingsProps) {
   const shape = structure.reduce((acc, item) => {
     const validation = typeMap[item.type];
     if (!validation) {
@@ -263,7 +275,7 @@ export default function Settings({ structure = SAMPLE, readonly, title, value = 
 
   useEffect(
     () => {
-      if (!formState.isDirty) {
+      if (!preventUpdate) {
         reset(value);
       }
     },
@@ -271,7 +283,10 @@ export default function Settings({ structure = SAMPLE, readonly, title, value = 
     [value]
   );
   return (
-    <DetailContainer style={{backgroundColor: updating ? '#ccc' : undefined}}>
+    <DetailContainer
+      style={{ backgroundColor: updating ? '#ccc' : undefined }}
+      className='expert'
+    >
       <h2>{title}</h2>
       {updating && <h3>Updating ...</h3>}
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -289,7 +304,8 @@ export default function Settings({ structure = SAMPLE, readonly, title, value = 
                     ...(s.attributes || {}),
                     ...field,
                     error: !!fieldState.error,
-                    helperText: fieldState.error?.message
+                    helperText: fieldState.error?.message,
+                    onFocus: () => onFocus()
                   })
                 }}
                 // @ts-ignore
