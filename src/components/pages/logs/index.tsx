@@ -212,7 +212,7 @@ const Index: React.FC = () => {
                     return (
                       <TableRow key={log.id}>
                         <TableCell>{index + 1}</TableCell>
-                        <TableCell>{new Date(log.date).toTimeString()}</TableCell>
+                        <TableCell>{new Date(log.date).toLocaleString()}</TableCell>
                         <TableCell>{log.username}</TableCell>
                         <TableCell>{log.ipAddress}</TableCell>
                         <TableCell>
