@@ -51,7 +51,7 @@ const compareAndVisualize = (old: LogDetail, current: LogDetail) => {
         return `${acc}<br />${item.name}: ${item.value}`
       }
       else {
-        return `${acc}<br /><span style='color:red'>${item.name}: ${item.value}</span>`
+        return `${acc}<br /><span style='color:red'>${item.name}: <b>${item.value}</b></span>`
       }
     }, '');
 }
