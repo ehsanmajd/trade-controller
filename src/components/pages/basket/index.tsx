@@ -95,6 +95,13 @@ export default function Basket() {
 
   useEffect(
     () => {
+      setSelectedExpert(null);
+    },
+    [selectedBasket]
+  )
+
+  useEffect(
+    () => {
       if (!selectedBasket && baskets && baskets.length) {
         setSelectedBasket(baskets?.[0]?.name);
       }
@@ -141,6 +148,7 @@ export default function Basket() {
     });
     const title = getExpertName(modelCopy);
     setSavedExpert(title);
+    setSelectedExpert(null);
   }
 
   function navigate(mode: 'back' | 'forward') {
