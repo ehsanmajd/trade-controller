@@ -158,13 +158,13 @@ export default function Settings({
     >
       <h2 style={{fontSize: '20px'}}>
         {title}
-        <span>
+        {!readonly && <span>
           <IconButton
             onClick={() => onModeChange('edit')}
           >
             <EditIcon color='secondary' />
           </IconButton>
-        </span>
+        </span>}
       </h2>
       {updating && <h3>Updating ...</h3>}
       <form onSubmit={handleSubmit(onSubmit)}>
