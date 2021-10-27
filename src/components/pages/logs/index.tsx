@@ -216,10 +216,10 @@ const Index: React.FC = () => {
                         <TableCell>{log.username}</TableCell>
                         <TableCell>{log.ipAddress}</TableCell>
                         <TableCell>
-                          <div dangerouslySetInnerHTML={{ __html: visualize(log.description.old) }}></div>
+                          {log.description.old && <div dangerouslySetInnerHTML={{ __html: visualize(log.description.old) }}></div>}
                         </TableCell>
                         <TableCell>
-                          <div dangerouslySetInnerHTML={{ __html: compareAndVisualize(log.description.old, log.description.new) }}></div>
+                          {log.description.new && <div dangerouslySetInnerHTML={{ __html: compareAndVisualize(log.description.old, log.description.new) }}></div>}
                         </TableCell>
                       </TableRow>
                     )
