@@ -9,11 +9,14 @@ import * as yup from "yup";
 import InputNumber from './InputNumber';
 import TextField from '@material-ui/core/TextField';
 import { useEffect } from 'react';
+import { SAMPLE, VALUES } from './settingMock'
+import EditIcon from '@material-ui/icons/Edit'
+import { IconButton } from '@material-ui/core'
 
 
 type InputTypes = 'string' | 'number' | 'boolean';
 
-interface Input {
+export interface Input {
   component: 'Textbox' | 'Dropdown' | 'Checkbox' | 'Label';
   type: InputTypes;
   name: string;
@@ -21,6 +24,7 @@ interface Input {
   attributes?: any;
 }
 
+type Mode = 'view' | 'edit';
 interface SettingsProps {
   structure?: Input[];
   value?: object;
@@ -29,8 +33,8 @@ interface SettingsProps {
   disabled?: boolean;
   readonly: boolean;
   updating: boolean;
-  onFocus: VoidFunction;
-  preventUpdate: boolean;
+  onModeChange: (m: Mode) => void;
+  mode: Mode;
 }
 
 const Components = {
@@ -58,7 +62,7 @@ const Components = {
     </Select>
   </>
 }
-type Inputs = {
+export type Inputs = {
   channel_top: number,
   channel_bottom: number,
   min_distance: number,
@@ -80,157 +84,6 @@ type Inputs = {
   terminate_strategy: number
 };
 
-const SAMPLE: Input[] = [
-  {
-    name: 'channel_top',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'channel_bottom',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'min_distance',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'lot_size',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'order_interval',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'take_profit',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'stop_loss',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'side',
-    type: 'number',
-    component: 'Dropdown',
-    attributes: {
-      datasource: [
-        {
-          label: 'SELL',
-          value: 1
-        },
-        {
-          label: 'BUY',
-          value: 2
-        }
-      ]
-    }
-  },
-  {
-    name: 'strategy_serial',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'trailing_stop_first_step',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'trailing_stop_first_modification',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'trailing_stop_further_step',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'trailing_stop_further_modification',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'pending_order_limit_count',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'maximum_market_order_count',
-    type: 'number',
-    component: 'Textbox',
-  },
-  {
-    name: 'order_to_modify',
-    type: 'number',
-    component: 'Dropdown',
-    attributes: {
-      datasource: [
-        {
-          label: 'None',
-          value: 1
-        },
-        {
-          label: 'Pending order',
-          value: 2
-        },
-        {
-          label: 'Market order',
-          value: 3
-        },
-        {
-          label: 'All',
-          value: 4
-        }
-      ]
-    }
-  },
-  {
-    name: 'close_Pending_Order',
-    type: 'number',
-    component: 'Checkbox',
-  },
-  {
-    name: 'close_Market_Order',
-    type: 'number',
-    component: 'Checkbox',
-  },
-  {
-    name: 'terminate_strategy',
-    type: 'number',
-    component: 'Checkbox',
-  },
-]
-
-const VALUES: Inputs = {
-  channel_top: 1.28,
-  channel_bottom: 1.19,
-  min_distance: 10,
-  lot_size: 0.1,
-  order_interval: 5,
-  take_profit: 10,
-  stop_loss: 10,
-  side: 1,
-  strategy_serial: 1001,
-  trailing_stop_first_step: 6,
-  trailing_stop_first_modification: 1,
-  trailing_stop_further_step: 1,
-  trailing_stop_further_modification: 1,
-  pending_order_limit_count: 5,
-  maximum_market_order_count: 4,
-  terminate_strategy: 0,
-  close_Pending_Order: 0,
-  close_Market_Order: 1,
-  order_to_modify: 1,
-}
 
 const MESSAGES = {
   int: 'Enter an Integer number',
@@ -250,8 +103,8 @@ export default function Settings({
   onSubmit,
   disabled = false,
   updating,
-  onFocus,
-  preventUpdate
+  onModeChange,
+  mode
 }: SettingsProps) {
   const shape = structure.reduce((acc, item) => {
     const validation = typeMap[item.type];
@@ -273,6 +126,8 @@ export default function Settings({
     mode: 'onChange'
   });
 
+  const preventUpdate = mode === 'edit';
+
   useEffect(
     () => {
       if (!preventUpdate) {
@@ -282,12 +137,35 @@ export default function Settings({
     // eslint-disable-next-line 
     [value]
   );
+
+  const backgroundColor = (
+    () => {
+      if (updating) {
+        return '#ccc'
+      }
+      if (mode === 'edit') {
+        return '#FFAA00';
+      }
+    }
+  )();
+
+  const showCommands = !readonly && mode === 'edit';
+
   return (
     <DetailContainer
-      style={{ backgroundColor: updating ? '#ccc' : undefined }}
+      style={{ backgroundColor }}
       className='expert'
     >
-      <h2>{title}</h2>
+      <h2 style={{fontSize: '20px'}}>
+        {title}
+        <span>
+          <IconButton
+            onClick={() => onModeChange('edit')}
+          >
+            <EditIcon color='secondary' />
+          </IconButton>
+        </span>
+      </h2>
       {updating && <h3>Updating ...</h3>}
       <form onSubmit={handleSubmit(onSubmit)}>
         {
@@ -305,7 +183,6 @@ export default function Settings({
                     ...field,
                     error: !!fieldState.error,
                     helperText: fieldState.error?.message,
-                    onFocus: () => onFocus()
                   })
                 }}
                 // @ts-ignore
@@ -314,7 +191,8 @@ export default function Settings({
             }</Row>
           })
         }
-        {!readonly && <Button disabled={disabled} type="submit" variant='contained' color='primary'>Save</Button>}
+        {showCommands && <Button disabled={disabled} type="submit" variant='contained' color='primary'>Save</Button>}
+        {showCommands && <Button disabled={disabled} variant='contained' color='secondary' onClick={() => onModeChange('view')}>Cancel</Button>}
       </form>
     </DetailContainer>
   )

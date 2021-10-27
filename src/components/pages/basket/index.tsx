@@ -103,28 +103,6 @@ export default function Basket() {
     [baskets]
   )
 
-  useEffect(
-    () => {
-      const handleOutsideClick = (e) => {
-        let parent = e.target.parentElement;
-        do {
-          const classList = Array.from(parent.classList);
-          if (classList.indexOf('expert') !== -1) {
-            break;
-          }
-          parent = parent.parentElement;
-        } while (parent !== null);
-        if (parent === null) {
-          setSelectedExpert(null);
-        }
-      }
-
-      document.body.addEventListener('click', handleOutsideClick)
-      return () => document.body.removeEventListener('click', handleOutsideClick)
-    },
-    []
-  )
-
   function handleBasketChange(e, value) {
     setSelectedBasket(value?.name);
   }
@@ -221,7 +199,15 @@ export default function Basket() {
                 const title = getExpertName(args.params);
                 const updating = args.updating;
                 return <Settings
-                  preventUpdate={args.id === selectedExpert}
+                  mode={args.id === selectedExpert ? 'edit' : 'view'}
+                  onModeChange={(mode) => {
+                    if (mode === 'edit') {
+                      setSelectedExpert(args.id)
+                    }
+                    else {
+                      setSelectedExpert(null)
+                    }
+                  }}
                   updating={updating}
                   readonly={updating || basket.accessType === AccessType.Investor}
                   disabled={hasError}
@@ -243,7 +229,6 @@ export default function Basket() {
                     return acc;
                   }, {})}
                   onSubmit={(data) => handleSubmit(basket.basketId, data, args.params, args.id, args.headerValue)}
-                  onFocus={() => setSelectedExpert(args.id)}
                 />
               })
             }
