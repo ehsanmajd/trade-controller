@@ -219,7 +219,8 @@ const Index: React.FC = () => {
                           {log.description.old && <div dangerouslySetInnerHTML={{ __html: visualize(log.description.old) }}></div>}
                         </TableCell>
                         <TableCell>
-                          {log.description.new && <div dangerouslySetInnerHTML={{ __html: compareAndVisualize(log.description.old, log.description.new) }}></div>}
+                          {log.description.new && log.description.old && <div dangerouslySetInnerHTML={{ __html: compareAndVisualize(log.description.old, log.description.new) }}></div>}
+                          {log.description.new && !log.description.old && <div dangerouslySetInnerHTML={{ __html: visualize(log.description.new) }}></div>}
                         </TableCell>
                       </TableRow>
                     )
