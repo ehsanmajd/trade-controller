@@ -183,6 +183,9 @@ export default function Settings({
                     ...field,
                     error: !!fieldState.error,
                     helperText: fieldState.error?.message,
+                    inputProps:{
+                      readOnly: mode === 'view' || readonly, 
+                    }
                   })
                 }}
                 // @ts-ignore
