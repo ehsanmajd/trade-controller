@@ -1,18 +1,19 @@
 import React, { useEffect } from 'react';
 import { useUserContext } from '../context/UserContext';
 import * as service from '../service';
+import { disposeAccessToken, disposeRefreshToken, getRefreshToken } from '../utils/token';
 
 const SignOut: React.FC = () => {
   const { setData: setUser } = useUserContext();
 
   useEffect(
     () => {
-      window.localStorage.removeItem('at')
+      disposeAccessToken();
       service.signOut(
-        window.localStorage.getItem('rt')
+        getRefreshToken()
       ).then(
         () => {
-          window.localStorage.removeItem('rt')
+          disposeRefreshToken();
           setUser({
             loggedIn: false,
             name: '',

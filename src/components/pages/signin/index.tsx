@@ -13,6 +13,7 @@ import * as service from '../../../service';
 import { Redirect } from 'react-router-dom'
 import { useUserContext } from '../../../context/UserContext';
 import { useEffect } from 'react';
+import { disposeAccessToken, disposeRefreshToken, setAccessToken, setRefreshToken } from '../../../utils/token';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -51,8 +52,8 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { accessToken, refreshToken, user } = await service.login(form.username, form.password);
-    window.localStorage.setItem('rt', refreshToken);
-    window.localStorage.setItem('at', accessToken);
+    setRefreshToken(refreshToken);
+    setAccessToken(accessToken);
     setUser({
       loggedIn: true,
       name: user.name,
@@ -64,8 +65,8 @@ export default function SignIn() {
   const classes = useStyles();
 
   useEffect(() => {
-    window.localStorage.removeItem('rt');
-    window.localStorage.removeItem('at');
+    disposeRefreshToken();
+    disposeAccessToken();
   }, []);
 
   return (
