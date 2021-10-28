@@ -149,6 +149,7 @@ export default function Basket() {
     const title = getExpertName(modelCopy);
     setSavedExpert(title);
     setSelectedExpert(null);
+    await refresh();
   }
 
   function navigate(mode: 'back' | 'forward') {
