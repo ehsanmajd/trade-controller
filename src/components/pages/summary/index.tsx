@@ -2,6 +2,7 @@ import BasketInfo from '../basket/BasketInfo';
 import { useBasketsContext } from '../../../context/BasketsContext';
 import { makeStyles, Theme, createStyles } from '@material-ui/core';
 import { useEffect } from 'react';
+import { useUserContext } from '../../../context/UserContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Summary() {
   const classes = useStyles();
   const { data, refresh } = useBasketsContext();
+  const { data: userData } = useUserContext();
   const { baskets, refreshTime } = data;
 
   useEffect(
@@ -44,6 +46,9 @@ export default function Summary() {
 
   return (
     <div>
+      <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}/baskets/export?uid=` + userData.userId}>Export</a>
+      </div>
       {baskets.map(basket => {
         return (
           <div key={basket.name} className={classes.baskets}>
