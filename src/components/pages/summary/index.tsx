@@ -52,7 +52,7 @@ export default function Summary() {
   return (
     <div>
       <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Button variant='contained' color='primary' onClick={handleDownload}>Export</Button>
+        {baskets.length > 0 && <Button variant='contained' color='primary' onClick={handleDownload}>Export</Button>}
       </div>
       {baskets.map(basket => {
         return (
