@@ -1,8 +1,9 @@
 import BasketInfo from '../basket/BasketInfo';
 import { useBasketsContext } from '../../../context/BasketsContext';
-import { makeStyles, Theme, createStyles } from '@material-ui/core';
+import { makeStyles, Theme, createStyles, Button } from '@material-ui/core';
 import { useEffect } from 'react';
 import { useUserContext } from '../../../context/UserContext';
+import * as services from '../../../service';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,10 +45,14 @@ export default function Summary() {
     [refreshTime]
   )
 
+  const handleDownload = async () => {
+    await services.exportBaskets(userData.username);
+  }
+
   return (
     <div>
       <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <a target='_blank' href={`${process.env.REACT_APP_BACKEND_URL}/baskets/export?uid=` + userData.userId}>Export</a>
+        <Button variant='contained' color='primary' onClick={handleDownload}>Export</Button>
       </div>
       {baskets.map(basket => {
         return (

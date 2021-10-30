@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FileSaver from 'file-saver';
 import { BasketUsers } from '../types/baskets';
 import { getAccessToken, getRefreshToken, setAccessToken } from '../utils/token';
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -166,4 +167,12 @@ export const updateBasketPermissions = async (serverId: string, baskets: Omit<Ba
 export const getBasketLogs = async (basketId: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/logs/' + basketId);
   return data;
+}
+
+export const exportBaskets = async (username: string) => {
+  const response = await axiosApiInstance.get(BASE_URL + '/baskets?download=1', {
+    responseType: 'blob'
+  });
+  const filename = `Mybasket-${username}-${new Date().toLocaleString()}.xlsx`;
+  FileSaver.saveAs(response.data, filename);
 }
