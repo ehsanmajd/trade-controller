@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '14px'
     },
     row: {
-      marginBottom: '48px'
+      marginBottom: '4px'
     }
   }),
 );
@@ -183,7 +183,7 @@ const Charts: React.FC = () => {
           data={chartData}
           dateProp='date'
           valueProp='netLot'
-          label='Net lot'
+          label='Net Lot'
           color='#FFBB00'
         />
       </Row>
