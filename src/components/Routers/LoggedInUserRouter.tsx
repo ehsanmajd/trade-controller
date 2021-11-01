@@ -11,6 +11,7 @@ import Auth from "../Auth";
 import SignOut from "../../pages/SignOut";
 import AccessDenied from '../../pages/AccessDenied';
 import Logs from '../../pages/Logs';
+import Charts from "../../pages/Charts";
 
 interface Props {
   routePrefix: string;
@@ -32,6 +33,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
           </Route>
           <Route path={`${routePrefix}/logs`}>
             <Logs />
+          </Route>
+          <Route path={`${routePrefix}/charts`}>
+            <Charts />
           </Route>
           <Route path={`${routePrefix}/admin`}>
             <Admin />

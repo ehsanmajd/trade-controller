@@ -176,3 +176,8 @@ export const exportBaskets = async (username: string) => {
   const filename = `Mybasket-${username}-${new Date().toLocaleString()}.xlsx`;
   FileSaver.saveAs(response.data, filename);
 }
+
+export const getBasketStatistics = async (basketId: string) => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/statistics/' + basketId);
+  return data;
+}
