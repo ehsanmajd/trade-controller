@@ -64,7 +64,7 @@ function BasketChart<T>({ label, data, dateProp, valueProp, color }: Props<T>) {
     [data, color]
   )
 
-  return chartData.data.length !== 0 ? <Grid md={6} xs={12} alignItems='center' container direction='column' className={classes.grid}>
+  return chartData.data.length !== 0 ? <Grid md={12} xs={12} alignItems='center' container direction='column' className={classes.grid}>
     <div className={classes.box}>
       <div className={classes.chart}>
         <Chart

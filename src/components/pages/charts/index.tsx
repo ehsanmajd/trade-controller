@@ -138,7 +138,7 @@ const Charts: React.FC = () => {
         </Grid>
       </Grid>
       <br />
-      <h1 style={{paddingLeft: '28px'}}>Charts</h1>
+      <h1 style={{ paddingLeft: '28px' }}>Charts</h1>
       <Row>
         <BasketChart<ChartData>
           data={chartData}
@@ -147,6 +147,8 @@ const Charts: React.FC = () => {
           label='Balance'
           color='#AA25F4'
         />
+      </Row>
+      <Row>
         <BasketChart<ChartData>
           label='Equity'
           data={chartData}
@@ -163,6 +165,8 @@ const Charts: React.FC = () => {
           label='Margin'
           color='#B20089'
         />
+      </Row>
+      <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
@@ -179,6 +183,8 @@ const Charts: React.FC = () => {
           label='Margin Level'
           color='#459ABC'
         />
+      </Row>
+      <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
