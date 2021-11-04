@@ -8,7 +8,7 @@ import { usePrevious } from '../../hooks/usePrevious';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(1),
       textAlign: 'center',
       color: theme.palette.text.secondary,
       cursor: 'pointer'
@@ -45,14 +45,17 @@ const Header: FC = () => {
     <Grid item xs={3} sm={3}>
       <HeaderPaper path='setting' name='Setting' />
     </Grid>
-    <Grid item xs={3} sm={3}>
+    <Grid item xs={2} sm={2}>
       <HeaderPaper path='home' name='Basket' />
     </Grid>
     <Grid item xs={3} sm={3}>
       <HeaderPaper path='summary' name='Summary' />
     </Grid>
-    <Grid item xs={3} sm={3}>
+    <Grid item xs={2} sm={2}>
       <HeaderPaper path='logs' name='Logs' />
+    </Grid>
+    <Grid item xs={2} sm={2}>
+      <HeaderPaper path='charts' name='Charts' />
     </Grid>
     <Grid item xs={12} sm={3}>
       {refreshTime && <Grid container justify='center'>
