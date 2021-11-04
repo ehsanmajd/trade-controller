@@ -4,10 +4,10 @@ import { AxisOptions, Chart } from 'react-charts';
 
 interface Props<T> {
   dateProp: keyof T;
-  valueProp: keyof T;
+  valueProp: (keyof T)[];
   label: string;
   data: T[];
-  color?: string;
+  colors?: string[];
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -20,66 +20,79 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     box: {
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      border: 'solid 1px #ccc', 
-      borderRadius:'5px', 
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      border: 'solid 1px #ccc',
+      borderRadius: '5px',
       width: '100%',
       backgroundColor: '#EFF'
     },
     chart: {
-      width: '80%', 
-      height: '300px'
+      width: '80%',
+      height: 'calc(100vh - 100px)'
     }
   }),
 );
 
-function BasketChart<T>({ label, data, dateProp, valueProp, color }: Props<T>) {
+function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) {
   const classes = useStyles();
   const primaryAxis = React.useMemo(
-    (): AxisOptions<T> => ({
-      getValue: datum => datum[dateProp]
-    }),
+    (): AxisOptions<T> => (
+      {
+        getValue: datum => datum[dateProp]
+      }
+    ),
     []
   )
 
   const secondaryAxes = React.useMemo(
     (): AxisOptions<T>[] => [
       {
-        getValue: datum => datum[valueProp],
-      },
+        // @ts-ignore
+        getValue: datum => datum['value']
+      }
     ],
-    []
+    [valueProp]
   )
 
   const chartData = React.useMemo(
     () => {
-      return {
-        label,
-        data,
-        color: 'red'
-      }
+      return valueProp.map(val => {
+        return {
+          label: val,
+          data: data.map(x => {
+            return {
+              // @ts-ignore
+              date: x.date,
+              value: x[val]
+            }
+          })
+        }
+      })
     },
-    [data, color]
+    [data, colors]
   )
 
-  return chartData.data.length !== 0 ? <Grid md={12} xs={12} alignItems='center' container direction='column' className={classes.grid}>
+  const render = data.length !== 0;
+
+
+
+  return <Grid md={12} xs={12} alignItems='center' container direction='column' className={classes.grid}>
     <div className={classes.box}>
       <div className={classes.chart}>
-        <Chart
-          // style={{ height: '400px', width: '100%' }}
+        {render && <Chart
           options={{
-            defaultColors: [color],
-            data: [chartData],
+            defaultColors: colors,
+            data: chartData as any,
             primaryAxis,
-            secondaryAxes,
+            secondaryAxes
           }}
-        />
+        />}
       </div>
       <h5>{label}</h5>
     </div>
-  </Grid> : null
+  </Grid>
 
 }
 

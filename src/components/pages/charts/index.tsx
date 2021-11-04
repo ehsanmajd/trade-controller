@@ -143,54 +143,36 @@ const Charts: React.FC = () => {
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
-          valueProp='balance'
-          label='Balance'
-          color='#AA25F4'
-        />
-      </Row>
-      <Row>
-        <BasketChart<ChartData>
-          label='Equity'
-          data={chartData}
-          dateProp='date'
-          valueProp='equity'
-          color='#FF0000'
+          valueProp={['balance', 'equity']}
+          label='Balance & Equity'
+          colors={['#AA25F4', '#142EE4']}
         />
       </Row>
       <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
-          valueProp='margin'
+          valueProp={['margin', 'freeMargin']}
           label='Margin'
-          color='#B20089'
+          colors={['#B20089', '#32CC18']}
         />
       </Row>
       <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
-          valueProp='freeMargin'
-          label='Free Margin'
-          color='#32CC18'
-        />
-      </Row>
-      <Row>
-        <BasketChart<ChartData>
-          data={chartData}
-          dateProp='date'
-          valueProp='marginLevel'
+          valueProp={['marginLevel']}
           label='Margin Level'
-          color='#459ABC'
+          colors={['#459ABC']}
         />
       </Row>
       <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
-          valueProp='netLot'
+          valueProp={['netLot']}
           label='Net Lot'
-          color='#FFBB00'
+          colors={['#FFBB00']}
         />
       </Row>
     </Paper>
