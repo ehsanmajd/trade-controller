@@ -54,7 +54,7 @@ const Charts: React.FC = () => {
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [filterType, setFilterType] = useState<TimeFilterType>(TimeFilterType.Last24Hours);
-  const [from, setFrom] = useState<Date>(new Date(-1))
+  const [from, setFrom] = useState<Date>(new Date(new Date().getDate() - 1))
   const [to, setTo] = useState<Date>(new Date())
 
 
