@@ -183,9 +183,27 @@ type PeriodOptions = {
   from?: Date,
   to?: Date
 }
-export const getBasketStatistics = async (basketId: string, options: PeriodOptions) => {
+
+export const getBasketStatistics = async (
+  basketId: string,
+  options: PeriodOptions
+) => {
   const { data } = await axiosApiInstance.get(
     BASE_URL + `/statistics/${basketId}?type=${options.type}&from=${options.from ?? ''}&to=${options.to ?? ''}`
   );
   return data;
+}
+
+export const exportStatistics = async (
+  username: string,
+  options: PeriodOptions
+) => {
+  const response = await axiosApiInstance.get(
+    BASE_URL + `/statistics?type=${options.type}&from=${options.from ?? ''}&to=${options.to ?? ''}`,
+    {
+      responseType: 'blob'
+    }
+  );
+  const filename = `Stats-${username}.xlsx`;
+  FileSaver.saveAs(response.data, filename);
 }

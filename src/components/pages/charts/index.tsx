@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { createStyles, Grid, makeStyles, Paper, TextField, Theme } from '@material-ui/core';
+import { Button, createStyles, Grid, makeStyles, Paper, TextField, Theme } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { useState } from 'react';
 import { useBasketsContext } from '../../../context/BasketsContext';
@@ -11,6 +11,7 @@ import Forward from '@material-ui/icons/ArrowForward';
 import BasketChart from './BasketChart';
 import TimeFilter from './TimeFilter';
 import { TimeFilterType } from '../../../types/baskets';
+import { useUserContext } from '../../../context/UserContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,6 +55,7 @@ yesterday.setDate(yesterday.getDate() - 1)
 const Charts: React.FC = () => {
   const classes = useStyles();
   const { data, hasError, refresh } = useBasketsContext();
+  const { data: userData } = useUserContext();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [filterType, setFilterType] = useState<TimeFilterType>(TimeFilterType.Last24Hours);
@@ -67,6 +69,17 @@ const Charts: React.FC = () => {
 
   const handleBasketChange = (_, value) => {
     setSelectedBasket(value?.basketId);
+  }
+
+  const handleExport = async () => {
+    await services.exportStatistics(
+      userData.username,
+      {
+        type: filterType,
+        from,
+        to
+      }
+    );
   }
 
   function navigate(mode: 'back' | 'forward') {
@@ -157,8 +170,8 @@ const Charts: React.FC = () => {
         <Grid md={4}>
           <h1 style={{ paddingLeft: '28px' }}>Charts</h1>
         </Grid>
-        <Grid container md={8} spacing={2} alignItems='center'>
-          <TimeFilter 
+        <Grid container md={6} spacing={2} alignItems='center'>
+          <TimeFilter
             filterType={filterType}
             onFilterTypeChange={setFilterType}
             from={from}
@@ -166,6 +179,9 @@ const Charts: React.FC = () => {
             to={to}
             onToChange={setTo}
           />
+        </Grid>
+        <Grid container md={2} alignItems='center'>
+          <Button onClick={handleExport} variant='outlined' color='primary'>Export</Button>
         </Grid>
       </Grid>
       <Row>
