@@ -30,7 +30,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chart: {
       width: '80%',
-      height: 'calc(100vh - 100px)'
+      height: 'calc(100vh - 100px)',
+      [theme.breakpoints.down('md')]: {
+        height: 'calc(50vh - 50px)'
+      },
     }
   }),
 );
@@ -78,7 +81,7 @@ function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) 
 
 
 
-  return <Grid md={12} xs={12} alignItems='center' container direction='column' className={classes.grid}>
+  return <Grid md={6} xs={12} alignItems='center' container direction='column' className={classes.grid}>
     <div className={classes.box}>
       <div className={classes.chart}>
         {render && <Chart
