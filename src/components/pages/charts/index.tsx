@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { createStyles, Grid, makeStyles, MenuItem, Paper, TextField, Theme } from '@material-ui/core';
+import { createStyles, Grid, makeStyles, Paper, TextField, Theme } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { useState } from 'react';
 import { useBasketsContext } from '../../../context/BasketsContext';
@@ -167,7 +167,6 @@ const Charts: React.FC = () => {
             onToChange={setTo}
           />
         </Grid>
-
       </Grid>
       <Row>
         <BasketChart<ChartData>

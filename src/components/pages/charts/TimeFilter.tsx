@@ -36,7 +36,7 @@ const TimeFilter: React.FC<TimeFilterProps> = (
 
   return (
     <>
-      <Grid md={4} spacing={2} className={classes.cell}>
+      <Grid xs={12} md={4} spacing={2} className={classes.cell}>
         <>
           <InputLabel id={`label-time-filter`}>Period</InputLabel>
           <Select
@@ -53,13 +53,13 @@ const TimeFilter: React.FC<TimeFilterProps> = (
           </Select>
         </>
       </Grid>
-      <Grid md={4} spacing={2} className={classes.cell}>
+      <Grid xs={12} md={4} spacing={2} className={classes.cell}>
         <>
           <InputLabel id={`label-from-filter`}>From</InputLabel>
           <DatePicker value={from} onChange={m => onFromChange(m.toDate())} disabled={disablePickers} fullWidth name='label-from-filter' />
         </>
       </Grid>
-      <Grid md={4} spacing={2} className={classes.cell}>
+      <Grid xs={12} md={4} spacing={2} className={classes.cell}>
         <>
           <InputLabel id={`label-to-filter`}>To</InputLabel>
           <DatePicker value={to} onChange={m => onToChange(m.toDate())} disabled={disablePickers} fullWidth />
