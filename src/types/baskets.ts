@@ -62,3 +62,10 @@ export interface UserBasketPermission {
   address: string;
   basketName: string;
 }
+
+export enum TimeFilterType {
+  Last24Hours = 1,
+  Last7Days = 2,
+  Last30Days = 3,
+  SpecificDate = 4
+}

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import FileSaver from 'file-saver';
-import { BasketUsers } from '../types/baskets';
+import { BasketUsers, TimeFilterType } from '../types/baskets';
 import { getAccessToken, getRefreshToken, setAccessToken } from '../utils/token';
 export const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 export const axiosApiInstance = axios.create();
@@ -177,7 +177,15 @@ export const exportBaskets = async (username: string) => {
   FileSaver.saveAs(response.data, filename);
 }
 
-export const getBasketStatistics = async (basketId: string) => {
-  const { data } = await axiosApiInstance.get(BASE_URL + '/statistics/' + basketId);
+
+type PeriodOptions = {
+  type: TimeFilterType;
+  from?: Date,
+  to?: Date
+}
+export const getBasketStatistics = async (basketId: string, options: PeriodOptions) => {
+  const { data } = await axiosApiInstance.get(
+    BASE_URL + `/statistics/${basketId}?type=${options.type}&from=${options.from ?? ''}&to=${options.to ?? ''}`
+  );
   return data;
 }

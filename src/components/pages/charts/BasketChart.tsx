@@ -30,9 +30,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chart: {
       width: '80%',
-      height: 'calc(100vh - 100px)',
+      height: 'calc(50vh - 50px)',
+      
       [theme.breakpoints.down('md')]: {
-        height: 'calc(50vh - 50px)'
+        height: 'calc(100vh - 100px)'
       },
     }
   }),

@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 
-import { createStyles, Grid, makeStyles, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Theme } from '@material-ui/core';
+import { createStyles, Grid, makeStyles, MenuItem, Paper, TextField, Theme } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { useState } from 'react';
 import { useBasketsContext } from '../../../context/BasketsContext';
-import { getExpertName } from '../../../utils/expert';
 import * as services from '../../../service';
 import IconButton from '@material-ui/core/IconButton';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import BasketChart from './BasketChart';
+import TimeFilter from './TimeFilter';
+import { TimeFilterType } from '../../../types/baskets';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,6 +53,10 @@ const Charts: React.FC = () => {
   const { data, hasError, refresh } = useBasketsContext();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [filterType, setFilterType] = useState<TimeFilterType>(TimeFilterType.Last24Hours);
+  const [from, setFrom] = useState<Date>(new Date(-1))
+  const [to, setTo] = useState<Date>(new Date())
+
 
   const baskets = data?.baskets || [];
   const basket = baskets.find(x => x.basketId === selectedBasket);
@@ -72,12 +77,19 @@ const Charts: React.FC = () => {
     () => {
       (async () => {
         if (selectedBasket) {
-          const data = await services.getBasketStatistics(selectedBasket);
+          const data = await services.getBasketStatistics(
+            selectedBasket,
+            {
+              type: filterType,
+              from,
+              to
+            }
+          );
           setChartData(data.map(x => ({ ...x, date: new Date(x.date) })));
         }
       })();
     },
-    [selectedBasket]
+    [selectedBasket, filterType, from, to]
   );
 
   useEffect(
@@ -138,23 +150,52 @@ const Charts: React.FC = () => {
         </Grid>
       </Grid>
       <br />
-      <h1 style={{ paddingLeft: '28px' }}>Charts</h1>
+      <Grid container>
+        <Grid md={4}>
+          <h1 style={{ paddingLeft: '28px' }}>Charts</h1>
+        </Grid>
+        <Grid container md={8} spacing={2} alignItems='center'>
+          <TimeFilter 
+            filterType={filterType}
+            onFilterTypeChange={setFilterType}
+            from={from}
+            onFromChange={setFrom}
+            to={to}
+            onToChange={setTo}
+          />
+        </Grid>
+
+      </Grid>
       <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
-          valueProp={['balance', 'equity']}
-          label='Balance & Equity'
-          colors={['#AA25F4', '#142EE4']}
+          valueProp={['balance']}
+          label='Balance'
+          colors={['#AA25F4']}
+        />
+        <BasketChart<ChartData>
+          data={chartData}
+          dateProp='date'
+          valueProp={['equity']}
+          label='Equity'
+          colors={['#142EE4']}
         />
       </Row>
       <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
-          valueProp={['margin', 'freeMargin']}
+          valueProp={['margin']}
           label='Margin'
-          colors={['#B20089', '#32CC18']}
+          colors={['#B20089']}
+        />
+        <BasketChart<ChartData>
+          data={chartData}
+          dateProp='date'
+          valueProp={['freeMargin']}
+          label='Free margin'
+          colors={['#32CC18']}
         />
       </Row>
       <Row>
@@ -165,8 +206,6 @@ const Charts: React.FC = () => {
           label='Margin Level'
           colors={['#459ABC']}
         />
-      </Row>
-      <Row>
         <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
