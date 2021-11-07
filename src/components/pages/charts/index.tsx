@@ -48,13 +48,16 @@ const Row: React.FC = ({ children }) => {
   return <Grid container justify='space-between' className={classes.row}>{children}</Grid>
 }
 
+const yesterday = new Date();
+yesterday.setDate(yesterday.getDate() - 1)
+
 const Charts: React.FC = () => {
   const classes = useStyles();
   const { data, hasError, refresh } = useBasketsContext();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [filterType, setFilterType] = useState<TimeFilterType>(TimeFilterType.Last24Hours);
-  const [from, setFrom] = useState<Date>(new Date(new Date().getDate() - 1))
+  const [from, setFrom] = useState<Date>(yesterday)
   const [to, setTo] = useState<Date>(new Date())
 
 
