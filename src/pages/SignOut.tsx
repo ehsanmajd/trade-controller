@@ -8,11 +8,11 @@ const SignOut: React.FC = () => {
 
   useEffect(
     () => {
-      disposeAccessToken();
       service.signOut(
         getRefreshToken()
-      ).then(
-        () => {
+        ).then(
+          () => {
+          disposeAccessToken();
           disposeRefreshToken();
           setUser({
             loggedIn: false,
