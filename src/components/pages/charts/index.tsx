@@ -49,11 +49,17 @@ const Row: React.FC = ({ children }) => {
   return <Grid container justify='space-between' className={classes.row}>{children}</Grid>
 }
 
-const yesterday = new Date();
-yesterday.setDate(yesterday.getDate() - 1)
+const yesterday = (
+  () => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d;
+  }
+)();
 
 const Charts: React.FC = () => {
   const classes = useStyles();
+  const [loading, setLoading] = useState(false);
   const { data, hasError, refresh } = useBasketsContext();
   const { data: userData } = useUserContext();
   const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
@@ -93,6 +99,7 @@ const Charts: React.FC = () => {
     () => {
       (async () => {
         if (selectedBasket) {
+          setLoading(true);
           const data = await services.getBasketStatistics(
             selectedBasket,
             {
@@ -102,6 +109,7 @@ const Charts: React.FC = () => {
             }
           );
           setChartData(data.map(x => ({ ...x, date: new Date(x.date) })));
+          setLoading(false);
         }
       })();
     },
@@ -167,8 +175,11 @@ const Charts: React.FC = () => {
       </Grid>
       <br />
       <Grid container>
-        <Grid md={4}>
-          <h1 style={{ paddingLeft: '28px' }}>Charts</h1>
+        <Grid container md={4} alignItems='center'>
+          <h1 style={{ paddingLeft: '28px' }}>
+            Charts
+            {loading && <span style={{fontSize: '16px'}}> (Please wait ...)</span> }
+          </h1>
         </Grid>
         <Grid container md={6} spacing={2} alignItems='center'>
           <TimeFilter
