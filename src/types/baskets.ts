@@ -25,6 +25,7 @@ export type ParameterFileType = {
 export interface BasketModel {
   basketId: string;
   serverId: string;
+  serverName: string;
   name: string;
   info: {
     main: BasketInfoModel;

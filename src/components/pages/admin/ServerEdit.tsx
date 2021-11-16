@@ -48,10 +48,12 @@ interface Props {
 interface Server {
   id: string;
   address: string;
+  name: string;
 }
 
 const EMPTY_FORM_VALUES = {
-  address: ''
+  address: '',
+  name: ''
 }
 
 export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
@@ -63,7 +65,7 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
   const [servers, setServers] = useState<Server[]>([]);
   const [selectedServerIdToEdit, setSelectedServerIdToEdit] = useState(null);
 
-  const { address } = form;
+  const { name, address } = form;
 
   const gotoEditMode = (serverId: string) => {
     setSelectedServerIdToEdit(serverId);
@@ -93,10 +95,10 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
 
   const handleSubmit = async () => {
     if (mode === 'add') {
-      await adminServices.addServer(userId, address);
+      await adminServices.addServer(userId, {address, name});
     }
     else if (mode === 'edit') {
-      await adminServices.updateServer(selectedServerIdToEdit, address, userId);
+      await adminServices.updateServer(selectedServerIdToEdit, {address, name}, userId);
     }
     handleCancel();
     reset();
@@ -130,6 +132,7 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
             <TableRow>
               <TableCell> </TableCell>
               <TableCell>Index</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Address</TableCell>
               <TableCell align="center">Actions</TableCell>
             </TableRow>
@@ -149,6 +152,11 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
                     ><Remove /></IconButton>
                   </TableCell>
                   <TableCell>{index + 1}</TableCell>
+                  <TableCell>
+                    {editMode ?
+                      <TextField value={name} label='name' name='name' onChange={handleInputChange} />
+                      : server.name}
+                  </TableCell>
                   <TableCell>
                     {editMode ?
                       <TextField value={address} label='Address' name='address' onChange={handleInputChange} />
@@ -186,6 +194,7 @@ export default function ServerEdit({ userId, onClose, onOpenBasket }: Props) {
                   ><Remove /></IconButton>
                 </TableCell>
                 <TableCell>#</TableCell>
+                <TableCell><TextField value={name} label='Name' name='name' onChange={handleInputChange} /></TableCell>
                 <TableCell><TextField value={address} label='Address' name='address' onChange={handleInputChange} /></TableCell>
                 <TableCell>
                   <IconButton

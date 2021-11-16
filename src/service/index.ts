@@ -131,9 +131,10 @@ export const loadSharedServers = async () => {
 }
 
 export const addServer =
-  async (address: string) => {
+  async (m: { address: string; name: string }) => {
     const { data } = await axiosApiInstance.post(BASE_URL + '/server', {
-      address
+      address: m.address,
+      name: m.name
     });
     return data;
   }
@@ -148,10 +149,11 @@ export const deleteSharedBasket = async (id: string) => {
   return data;
 }
 
-export const updateServer = async (id: string, address: string) => {
+export const updateServer = async (id: string, m: { address: string; name: string }) => {
   const { data } = await axiosApiInstance.put(BASE_URL + `/server/`, {
     id,
-    address
+    address: m.address,
+    name: m.name
   });
   return data;
 }

@@ -47,17 +47,19 @@ export const toggleActive = async (id: string) => {
 }
 
 export const addServer =
-  async (userId: string, address: string) => {
+  async (userId: string, m: { name: string; address: string }) => {
     const { data } = await axiosApiInstance.post(BASE_URL + '/server', {
-      address,
+      address: m.address,
+      name: m.name,
       userId
     });
     return data;
   }
 
-export const updateServer = async (id: string, address: string, userId: string) => {
+export const updateServer = async (id: string, m: { name: string; address: string }, userId: string) => {
   const { data } = await axiosApiInstance.put(BASE_URL + '/server', {
-    address,
+    address: m.address,
+    name: m.name,
     id,
     userId
   });
@@ -71,7 +73,7 @@ export const deleteServer = async (id: string, userId: string) => {
 
 export const getServersByUserId = async (userId: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/server/' + userId);
-  return data as { id: string, address: string }[];
+  return data as { id: string, address: string; name: string; }[];
 }
 
 export const changePassword = async (userId: string, password: string) => {

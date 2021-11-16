@@ -22,16 +22,18 @@ const useStyles = makeStyles({
 
 
 interface AddButtonProp {
-  onAdd: (address: string) => void;
+  onAdd: (m: { address: string; name: string }) => void;
 }
 
 interface FormItems {
   address: string;
+  name: string;
 }
 
 const schema = yup.object().shape({
   // TODO: Add ip validator
-  address: yup.string().required()
+  address: yup.string().required(),
+  name: yup.string().required(),
 });
 
 const AddServer: React.FC<AddButtonProp> = ({ onAdd }) => {
@@ -39,7 +41,8 @@ const AddServer: React.FC<AddButtonProp> = ({ onAdd }) => {
   const [mode, setMode] = useState<'view' | 'edit'>('view');
   const { handleSubmit, control, register, reset } = useForm<FormItems>({
     defaultValues: {
-      address: ''
+      address: '',
+      name: ''
     },
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',
@@ -58,7 +61,7 @@ const AddServer: React.FC<AddButtonProp> = ({ onAdd }) => {
   }
 
   const handleSave = (data: FormItems) => {
-    onAdd(data.address);
+    onAdd({ address: data.address, name: data.name });
     reset();
     setMode('view');
   }
@@ -67,6 +70,18 @@ const AddServer: React.FC<AddButtonProp> = ({ onAdd }) => {
     <Card className={classes.root} variant="outlined">
       <CardContent className={classes.center}>
         {mode === 'edit' && <form onSubmit={handleSubmit(handleSave)}>
+          <Row>
+            <Controller
+              // @ts-ignore
+              name={'name'}
+              control={control}
+              render={({ field, fieldState }) => {
+                return <TextField fullWidth label='name' {...field} />
+              }}
+              // @ts-ignore
+              {...register('name')}
+            />
+          </Row>
           <Row>
             <Controller
               // @ts-ignore
@@ -93,6 +108,7 @@ const AddServer: React.FC<AddButtonProp> = ({ onAdd }) => {
 
 interface ServerInfo {
   id: string;
+  serverName: string;
   address: string;
   baskets: {
     name: string;
@@ -126,6 +142,7 @@ const ServerCards: React.FC = () => {
         acc.push({
           id: item.serverId,
           address: item.address,
+          serverName: item.serverName,
           baskets: item.success ? [
             {
               name: item.name,
@@ -150,12 +167,12 @@ const ServerCards: React.FC = () => {
     []
   );
 
-  const handleAddServer = async (address: string) => {
+  const handleAddServer = async ({ address, name }) => {
     if (servers.some(x => x.address === address)) {
       // TODO: Warn user.
       return;
     }
-    await services.addServer(address);
+    await services.addServer({ address, name });
     await load();
   }
 
@@ -182,11 +199,12 @@ const ServerCards: React.FC = () => {
           <ServerCard
             key={server.id}
             serverId={server.id}
+            name={server.serverName}
             address={server.address}
             baskets={server.baskets}
             hasError={server.hasError}
             onDelete={() => handleDelete(server.id)}
-            addresses={addresses}
+            addresses={addresses.filter(x => x !== server.address)}
           />
         ))
       }

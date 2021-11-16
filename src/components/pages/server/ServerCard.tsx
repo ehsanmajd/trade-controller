@@ -23,6 +23,7 @@ type BasketInfo = {
 interface ServerCardProps {
   serverId: string;
   address: string;
+  name: string;
   baskets: BasketInfo[];
   hasError: boolean;
   onDelete: VoidFunction;
@@ -50,8 +51,44 @@ const useStyles = makeStyles({
   }
 });
 
+const InlineEditForm = (
+  {
+    value,
+    onChange,
+    className,
+    onCancel,
+    onSubmit
+  }:
+    {
+      className: string;
+      value: string,
+      onChange: (m: string) => void;
+      onCancel: VoidFunction;
+      onSubmit: VoidFunction;
+    }
+) => {
+  return (
+    <div className={className}>
+      <TextField value={value} onChange={e => onChange(e.target.value)} />
+      <div>
+        <IconButton
+          onClick={onSubmit}
+        >
+          <CheckCircle color='primary' />
+        </IconButton>
+        <IconButton
+          onClick={onCancel}
+        >
+          <Cancel color='secondary' />
+        </IconButton>
+      </div>
+    </div>
+  )
+}
+
 const ServerCard: React.FC<ServerCardProps> = ({
   serverId,
+  name,
   address,
   baskets: initBaskets,
   hasError: initHasError,
@@ -61,8 +98,9 @@ const ServerCard: React.FC<ServerCardProps> = ({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<'view' | 'editAddress' | 'editBaskets'>('view');
+  const [mode, setMode] = useState<'view' | 'editAddress' | 'editBaskets' | 'editName'>('view');
   const [serverAddress, setServerAddress] = useState(address);
+  const [serverName, setServerName] = useState(name);
   const [baskets, setBaskets] = useState<BasketInfo[]>(initBaskets);
   const [hasError, setHasError] = useState<boolean>(initHasError);
   const basketsTemp = useRef<BasketInfo[] | null>(null);
@@ -120,6 +158,11 @@ const ServerCard: React.FC<ServerCardProps> = ({
     setMode('editAddress');
     handleClose();
   }
+  
+  const handleEditName = () => {
+    setMode('editName');
+    handleClose();
+  }
 
   const handleEditBaskets = () => {
     basketsTemp.current = JSON.parse(JSON.stringify(baskets));
@@ -139,18 +182,20 @@ const ServerCard: React.FC<ServerCardProps> = ({
 
   const handleClose = () => setAnchorEl(null);
 
-  const handleCancelAddressEdit = () => setMode('view');
+  const handleCancelAddressOrNameEdit = () => setMode('view');
 
-  const handleSubmitAddress = async () => {
+  const handleSubmitAddressOrName = async () => {
     if (!serverAddress) {
       // TODO: Warn user!
+
       return;
     }
     if (addresses.some(adr => adr === serverAddress)) {
+      console.log(addresses);
       // TODO: Warn user!
       return;
     }
-    await services.updateServer(serverId, serverAddress);
+    await services.updateServer(serverId, { address: serverAddress, name: serverName });
     await load();
     setMode('view');
   }
@@ -182,31 +227,33 @@ const ServerCard: React.FC<ServerCardProps> = ({
             >
               <MenuItem onClick={handleEditBaskets}>Edit Baskets</MenuItem>
               <MenuItem onClick={handleEditAddress}>Edit Address</MenuItem>
+              <MenuItem onClick={handleEditName}>Edit Name</MenuItem>
               <MenuItem onClick={handleDelete}>Delete</MenuItem>
             </Menu>
           </IconButton>
         }
         title={
           <>
-            {mode !== 'editAddress' && <div className={classes.flex}>
+            {mode !== 'editAddress' && mode !== 'editName' && <div className={classes.flex}>
               {hasError && <><Error color='secondary' />&nbsp;</>}
-              <label>{address}</label>
+              <label>{serverName}-{serverAddress}</label>
             </div>}
-            {mode === 'editAddress' && <div className={classes.flex}>
-              <TextField value={serverAddress} onChange={e => setServerAddress(e.target.value)} />
-              <div>
-                <IconButton
-                  onClick={handleSubmitAddress}
-                >
-                  <CheckCircle color='primary' />
-                </IconButton>
-                <IconButton
-                  onClick={handleCancelAddressEdit}
-                >
-                  <Cancel color='secondary' />
-                </IconButton>
-              </div>
-            </div>}
+            {mode === 'editAddress' && <InlineEditForm
+              value={serverAddress}
+              onChange={setServerAddress}
+              className={classes.flex}
+              onCancel={handleCancelAddressOrNameEdit}
+              onSubmit={handleSubmitAddressOrName}
+            />
+            }
+            {mode === 'editName' && <InlineEditForm
+              value={serverName}
+              onChange={setServerName}
+              className={classes.flex}
+              onCancel={handleCancelAddressOrNameEdit}
+              onSubmit={handleSubmitAddressOrName}
+            />
+            }
           </>
         }
       />
@@ -239,7 +286,7 @@ const ServerCard: React.FC<ServerCardProps> = ({
           </div>
         </Typography>
       </CardContent>
-     {mode === 'editBaskets' && <CardActions>
+      {mode === 'editBaskets' && <CardActions>
         <Button color='primary' variant='contained' onClick={handleSave}>Save</Button>
         <Button variant='contained' onClick={handleCancelSave}>Cancel</Button>
       </CardActions>}
