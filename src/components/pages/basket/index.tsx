@@ -14,6 +14,7 @@ import { AccessType, ParameterType } from '../../../types/baskets';
 import { useBasketsContext } from '../../../context/BasketsContext';
 import { usePrevious } from '../../../hooks/usePrevious';
 import { getExpertName } from '../../../utils/expert';
+import Orders from './Orders';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -83,6 +84,7 @@ export default function Basket() {
 
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
+  const orders = basket?.orders;
   const index = baskets.findIndex(x => x.name === selectedBasket);
 
   useEffect(
@@ -149,6 +151,17 @@ export default function Basket() {
     const title = getExpertName(modelCopy);
     setSavedExpert(title);
     setSelectedExpert(null);
+    await refresh();
+  }
+
+  async function handleCloseOrder(ticketId:number){
+    const basket = baskets.find(x => x.name === selectedBasket);
+    await service.closeOrder({
+      serverId: basket.serverId,
+      basketId:basket.basketId,
+      basketName: selectedBasket,
+      ticketId
+    });
     await refresh();
   }
 
@@ -242,6 +255,9 @@ export default function Basket() {
               })
             }
           </Grid>
+          <hr />
+          <h2>Orders ({orders.length})</h2>
+          <Orders orders={orders} onCloseOrder={handleCloseOrder} />
           <Info message={`The changes has been successfully applied to EA: "${savedExpert}".`} open={!!savedExpert} onClose={() => setSavedExpert('')} />
         </>
       }

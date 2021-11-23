@@ -22,6 +22,23 @@ export type ParameterFileType = {
   headerValue: string;
   updating: boolean;
 }
+
+export type OrderModel = {
+  ticketId:number;
+  openTime:number;
+  type:string;
+  size:number;
+  symbol:string;
+  openPrice:number;
+  stopLoss:number;
+  takeProfit:number;
+  swap:number;
+  commission:number;
+  profit:number;
+  magicNumber:number;
+  orderComment:string;
+}
+
 export interface BasketModel {
   basketId: string;
   serverId: string;
@@ -32,6 +49,7 @@ export interface BasketModel {
     extra?: BasketInfoModel[];
   };
   parameters: ParameterFileType[];
+  orders: OrderModel[];
   success: boolean;
   accessType?: AccessType;
   address: string;
