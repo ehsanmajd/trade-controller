@@ -105,6 +105,28 @@ export const updateExpert = async (
   return data;
 }
 
+export const closeOrder = async (
+  {
+    serverId,
+    basketId,
+    basketName,
+    ticketId
+  }:
+    {
+      serverId: string,
+      basketId: string,
+      basketName: string,
+      ticketId: number
+    }) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/baskets/close-order', {
+    serverId,
+    basketName,
+    basketId,
+    ticketId
+  });
+  return data;
+}
+
 export const searchUsers = async (keyword: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/users/search?keyword=' + keyword);
   return data;
