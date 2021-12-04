@@ -14,6 +14,7 @@ import { AccessType, ParameterType } from '../../../types/baskets';
 import { useBasketsContext } from '../../../context/BasketsContext';
 import { usePrevious } from '../../../hooks/usePrevious';
 import { getExpertName } from '../../../utils/expert';
+import { Refresh } from '@material-ui/icons';
 import Orders from './Orders';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -255,9 +256,11 @@ export default function Basket() {
               })
             }
           </Grid>
-          <hr />
-          <h2>Orders ({orders.length})</h2>
-          <Orders orders={orders} onCloseOrder={handleCloseOrder} />
+          {orders && <>
+            <hr />
+            <h2>Orders ({orders.length}) <IconButton onClick={refresh}><Refresh /></IconButton></h2>
+            <Orders orders={orders} onCloseOrder={handleCloseOrder} />
+          </>}
           <Info message={`The changes has been successfully applied to EA: "${savedExpert}".`} open={!!savedExpert} onClose={() => setSavedExpert('')} />
         </>
       }

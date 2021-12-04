@@ -18,14 +18,21 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth:'560px'
         },
         red:{
-            color:'red'
+            color:'red',
+            fontWeight:'bold'
         },
-        green:{
-            color:'lightgreen'
+        blue:{
+            color:'blue',
+            fontWeight:'bold'
         },
         rightBold:{
             fontWeight:'bold',
             textAlign:'right'
+        },
+        pendings:{
+          '& > th, & > td':{
+            color:'#6e6d6d'
+          }
         }
     })
 );
@@ -45,15 +52,16 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
         onCloseOrder(ticketId);
     }
 
-    const Rows = ({orders}:{orders:OrderModel[]})=>{
+    const Rows = ({orders,isPending}:{orders:OrderModel[],isPending?:boolean})=>{
         return <>{orders.map((row) => (
-            <TableRow key={row.ticketId}>
+            <TableRow key={row.ticketId} className={isPending ? classes.pendings : ""}>
                 <TableCell component="th" scope="row">
                     {row.ticketId}
                 </TableCell>
                 <TableCell align="center">{row.symbol}</TableCell>
                 <TableCell align="center">{row.openTime}</TableCell>
                 <TableCell align="center">{row.type}</TableCell>
+                <TableCell align="center">{row.size}</TableCell>
                 <TableCell align="center">{row.openPrice}</TableCell>
                 <TableCell align="center">{row.stopLoss}</TableCell>
                 <TableCell align="center">{row.takeProfit}</TableCell>
@@ -76,7 +84,7 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
     },[marketOrders]);
 
     const getAmountClass=(amount:number)=>{
-        return amount > 0 ? classes.green : (amount < 0 ? classes.red : null)
+        return amount > 0 ? classes.blue : (amount < 0 ? classes.red : null)
     }
 
     return <TableContainer component={Paper}>
@@ -87,6 +95,7 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
           <TableCell align="center">Symbol</TableCell>
           <TableCell align="center">Open Time</TableCell>
           <TableCell align="center">Type</TableCell>
+          <TableCell align="center">Size</TableCell>
           <TableCell align="center">Open Price</TableCell>
           <TableCell align="center">S / L</TableCell>
           <TableCell align="center">T / P</TableCell>
@@ -96,16 +105,17 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
       </TableHead>
       <TableBody>
         <Rows orders={marketOrders} />
-        <TableRow key={'sum'}>
+        {!!marketOrders.length && <TableRow key={'sum'}>
             <TableCell component="th" scope="row"></TableCell>
+            <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell colSpan={3} className={classes.rightBold}>Total Profit/Loss</TableCell>
             <TableCell className={getAmountClass(totalProfit)} >{totalProfit.toFixed(2)}</TableCell>
             <TableCell></TableCell>
-          </TableRow>
-        <Rows orders={pendingOrders} />
+          </TableRow>}
+        <Rows orders={pendingOrders} isPending={true} />
       </TableBody>
     </Table>
   </TableContainer>
