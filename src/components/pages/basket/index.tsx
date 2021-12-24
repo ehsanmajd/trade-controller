@@ -16,6 +16,7 @@ import { usePrevious } from '../../../hooks/usePrevious';
 import { getExpertName } from '../../../utils/expert';
 import { Refresh } from '@material-ui/icons';
 import Orders from './Orders';
+import ReloadableCharts from './ReloadableCharts';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -86,6 +87,10 @@ export default function Basket() {
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
   const orders = basket?.orders;
+  const reloadableCharts = basket?.reloadableCharts?.filter(c=> parameterFiles.map(p=>p.params).filter(x=>{
+    const strategy_serial = x.find(parameter=> parameter.name === 'strategy_serial')?.value;
+    return strategy_serial !== c.strategy_serial
+  }));
   const index = baskets.findIndex(x => x.name === selectedBasket);
 
   useEffect(
@@ -166,6 +171,17 @@ export default function Basket() {
     await refresh();
   }
 
+  async function handleReloadClick(chartId:string){
+    const basket = baskets.find(x => x.name === selectedBasket);
+    await service.ReloadChart({
+      serverId: basket.serverId,
+      basketId:basket.basketId,
+      basketName: selectedBasket,
+      chartId: chartId
+    });
+    await refresh();
+  }
+
   function navigate(mode: 'back' | 'forward') {
     setSelectedBasket(mode === 'back' ?
       baskets[index - 1].name :
@@ -216,6 +232,7 @@ export default function Basket() {
           <BasketInfo data={basket.info} />
           <hr />
           <h2>Expert Setting ({parameterFiles.length})</h2>
+          <ReloadableCharts reloadableCharts={reloadableCharts} onReload={handleReloadClick} />
           <Grid className={classes.boxContainer}>
             {
               selectedBasket && parameterFiles.map((args, index) => {
@@ -235,7 +252,7 @@ export default function Basket() {
                   readonly={updating || basket.accessType === AccessType.Investor}
                   disabled={hasError}
                   key={`${selectedBasket}-${index}`}
-                  title={`EA: "${title}"`}
+                  title={title}
                   structure={args.params.map(arg => ({
                     name: arg.name as any,
                     type: arg.type as any,

@@ -127,6 +127,28 @@ export const closeOrder = async (
   return data;
 }
 
+export const ReloadChart = async (
+  {
+    serverId,
+    basketId,
+    basketName,
+    chartId
+  }:
+    {
+      serverId: string,
+      basketId: string,
+      basketName: string,
+      chartId: string
+    }) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/baskets/reload-chart', {
+    serverId,
+    basketId,
+    basketName,
+    chartId
+  });
+  return data;
+}
+
 export const searchUsers = async (keyword: string) => {
   const { data } = await axiosApiInstance.get(BASE_URL + '/users/search?keyword=' + keyword);
   return data;

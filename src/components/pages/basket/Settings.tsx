@@ -1,5 +1,5 @@
-import React from 'react'
-import { MenuItem, Select } from '@material-ui/core';
+import React, { useState } from 'react'
+import { createStyles, makeStyles, Theme, MenuItem, Select } from '@material-ui/core';
 import { Button, InputLabel } from '@material-ui/core'
 import Row from '../../Row';
 import { useForm, Controller } from "react-hook-form";
@@ -11,6 +11,9 @@ import TextField from '@material-ui/core/TextField';
 import { useEffect } from 'react';
 import { SAMPLE, VALUES } from './settingMock'
 import EditIcon from '@material-ui/icons/Edit'
+import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { IconButton } from '@material-ui/core'
 
 
@@ -95,6 +98,25 @@ const typeMap = {
   double: yup.number().min(0, MESSAGES['positive']).required(),
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+        header: {
+            fontSize:'20px',
+            display:'flex',
+            lineHeight: '48px',
+            marginTop: '0px',
+            '& > span':{
+              marginLeft:'auto'
+            }
+        },
+        commands:{
+          '& > button':{
+            marginRight:'4px'
+          }
+        }
+    })
+);
+
 export default function Settings({
   structure = SAMPLE,
   readonly,
@@ -125,8 +147,12 @@ export default function Settings({
     shouldFocusError: true,
     mode: 'onChange'
   });
+  const [pausing,setPausing] = useState(false);
+
+  const classes = useStyles();
 
   const preventUpdate = mode === 'edit';
+  const paused = value['paused'];
 
   useEffect(
     () => {
@@ -137,6 +163,10 @@ export default function Settings({
     // eslint-disable-next-line 
     [value]
   );
+
+  useEffect(()=>{
+    setPausing(false);
+  },[paused]);
 
   const backgroundColor = (
     () => {
@@ -149,17 +179,34 @@ export default function Settings({
     }
   )();
 
+  const hasPauseCommand = structure.some(c=> c.name === 'paused');
+
   const showCommands = !readonly && mode === 'edit';
+
+  const handlePlayPauseClick=()=>{
+    setPausing(true);
+    onSubmit({
+      ...value,
+      paused:!paused
+    });
+  }
 
   return (
     <DetailContainer
       style={{ backgroundColor }}
       className='expert'
     >
-      <h2 style={{fontSize: '20px'}}>
+      <h2 className={classes.header}>
         {title}
         {!readonly && <span>
-          <IconButton
+          {hasPauseCommand && mode !== 'edit' && <>
+            {pausing && <IconButton><CircularProgress color='secondary' size={24} /></IconButton>}
+            {!pausing &&  <IconButton onClick={handlePlayPauseClick} title={paused ? "Restart" : "Stop"} >
+              {!paused && <PauseCircleOutlineIcon color='secondary' />}
+              {!!paused && <PlayCircleOutlineIcon color='secondary' />}
+            </IconButton>}
+          </>}
+          <IconButton 
             onClick={() => onModeChange('edit')}
           >
             <EditIcon color='secondary' />
@@ -169,7 +216,7 @@ export default function Settings({
       {updating && <h3>Updating ...</h3>}
       <form onSubmit={handleSubmit(onSubmit)}>
         {
-          structure.filter(x => x.name !== 'symbol').map(s => {
+          structure.filter(x => !['symbol','paused'].includes(x.name)).map(s => {
             return <Row key={s.name}>{
               <Controller
                 // @ts-ignore
@@ -194,8 +241,10 @@ export default function Settings({
             }</Row>
           })
         }
-        {showCommands && <Button disabled={disabled} type="submit" variant='contained' color='primary'>Save</Button>}
-        {showCommands && <Button disabled={disabled} variant='contained' color='secondary' onClick={() => onModeChange('view')}>Cancel</Button>}
+        {showCommands && <div className={classes.commands}> 
+          <Button disabled={disabled} type="submit" variant='contained' color='primary'>Save</Button>
+          <Button disabled={disabled} variant='contained' color='secondary' onClick={() => onModeChange('view')}>Cancel</Button>
+        </div>}
       </form>
     </DetailContainer>
   )
