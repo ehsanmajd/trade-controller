@@ -39,6 +39,13 @@ export type OrderModel = {
   orderComment:string;
 }
 
+export type ReloadableChart={
+  symbol:string;
+  time:number;
+  chartId:string;
+  strategy_serial:number;
+}
+
 export interface BasketModel {
   basketId: string;
   serverId: string;
@@ -50,6 +57,7 @@ export interface BasketModel {
   };
   parameters: ParameterFileType[];
   orders: OrderModel[];
+  reloadableCharts: ReloadableChart[];
   success: boolean;
   accessType?: AccessType;
   address: string;
