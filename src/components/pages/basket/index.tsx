@@ -87,10 +87,13 @@ export default function Basket() {
   const basket = baskets.find(x => x.name === selectedBasket);
   const parameterFiles = basket?.parameters;
   const orders = basket?.orders;
-  const reloadableCharts = basket?.reloadableCharts?.filter(c=> parameterFiles.map(p=>p.params).filter(x=>{
-    const strategy_serial = x.find(parameter=> parameter.name === 'strategy_serial')?.value;
-    return strategy_serial !== c.strategy_serial
-  }));
+  const activeSerials = [];
+  parameterFiles?.map(p=>p.params).forEach(params=>{
+    params.forEach(innerParams=>{
+      innerParams.name === 'strategy_serial' && activeSerials.push(innerParams.value)
+    })
+  });
+  const reloadableCharts = basket?.reloadableCharts?.filter(c=> !activeSerials.includes(c.strategy_serial));
   const index = baskets.findIndex(x => x.name === selectedBasket);
 
   useEffect(

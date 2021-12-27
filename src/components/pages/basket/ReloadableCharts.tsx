@@ -13,12 +13,16 @@ export default function ReloadableCharts({reloadableCharts,onReload}:ReloadableC
 
     const [reloading,setReloading] = React.useState(false);
 
+    React.useEffect(()=>{
+        setReloading(false);
+    },[reloadableCharts.length]);
+
     const handleReloadClick=(chartId:string)=>{
         setReloading(true);
         onReload(chartId);
     }
 
-    if (reloadableCharts && reloadableCharts.length > 0) {
+    if (!reloadableCharts || reloadableCharts.length === 0) {
         return null;
     }
 
