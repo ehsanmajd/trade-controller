@@ -95,7 +95,8 @@ export default function Basket() {
   });
   const reloadableCharts = basket?.reloadableCharts?.filter(c=> !activeSerials.includes(c.strategy_serial));
   const index = baskets.findIndex(x => x.name === selectedBasket);
-
+  const isInvestor = basket?.accessType === AccessType.Investor;
+  
   useEffect(
     () => {
       refresh();
@@ -279,7 +280,7 @@ export default function Basket() {
           {orders && <>
             <hr />
             <h2>Orders ({orders.length}) <IconButton onClick={refresh}><Refresh /></IconButton></h2>
-            <Orders orders={orders} onCloseOrder={handleCloseOrder} />
+            <Orders orders={orders} isInvestor={isInvestor} onCloseOrder={handleCloseOrder} />
           </>}
           <Info message={`The changes has been successfully applied to EA: "${savedExpert}".`} open={!!savedExpert} onClose={() => setSavedExpert('')} />
         </>
