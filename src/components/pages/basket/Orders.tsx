@@ -39,10 +39,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface OrdersProps {
     orders:OrderModel[];
+    isInvestor:boolean;
     onCloseOrder:(ticketId:number)=>void;
   }
 
-export default function Orders({orders,onCloseOrder}:OrdersProps){
+export default function Orders({orders,isInvestor,onCloseOrder}:OrdersProps){
     const classes = useStyles();
 
     const [closingTicketIds,setClosingTicketIds] = React.useState([]);
@@ -66,11 +67,11 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
                 <TableCell align="center">{row.stopLoss}</TableCell>
                 <TableCell align="center">{row.takeProfit}</TableCell>
                 <TableCell align="center" className={getAmountClass(row.profit)}>{row.profit}</TableCell>
-                <TableCell align="center"><IconButton onClick={()=>handleCloseOrder(row.ticketId)}>
+                {!isInvestor &&  <TableCell align="center"><IconButton onClick={()=>handleCloseOrder(row.ticketId)}>
                   {!closingTicketIds.includes(row.ticketId) && <CloseIcon color='secondary' />}
                   {closingTicketIds.includes(row.ticketId) && <CircularProgress color="secondary" size={20} />}
                   </IconButton>
-                </TableCell>
+                </TableCell>}
             </TableRow>))}</>;
     }
 
@@ -100,7 +101,7 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
           <TableCell align="center">S / L</TableCell>
           <TableCell align="center">T / P</TableCell>
           <TableCell align="center">Profit</TableCell>
-          <TableCell align="center"></TableCell>
+          {!isInvestor && <TableCell align="center">Close</TableCell>}
         </TableRow>
       </TableHead>
       <TableBody>
@@ -113,7 +114,7 @@ export default function Orders({orders,onCloseOrder}:OrdersProps){
             <TableCell></TableCell>
             <TableCell colSpan={3} className={classes.rightBold}>Total Profit/Loss</TableCell>
             <TableCell className={getAmountClass(totalProfit)} >{totalProfit.toFixed(2)}</TableCell>
-            <TableCell></TableCell>
+            {!isInvestor && <TableCell></TableCell>}
           </TableRow>}
         <Rows orders={pendingOrders} isPending={true} />
       </TableBody>
