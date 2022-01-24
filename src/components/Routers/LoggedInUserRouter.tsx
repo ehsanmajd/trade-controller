@@ -12,6 +12,7 @@ import SignOut from "../../pages/SignOut";
 import AccessDenied from '../../pages/AccessDenied';
 import Logs from '../../pages/Logs';
 import Charts from "../../pages/Charts";
+import ChangePassword from "../../pages/ChangePassword";
 
 interface Props {
   routePrefix: string;
@@ -24,6 +25,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
         <Switch>
           <Route path={`${routePrefix}/home`}>
             <Main />
+          </Route>
+          <Route path={`${routePrefix}/change-password`}>
+            <ChangePassword />
           </Route>
           <Route path={`${routePrefix}/setting`}>
             <Setting />

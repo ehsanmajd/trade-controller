@@ -253,3 +253,14 @@ export const exportStatistics = async (
   const filename = `Stats-${username}.xlsx`;
   FileSaver.saveAs(response.data, filename);
 }
+
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string
+) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/change-password', {
+    oldPassword: currentPassword,
+    newPassword
+  });
+  return data;
+}
