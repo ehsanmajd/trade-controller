@@ -12,6 +12,7 @@ import BasketChart from './BasketChart';
 import TimeFilter from './TimeFilter';
 import { TimeFilterType } from '../../../types/baskets';
 import { useUserContext } from '../../../context/UserContext';
+import { setLastViewedBasket, getLastViewedBasket } from '../../../utils/basket';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +63,7 @@ const Charts: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { data, hasError, refresh } = useBasketsContext();
   const { data: userData } = useUserContext();
-  const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
+  const [selectedBasket, setSelectedBasketState] = useState<string | null>(null);
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [filterType, setFilterType] = useState<TimeFilterType>(TimeFilterType.Last24Hours);
   const [from, setFrom] = useState<Date>(yesterday)
@@ -72,6 +73,11 @@ const Charts: React.FC = () => {
   const baskets = data?.baskets || [];
   const basket = baskets.find(x => x.basketId === selectedBasket);
   const index = baskets.findIndex(x => x.basketId === selectedBasket);
+
+  const setSelectedBasket = (basket: string) => {
+    setSelectedBasketState(basket);
+    setLastViewedBasket(basket);
+  }
 
   const handleBasketChange = (_, value) => {
     setSelectedBasket(value?.basketId);
@@ -119,7 +125,13 @@ const Charts: React.FC = () => {
   useEffect(
     () => {
       if (!selectedBasket && baskets && baskets.length) {
-        setSelectedBasket(baskets?.[0]?.basketId);
+        const lastViewedBasket = getLastViewedBasket();
+        if (baskets.some(x => x.basketId === lastViewedBasket)) {
+          setSelectedBasket(lastViewedBasket);
+        }
+        else {
+          setSelectedBasket(baskets?.[0]?.basketId);
+        }
       }
     },
     // eslint-disable-next-line 
@@ -179,7 +191,7 @@ const Charts: React.FC = () => {
         <Grid container md={4} alignItems='center'>
           <h1 style={{ paddingLeft: '28px' }}>
             Charts
-            {loading && <span style={{fontSize: '16px'}}> (Please wait ...)</span> }
+            {loading && <span style={{ fontSize: '16px' }}> (Please wait ...)</span>}
           </h1>
         </Grid>
         <Grid container md={6} spacing={2} alignItems='center'>

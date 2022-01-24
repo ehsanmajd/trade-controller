@@ -8,6 +8,7 @@ import * as services from '../../../service';
 import IconButton from '@material-ui/core/IconButton';
 import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
+import { setLastViewedBasket, getLastViewedBasket } from '../../../utils/basket';
 
 type LogDetail = { name: string, value: unknown }[];
 
@@ -76,12 +77,17 @@ const useStyles = makeStyles((theme: Theme) =>
 const Index: React.FC = () => {
   const classes = useStyles();
   const { data, hasError, refresh } = useBasketsContext();
-  const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
+  const [selectedBasket, setSelectedBasketState] = useState<string | null>(null);
   const [logs, setLogs] = useState<LogModel[]>([]);
 
   const baskets = data?.baskets || [];
   const basket = baskets.find(x => x.basketId === selectedBasket);
   const index = baskets.findIndex(x => x.basketId === selectedBasket);
+
+  const setSelectedBasket = (basket: string) => {
+    setSelectedBasketState(basket);
+    setLastViewedBasket(basket);
+  }
 
   const handleBasketChange = (_, value) => {
     setSelectedBasket(value?.basketId);
@@ -133,7 +139,13 @@ const Index: React.FC = () => {
   useEffect(
     () => {
       if (!selectedBasket && baskets && baskets.length) {
-        setSelectedBasket(baskets?.[0]?.basketId);
+        const lastViewedBasket = getLastViewedBasket();
+        if (baskets.some(x => x.basketId === lastViewedBasket)) {
+          setSelectedBasket(lastViewedBasket);
+        }
+        else {
+          setSelectedBasket(baskets?.[0]?.basketId);
+        }
       }
     },
     // eslint-disable-next-line 

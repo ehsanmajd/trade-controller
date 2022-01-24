@@ -17,6 +17,7 @@ import { getExpertName } from '../../../utils/expert';
 import { Refresh } from '@material-ui/icons';
 import Orders from './Orders';
 import ReloadableCharts from './ReloadableCharts';
+import { setLastViewedBasket, getLastViewedBasket } from '../../../utils/basket';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,25 +79,30 @@ const getRelatedComponent = (type: string) => {
 export default function Basket() {
   const classes = useStyles();
   const [selectedExpert, setSelectedExpert] = useState<string | null>(null);
-  const [selectedBasket, setSelectedBasket] = useState<string | null>(null);
+  const [selectedBasket, setSelectedBasketState] = useState<string | null>(null);
   const [savedExpert, setSavedExpert] = useState<string>('');
   const { data, hasError, refresh } = useBasketsContext();
   const prevData = usePrevious(data);
   const baskets = hasError ? (prevData?.baskets || []) : data.baskets;
 
-  const basket = baskets.find(x => x.name === selectedBasket);
+  const basket = baskets.find(x => x.basketId === selectedBasket);
   const parameterFiles = basket?.parameters;
   const orders = basket?.orders;
   const activeSerials = [];
-  parameterFiles?.map(p=>p.params).forEach(params=>{
-    params.forEach(innerParams=>{
+  parameterFiles?.map(p => p.params).forEach(params => {
+    params.forEach(innerParams => {
       innerParams.name === 'strategy_serial' && activeSerials.push(innerParams.value)
     })
   });
-  const reloadableCharts = basket?.reloadableCharts?.filter(c=> !activeSerials.includes(c.strategy_serial));
-  const index = baskets.findIndex(x => x.name === selectedBasket);
+  const reloadableCharts = basket?.reloadableCharts?.filter(c => !activeSerials.includes(c.strategy_serial));
+  const index = baskets.findIndex(x => x.basketId === selectedBasket);
   const isInvestor = basket?.accessType === AccessType.Investor;
-  
+
+  const setSelectedBasket = (basket: string) => {
+    setSelectedBasketState(basket);
+    setLastViewedBasket(basket);
+  }
+
   useEffect(
     () => {
       refresh();
@@ -115,7 +121,13 @@ export default function Basket() {
   useEffect(
     () => {
       if (!selectedBasket && baskets && baskets.length) {
-        setSelectedBasket(baskets?.[0]?.name);
+        const lastViewedBasket = getLastViewedBasket();
+        if (baskets.some(x => x.basketId === lastViewedBasket)) {
+          setSelectedBasket(lastViewedBasket);
+        }
+        else {
+          setSelectedBasket(baskets?.[0]?.basketId);
+        }
       }
     },
     // eslint-disable-next-line 
@@ -123,7 +135,7 @@ export default function Basket() {
   )
 
   function handleBasketChange(e, value) {
-    setSelectedBasket(value?.name);
+    setSelectedBasket(value?.basketId);
   }
 
   async function handleSubmit(
@@ -144,7 +156,7 @@ export default function Basket() {
           temp.value = data[key];
         }
       });
-    const basket = baskets.find(x => x.name === selectedBasket);
+    const basket = baskets.find(x => x.basketId === selectedBasket);
     modelCopy = modelCopy.filter(x => x.name !== 'symbol');
     await service.updateExpert({
       serverId: basket.serverId,
@@ -164,22 +176,22 @@ export default function Basket() {
     await refresh();
   }
 
-  async function handleCloseOrder(ticketId:number){
-    const basket = baskets.find(x => x.name === selectedBasket);
+  async function handleCloseOrder(ticketId: number) {
+    const basket = baskets.find(x => x.basketId === selectedBasket);
     await service.closeOrder({
       serverId: basket.serverId,
-      basketId:basket.basketId,
+      basketId: basket.basketId,
       basketName: selectedBasket,
       ticketId
     });
     await refresh();
   }
 
-  async function handleReloadClick(chartId:string){
-    const basket = baskets.find(x => x.name === selectedBasket);
+  async function handleReloadClick(chartId: string) {
+    const basket = baskets.find(x => x.basketId === selectedBasket);
     await service.ReloadChart({
       serverId: basket.serverId,
-      basketId:basket.basketId,
+      basketId: basket.basketId,
       basketName: selectedBasket,
       chartId: chartId
     });
@@ -188,8 +200,8 @@ export default function Basket() {
 
   function navigate(mode: 'back' | 'forward') {
     setSelectedBasket(mode === 'back' ?
-      baskets[index - 1].name :
-      baskets[index + 1].name
+      baskets[index - 1].basketId :
+      baskets[index + 1].basketId
     );
   }
 
