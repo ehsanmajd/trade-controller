@@ -19,6 +19,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     marginTop: theme.spacing(10)
+  },
+  button: {
+    background: 'none!important',
+    border: 'none',
+    padding: '0!important',
+    /*optional*/
+    fontFamily: 'arial, sans-serif',
+    /*input has OS specific font-family*/
+    color: '#069',
+    textDecoration: 'underline',
+    cursor: 'pointer'
   }
 }));
 
@@ -69,7 +80,7 @@ export default function SharedBaskets() {
               <TableCell>{row.basketName}</TableCell>
               <TableCell>{AccessType[row.accessType]}</TableCell>
               <TableCell>
-                <a onClick={() => handleDelete(row.id)} href='#'>Delete</a>
+                <button className={classes.button} onClick={() => handleDelete(row.id)}>Delete</button>
               </TableCell>
             </TableRow>
           ))}

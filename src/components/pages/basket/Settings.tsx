@@ -139,7 +139,7 @@ export default function Settings({
     }
   }, {});
   const schema = yup.object().shape(shape);
-  const { handleSubmit, control, register, reset, formState } = useForm<Inputs>({
+  const { handleSubmit, control, register, reset } = useForm<Inputs>({
     defaultValues: value,
     resolver: yupResolver(schema),
     reValidateMode: 'onChange',

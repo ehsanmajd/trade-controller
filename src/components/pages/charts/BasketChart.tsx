@@ -47,6 +47,7 @@ function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) 
         getValue: datum => datum[dateProp]
       }
     ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -57,6 +58,7 @@ function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) 
         getValue: datum => datum['value']
       }
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [valueProp]
   )
 
@@ -75,6 +77,7 @@ function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) 
         }
       })
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, colors]
   )
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Avatar, Button, Container, CssBaseline, Grid, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
+import { Avatar, Button, Container, CssBaseline, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import PasswordIcon from '@material-ui/icons/VpnKeyOutlined';
 import { useHistory } from 'react-router-dom';
 import * as services from '../../../service';
@@ -113,6 +113,7 @@ export default function ChangePassword() {
       }
       return () => clearTimeout(timerId);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [message, counter]
   );
 
