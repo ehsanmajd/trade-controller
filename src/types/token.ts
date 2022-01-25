@@ -4,4 +4,5 @@ export interface Token {
   name: string;
   username: string;
   roles: string[];
+  askEmail: boolean;
 }

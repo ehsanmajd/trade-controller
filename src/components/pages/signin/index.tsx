@@ -13,6 +13,7 @@ import * as service from '../../../service';
 import { Redirect } from 'react-router-dom'
 import { useUserContext } from '../../../context/UserContext';
 import { useEffect } from 'react';
+import { useHistory } from 'react-router-dom'
 import { disposeAccessToken, disposeRefreshToken, setAccessToken, setRefreshToken } from '../../../utils/token';
 
 
@@ -34,13 +35,22 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  link: {
+    cursor: 'pointer'
+  }
 }));
 
 export default function SignIn() {
+  const [error, setError] = React.useState('');
+  const [message, setMessage] = React.useState('');
+  const [emailSent, setEmailSent] = React.useState(false);
+  const [mode, setMode] = React.useState<'signin' | 'forgot-password'>('signin');
   const [form, setForm] = React.useState({
-    username: '',
+    email: '',
     password: ''
   });
+  const history = useHistory();
+  const classes = useStyles();
 
   const { setData: setUser, data: user } = useUserContext();
 
@@ -51,23 +61,57 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { accessToken, refreshToken, user } = await service.login(form.username, form.password);
-    setRefreshToken(refreshToken);
-    setAccessToken(accessToken);
-    setUser({
-      loggedIn: true,
-      name: user.name,
-      username: user.username,
-      roles: user.roles
-    });
+    if (mode === 'signin') {
+      if (!form.email || !form.password) {
+        setError('Please fill all the fields');
+        return;
+      }
+      setError('');
+      try {
+        const { accessToken, refreshToken, user } = await service.login(form.email, form.password);
+        setRefreshToken(refreshToken);
+        setAccessToken(accessToken);
+        setUser({
+          loggedIn: true,
+          name: user.name,
+          username: user.username,
+          roles: user.roles,
+          askEmail: !user.email,
+        });
+      }
+      catch {
+        setError('Invalid username or password');
+      }
+    }
+    else if (mode === 'forgot-password') {
+      const email = form.email;
+      try {
+        await service.forgotPassword(email);
+        setEmailSent(true);
+        setMessage('Please check your email to reset your password');
+      } catch (err) {
+        setError('Email not found');
+      }
+    }
   }
-
-  const classes = useStyles();
 
   useEffect(() => {
     disposeRefreshToken();
     disposeAccessToken();
   }, []);
+
+  const toggleMode = () => {
+    setMode(mode => mode === 'signin' ? 'forgot-password' : 'signin');
+    setError('');
+    setForm({
+      email: '',
+      password: ''
+    })
+  }
+
+  const gotoRegisterPage = () => {
+    history.push('/guest/register');
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -78,23 +122,23 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          {mode === 'signin' ? 'Sign in' : 'Forgot password'}
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
-            value={form.username}
+            value={form.email}
             onChange={handleChange}
             variant="outlined"
             margin="normal"
             required
             fullWidth
             id="email"
-            label="Username"
-            name="username"
+            label={"Username"}
+            name="email"
             autoComplete="username"
             autoFocus
           />
-          <TextField
+          {mode === 'signin' && <TextField
             value={form.password}
             onChange={handleChange}
             variant="outlined"
@@ -106,28 +150,31 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-          />
-          {/* <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          /> */}
+          />}
+          {error && <Typography component="p" variant="caption" color='error'>
+            {error}
+          </Typography>}
+          {message && <Typography component="p" variant="caption" color='textPrimary'>
+            {message}
+          </Typography>}
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={(mode === 'forgot-password' && !form.email && emailSent)}
           >
-            Sign In
+            {mode === 'signin' ? 'Sign In' : 'Send'}
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
+              <Link className={classes.link} variant="body2" onClick={toggleMode}>
+                {mode === 'signin' ? 'Forgot password?' : 'Back to Sign In'}
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link className={classes.link} variant="body2" onClick={gotoRegisterPage}>
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>

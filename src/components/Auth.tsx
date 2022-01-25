@@ -21,7 +21,8 @@ const Auth: React.FC = ({ children }) => {
             name: token.name,
             userId: token.userId,
             loggedIn: true,
-            roles: token.roles
+            roles: token.roles,
+            askEmail: token.askEmail
           });
           return;
         }

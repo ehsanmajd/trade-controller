@@ -13,6 +13,8 @@ import AccessDenied from '../../pages/AccessDenied';
 import Logs from '../../pages/Logs';
 import Charts from "../../pages/Charts";
 import ChangePassword from "../../pages/ChangePassword";
+import UpdateEmail from "../../pages/UpdateEmail";
+import AskForEmail from "../AskForEmail";
 
 interface Props {
   routePrefix: string;
@@ -21,37 +23,42 @@ interface Props {
 export default function LoggedInUserRouter({ routePrefix }: Props) {
   return (
     <Auth>
-      <BasketProvider>
-        <Switch>
-          <Route path={`${routePrefix}/home`}>
-            <Main />
-          </Route>
-          <Route path={`${routePrefix}/change-password`}>
-            <ChangePassword />
-          </Route>
-          <Route path={`${routePrefix}/setting`}>
-            <Setting />
-          </Route>
-          <Route path={`${routePrefix}/summary`}>
-            <Summary />
-          </Route>
-          <Route path={`${routePrefix}/logs`}>
-            <Logs />
-          </Route>
-          <Route path={`${routePrefix}/charts`}>
-            <Charts />
-          </Route>
-          <Route path={`${routePrefix}/admin`}>
-            <Admin />
-          </Route>
-          <Route path={`${routePrefix}/signout`}>
-            <SignOut />
-          </Route>
-          <Route path={`${routePrefix}/access-denied`}>
-            <AccessDenied />
-          </Route>
-        </Switch>
-      </BasketProvider>
+      <AskForEmail>
+        <BasketProvider>
+          <Switch>
+            <Route path={`${routePrefix}/home`}>
+              <Main />
+            </Route>
+            <Route path={`${routePrefix}/change-password`}>
+              <ChangePassword />
+            </Route>
+            <Route path={`${routePrefix}/setting`}>
+              <Setting />
+            </Route>
+            <Route path={`${routePrefix}/summary`}>
+              <Summary />
+            </Route>
+            <Route path={`${routePrefix}/logs`}>
+              <Logs />
+            </Route>
+            <Route path={`${routePrefix}/charts`}>
+              <Charts />
+            </Route>
+            <Route path={`${routePrefix}/update-email`}>
+              <UpdateEmail />
+            </Route>
+            <Route path={`${routePrefix}/admin`}>
+              <Admin />
+            </Route>
+            <Route path={`${routePrefix}/signout`}>
+              <SignOut />
+            </Route>
+            <Route path={`${routePrefix}/access-denied`}>
+              <AccessDenied />
+            </Route>
+          </Switch>
+        </BasketProvider>
+      </AskForEmail>
     </Auth>
   )
 }

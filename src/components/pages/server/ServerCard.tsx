@@ -191,7 +191,6 @@ const ServerCard: React.FC<ServerCardProps> = ({
       return;
     }
     if (addresses.some(adr => adr === serverAddress)) {
-      console.log(addresses);
       // TODO: Warn user!
       return;
     }

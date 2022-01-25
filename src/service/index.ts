@@ -56,11 +56,11 @@ export const loadUsers = async () => {
   return users;
 }
 
-export const login = async (username: string, password: string) => {
-  if (!username || !password) {
+export const login = async (email: string, password: string) => {
+  if (!email || !password) {
     return;
   }
-  const { data } = await axiosApiInstance.post(BASE_URL + '/users/login', { username, password });
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/login', { email, password });
   return data;
 }
 
@@ -261,6 +261,37 @@ export const changePassword = async (
   const { data } = await axiosApiInstance.post(BASE_URL + '/users/change-password', {
     oldPassword: currentPassword,
     newPassword
+  });
+  return data;
+}
+
+export const forgotPassword = async (email: string) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/forgot-password', {
+    email
+  });
+  return data;
+}
+
+export const updateEmailAddress = async (
+  email: string
+) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/change-email', {
+    email
+  });
+  return data;
+}
+
+export const registerUser = async (
+  { email, password, name }: {
+    email: string,
+    password: string,
+    name: string
+  }
+) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/register', {
+    email,
+    password,
+    name
   });
   return data;
 }

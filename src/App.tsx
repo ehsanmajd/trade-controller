@@ -11,6 +11,7 @@ import React from 'react';
 import DefaultPage from './pages/DefaultPage';
 import LoggedInUserRouter from './components/Routers/LoggedInUserRouter';
 import GuestUserRouter from './components/Routers/GuestUserRouter';
+import SignOut from './pages/SignOut';
 
 
 function App() {
@@ -29,6 +30,9 @@ function App() {
             </Route>
             <Route path='/guest'>
               <GuestUserRouter routePrefix='/guest' />
+            </Route>
+            <Route path='/signout'>
+              <SignOut />
             </Route>
             <Route path="/">
               <DefaultPage />
