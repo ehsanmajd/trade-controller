@@ -98,6 +98,20 @@ export default function SignIn() {
     disposeAccessToken();
   }, []);
 
+  useEffect(
+    () => {
+      let timerId;
+      if (emailSent) {
+        timerId = setTimeout(() => {
+          setEmailSent(false);
+        }, 5000);
+      }
+      return () => clearTimeout(timerId);
+
+    },
+    [emailSent]
+  )
+
   const toggleMode = () => {
     setMode(mode => mode === 'signin' ? 'forgot-password' : 'signin');
     setError('');
