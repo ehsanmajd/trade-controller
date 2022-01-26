@@ -71,7 +71,7 @@ export default function Register() {
       return;
     }
 
-    if(!validateEmail(form.email)) {
+    if (!validateEmail(form.email)) {
       setError('Invalid email');
       return;
     }
@@ -79,8 +79,13 @@ export default function Register() {
     try {
       await services.registerUser(form);
       setSignupComplete(true);
-    } catch {
-      setError('An error occurred during registration.');
+    } catch (e) {
+      const errorMessageMap = new Map();
+      errorMessageMap.set(409, 'Email address already exists');
+      errorMessageMap.set(404, 'Email address not found');
+      errorMessageMap.set(500, 'An error occurred during registration');
+      const errorMessage = errorMessageMap.get(e.response.status) || 'Something went wrong';
+      setError(errorMessage);
     }
   }
 

@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const [error, setError] = React.useState('');
-  const [message, setMessage] = React.useState('');
   const [emailSent, setEmailSent] = React.useState(false);
   const [mode, setMode] = React.useState<'signin' | 'forgot-password'>('signin');
   const [form, setForm] = React.useState({
@@ -88,7 +87,6 @@ export default function SignIn() {
       try {
         await service.forgotPassword(email);
         setEmailSent(true);
-        setMessage('Please check your email to reset your password');
       } catch (err) {
         setError('Email not found');
       }
@@ -154,8 +152,8 @@ export default function SignIn() {
           {error && <Typography component="p" variant="caption" color='error'>
             {error}
           </Typography>}
-          {message && <Typography component="p" variant="caption" color='textPrimary'>
-            {message}
+          {emailSent && <Typography component="p" variant="caption" color='textPrimary'>
+            Please check your email to reset your password
           </Typography>}
           <Button
             type="submit"
