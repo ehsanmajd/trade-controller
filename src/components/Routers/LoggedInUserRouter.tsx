@@ -14,7 +14,7 @@ import Logs from '../../pages/Logs';
 import Charts from "../../pages/Charts";
 import ChangePassword from "../../pages/ChangePassword";
 import UpdateEmail from "../../pages/UpdateEmail";
-import AskForEmail from "../AskForEmail";
+import AskFor from "../AskFor";
 
 interface Props {
   routePrefix: string;
@@ -23,7 +23,10 @@ interface Props {
 export default function LoggedInUserRouter({ routePrefix }: Props) {
   return (
     <Auth>
-      <AskForEmail>
+      <AskFor 
+        email={{pathname: '/dashboard/update-email', userContextKey: 'askEmail'}}
+        password={{pathname: '/dashboard/change-password', userContextKey: 'askPassword'}}
+      >
         <BasketProvider>
           <Switch>
             <Route path={`${routePrefix}/home`}>
@@ -58,7 +61,7 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
             </Route>
           </Switch>
         </BasketProvider>
-      </AskForEmail>
+      </AskFor>
     </Auth>
   )
 }

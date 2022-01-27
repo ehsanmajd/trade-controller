@@ -7,6 +7,7 @@ export interface UserContextDataModel {
   loggedIn: boolean;
   roles: string[];
   askEmail?: boolean;
+  askPassword?: boolean;
 }
 export interface UserContextModel {
   data: UserContextDataModel;

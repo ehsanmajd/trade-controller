@@ -44,6 +44,14 @@ function Index() {
   const { data: user, setData: setUser } = useUserContext();
   const history = useHistory();
 
+  const handleEmailSave = () => {
+    setUser({
+      ...user,
+      askEmail: false,
+    });
+    history.replace('/dashboard/home');
+  }
+
   const handleChange = e => setForm({
     ...form,
     [e.target.name]: e.target.value
@@ -54,7 +62,7 @@ function Index() {
 
     setError('');
     if (message) {
-      history.replace('/dashboard/home');
+      handleEmailSave();
       return;
     }
 
@@ -86,11 +94,7 @@ function Index() {
         timerId = setTimeout(() => {
           setCounter(counter - 1);
           if (counter === 0) {
-            setUser({
-              ...user,
-              askEmail: false,
-            });
-            history.push('/dashboard/home');
+            handleEmailSave();
           }
         }, 1000);
       }

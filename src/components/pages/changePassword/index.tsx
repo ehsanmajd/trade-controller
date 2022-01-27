@@ -3,6 +3,7 @@ import { Avatar, Button, Container, CssBaseline, Grid, makeStyles, TextField, Ty
 import PasswordIcon from '@material-ui/icons/VpnKeyOutlined';
 import { useHistory } from 'react-router-dom';
 import * as services from '../../../service';
+import { useUserContext } from '../../../context/UserContext';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,6 +39,7 @@ export default function ChangePassword() {
   });
   const [message, setMessage] = useState('');
   const [counter, setCounter] = useState(COUNTER_INIT);
+  const { data: user, setData: setUser } = useUserContext();
 
   const [error, setError] = useState('');
 
@@ -49,6 +51,14 @@ export default function ChangePassword() {
   });
 
   const classes = useStyles();
+
+  const handlePasswordChanged = () => {
+    handleCancel();
+    setUser({
+      ...user,
+      askPassword: false,
+    });
+  }
 
   const handleCancel = () => {
     setForm({
@@ -66,7 +76,7 @@ export default function ChangePassword() {
     e.preventDefault();
 
     if (message) {
-      handleCancel();
+      handlePasswordChanged();
       return;
     }
 
@@ -107,7 +117,7 @@ export default function ChangePassword() {
         timerId = setTimeout(() => {
           setCounter(counter - 1);
           if (counter === 0) {
-            handleCancel();
+            handlePasswordChanged();
           }
         }, 1000);
       }
