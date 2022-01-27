@@ -76,7 +76,7 @@ export default function SignIn() {
           username: user.username,
           roles: user.roles,
           askEmail: !user.email,
-          askPassword: user.askForPasswordChange
+          askPassword: user.askForPasswordReset
         });
       }
       catch {
@@ -146,7 +146,7 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label={"Username"}
+            label={mode === 'forgot-password' ? 'Email' : "Username"}
             name="email"
             autoComplete="username"
             autoFocus
