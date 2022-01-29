@@ -1,3 +1,8 @@
+export enum UserStatus {
+  Active = 1,
+  Inactive = 2,
+  Pending = 3,
+}
 export interface User {
   id: string;
   name: string;
@@ -5,7 +10,7 @@ export interface User {
   password: string;
   email: string;
   phone: string;
-  active: boolean;
+  status: UserStatus;
 }
 
 export interface Server {

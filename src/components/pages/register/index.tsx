@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Avatar, Button, Container, CssBaseline, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
-import PasswordIcon from '@material-ui/icons/VpnKeyOutlined';
+import CreateIcon from '@material-ui/icons/Create';
 import { useHistory } from 'react-router-dom';
 import * as services from '../../../service';
-import { useUserContext } from '../../../context/UserContext';
+import { validateEmail } from '../../../utils/general';
+
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -29,20 +30,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const COUNTER_INIT = 3;
-
-export default function ChangePassword() {
+export default function Register() {
   const [form, setForm] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
   });
-  const [message, setMessage] = useState('');
-  const [counter, setCounter] = useState(COUNTER_INIT);
-  const { data: user, setData: setUser } = useUserContext();
-
+  const [signupComplete, setSignupComplete] = useState(false);
   const [error, setError] = useState('');
-
   const history = useHistory();
 
   const handleChange = e => setForm({
@@ -52,118 +48,101 @@ export default function ChangePassword() {
 
   const classes = useStyles();
 
-  const handlePasswordChanged = () => {
-    handleCancel();
-    setUser({
-      ...user,
-      askPassword: false,
-    });
-  }
-
-  const handleCancel = () => {
-    setForm({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    });
-    setError('');
-    setMessage('');
-    setCounter(COUNTER_INIT);
-    history.push('/dashboard/home');
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (message) {
-      handlePasswordChanged();
+    setError('');
+    if (signupComplete) {
+      history.push('/guest/signin');
       return;
     }
 
-    if (form.newPassword !== form.confirmPassword) {
+    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+      setError('Please fill all the fields');
+      return;
+    }
+
+    if (form.password !== form.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    if (!form.currentPassword) {
-      setError('Current password is required');
+    if (form.password.length < 4) {
+      setError('Password must be at least 4 characters long');
       return;
     }
 
-    if (!form.newPassword) {
-      setError('New password is required');
-      return;
-    }
-
-    if (form.newPassword.length < 4) {
-      setError('Password must be at least 4 characters');
+    if (!validateEmail(form.email)) {
+      setError('Invalid email');
       return;
     }
 
     try {
-      setError('');
-      await services.changePassword(form.currentPassword, form.newPassword);
-      setMessage('Password changed successfully');
-    }
-    catch {
-      setError('Make sure you entered the correct current password.');
+      await services.registerUser(form);
+      setSignupComplete(true);
+    } catch (e) {
+      const errorMessageMap = new Map();
+      errorMessageMap.set(409, 'Email address already exists');
+      errorMessageMap.set(404, 'Email address not found');
+      errorMessageMap.set(500, 'An error occurred during registration');
+      const errorMessage = errorMessageMap.get(e.response.status) || 'Something went wrong';
+      setError(errorMessage);
     }
   }
 
-  useEffect(
-    () => {
-      let timerId;
-      if (message) {
-        timerId = setTimeout(() => {
-          setCounter(counter - 1);
-          if (counter === 0) {
-            handlePasswordChanged();
-          }
-        }, 1000);
-      }
-      return () => clearTimeout(timerId);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [message, counter]
-  );
+  const handleCancel = () => {
+    history.push('/guest/signin');
+  }
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <PasswordIcon />
+          <CreateIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Change Password
+          Sign up
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
-            value={form.currentPassword}
+            value={form.name}
             onChange={handleChange}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Current password"
-            name="currentPassword"
-            type="password"
-            autoComplete="password"
+            id="name"
+            label="Name"
+            name="name"
+            type="text"
+            autoComplete="fullname"
             autoFocus
           />
           <TextField
-            value={form.newPassword}
+            value={form.email}
             onChange={handleChange}
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="newPassword"
-            label="New password"
+            name="email"
+            label="Email address"
+            type="email"
+            id="email"
+            autoComplete="email"
+          />
+          <TextField
+            value={form.password}
+            onChange={handleChange}
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
             type="password"
-            id="newPassword"
-            autoComplete="current-password"
+            id="password"
+            autoComplete="password"
           />
           <TextField
             value={form.confirmPassword}
@@ -181,8 +160,8 @@ export default function ChangePassword() {
           {error && <Typography component="p" variant="caption" color='error'>
             {error}
           </Typography>}
-          {message && <Typography component="p" variant="caption" color='textPrimary'>
-            {message}
+          {signupComplete && <Typography component="p" variant="subtitle1" color='secondary'>
+            Check your email to verify your account.
           </Typography>}
           <Grid container>
             <Grid item xs className={classes.command}>
@@ -193,10 +172,10 @@ export default function ChangePassword() {
                 color="primary"
                 className={classes.submit}
               >
-                {message ? `Homepage (${counter})` : 'Save'}
+                {signupComplete ? 'Back to Sign In' : 'Submit'}
               </Button>
             </Grid>
-            <Grid item xs className={classes.command}>
+            {!signupComplete && <Grid item xs className={classes.command}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -205,7 +184,7 @@ export default function ChangePassword() {
               >
                 Cancel
               </Button>
-            </Grid>
+            </Grid>}
           </Grid>
         </form>
       </div>

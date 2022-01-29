@@ -24,6 +24,7 @@ import BasketEdit from './BasketEdit';
 import { useCallback } from 'react';
 import Link from '@material-ui/core/Link/Link';
 import ChangePassword from './ChangePassword';
+import { User, UserStatus } from '../../../types/user';
 
 const useStyles = makeStyles({
   table: {
@@ -40,17 +41,7 @@ const EMPTY_FORM_VALUES = {
   name: '',
   username: '',
   password: '',
-  active: true
-}
-
-interface User {
-  id: string;
-  name: string;
-  username: string;
-  password: string;
-  email: string;
-  phone: string;
-  active: boolean;
+  status: UserStatus.Active,
 }
 
 export default function Index() {
@@ -62,7 +53,7 @@ export default function Index() {
   const [selectedUserIdToEdit, setSelectedUserIdToEdit] = useState(null);
   const [selectedServerIdToEdit, setSelectedServerIdToEdit] = useState(null);
 
-  const { name, username, password, active } = form
+  const { name, username, password, status } = form
   const classes = useStyles();
 
   const handleCancel = () => {
@@ -165,6 +156,7 @@ export default function Index() {
         </TableHead>
         <TableBody>
           {users.map((user, index) => {
+            const active = user.status === UserStatus.Active;
             const editMode = mode === 'edit' && user.id === selectedUserIdToEdit;
             return (
               <TableRow key={user.id}>
@@ -189,9 +181,9 @@ export default function Index() {
                 {mode === 'edit' && <TableCell>******</TableCell>}
                 <TableCell>
                   {editMode ?
-                    <Checkbox checked={active} name='active' onChange={handleInputChange} />
+                    <Checkbox checked={status === UserStatus.Active} name='active' onChange={handleInputChange} />
                     :
-                    user.active && <VerifiedUser color='action' />
+                    active && <VerifiedUser color='action' />
                   }
                 </TableCell>
                 <TableCell align="center">
@@ -212,10 +204,10 @@ export default function Index() {
                     <>
                       <IconButton
                         onClick={() => toggleActive(user.id)}
-                        title={user.active ? 'Deactivate' : 'Activate'}
+                        title={active ? 'Deactivate' : 'Activate'}
                       >
-                        {user.active && <ToggleOn color='primary' />}
-                        {!user.active && <ToggleOff color='secondary' />}
+                        {active && <ToggleOn color='primary' />}
+                        {!active && <ToggleOff color='secondary' />}
                       </IconButton>
                       <Link href='#' className={classes.link} onClick={() => editServers(user)}>Servers</Link> /
                       <Link href='#' className={classes.link} onClick={() => gotoEditMode(user.id)}>Edit</Link> /
@@ -237,7 +229,7 @@ export default function Index() {
               <TableCell><TextField value={name} label='Name' name='name' onChange={handleInputChange} /></TableCell>
               <TableCell><TextField value={username} label='Username' name='username' onChange={handleInputChange} /></TableCell>
               <TableCell><TextField value={password} label='Password' name='password' type='password' onChange={handleInputChange} /></TableCell>
-              <TableCell><Checkbox checked={active} name='active' onChange={handleInputChange} /></TableCell>
+              <TableCell><Checkbox checked={status === UserStatus.Active} name='active' onChange={handleInputChange} /></TableCell>
               <TableCell>
                 <IconButton
                   onClick={handleSubmit}
