@@ -161,7 +161,7 @@ export default function Basket() {
     await service.updateExpert({
       serverId: basket.serverId,
       basketId,
-      basketName: selectedBasket,
+      basketName: basket.name,
       fileId: filePath,
       content: modelCopy,
       headerValue,
@@ -181,7 +181,7 @@ export default function Basket() {
     await service.closeOrder({
       serverId: basket.serverId,
       basketId: basket.basketId,
-      basketName: selectedBasket,
+      basketName: basket.name,
       ticketId
     });
     await refresh();
@@ -192,7 +192,7 @@ export default function Basket() {
     await service.ReloadChart({
       serverId: basket.serverId,
       basketId: basket.basketId,
-      basketName: selectedBasket,
+      basketName: basket.name,
       chartId: chartId
     });
     await refresh();
