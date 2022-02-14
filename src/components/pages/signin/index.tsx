@@ -114,18 +114,16 @@ export default function SignIn() {
   )
 
   const toggleMode = () => {
-    // TODO: uncomment it
-    // setMode(mode => mode === 'signin' ? 'forgot-password' : 'signin');
-    // setError('');
-    // setForm({
-    //   email: '',
-    //   password: ''
-    // })
+    setMode(mode => mode === 'signin' ? 'forgot-password' : 'signin');
+    setError('');
+    setForm({
+      email: '',
+      password: ''
+    })
   }
 
   const gotoRegisterPage = () => {
-    // TODO: uncomment it
-    // history.push('/guest/register');
+    history.push('/guest/register');
   }
 
   return (
