@@ -56,11 +56,11 @@ export const loadUsers = async () => {
   return users;
 }
 
-export const login = async (email: string, password: string) => {
+export const login = async (email: string, password: string, captcha: string) => {
   if (!email || !password) {
     return;
   }
-  const { data } = await axiosApiInstance.post(BASE_URL + '/users/login', { email, password });
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/login', { email, password, captcha });
   return data;
 }
 
@@ -282,16 +282,18 @@ export const updateEmailAddress = async (
 }
 
 export const registerUser = async (
-  { email, password, name }: {
+  { email, password, name, captcha }: {
     email: string,
     password: string,
-    name: string
+    name: string,
+    captcha: string
   }
 ) => {
   const { data } = await axiosApiInstance.post(BASE_URL + '/users/register', {
     email,
     password,
-    name
+    name,
+    captcha
   });
   return data;
 }

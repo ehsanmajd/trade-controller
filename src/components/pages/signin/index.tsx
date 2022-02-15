@@ -1,4 +1,5 @@
 import React from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -46,7 +47,8 @@ export default function SignIn() {
   const [mode, setMode] = React.useState<'signin' | 'forgot-password'>('signin');
   const [form, setForm] = React.useState({
     email: '',
-    password: ''
+    password: '',
+    captcha: ''
   });
   const history = useHistory();
   const classes = useStyles();
@@ -61,13 +63,13 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (mode === 'signin') {
-      if (!form.email || !form.password) {
+      if (!form.email || !form.password || !form.captcha) {
         setError('Please fill all the fields');
         return;
       }
       setError('');
       try {
-        const { accessToken, refreshToken, user } = await service.login(form.email, form.password);
+        const { accessToken, refreshToken, user } = await service.login(form.email, form.password, form.captcha);
         setRefreshToken(refreshToken);
         setAccessToken(accessToken);
         setUser({
@@ -118,7 +120,8 @@ export default function SignIn() {
     setError('');
     setForm({
       email: '',
-      password: ''
+      password: '',
+      captcha: ''
     })
   }
 
@@ -163,6 +166,15 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+          />}
+          {mode === 'signin' && <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+            onChange={(value) => handleChange({
+              target: {
+                name: 'captcha',
+                value
+              }
+            })}
           />}
           {error && <Typography component="p" variant="caption" color='error'>
             {error}

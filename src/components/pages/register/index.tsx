@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReCAPTCHA from "react-google-recaptcha";
 import { Avatar, Button, Container, CssBaseline, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useHistory } from 'react-router-dom';
@@ -36,6 +37,7 @@ export default function Register() {
     email: '',
     password: '',
     confirmPassword: '',
+    captcha: ''
   });
   const [signupComplete, setSignupComplete] = useState(false);
   const [error, setError] = useState('');
@@ -56,7 +58,7 @@ export default function Register() {
       return;
     }
 
-    if (!form.name || !form.email || !form.password || !form.confirmPassword) {
+    if (!form.name || !form.email || !form.password || !form.confirmPassword || !form.captcha) {
       setError('Please fill all the fields');
       return;
     }
@@ -156,6 +158,15 @@ export default function Register() {
             type="password"
             id="confirmPassword"
             autoComplete="confirm-password"
+          />
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
+            onChange={(value) => handleChange({
+              target: {
+                name: 'captcha',
+                value
+              }
+            })}
           />
           {error && <Typography component="p" variant="caption" color='error'>
             {error}
