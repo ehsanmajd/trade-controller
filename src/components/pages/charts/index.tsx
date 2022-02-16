@@ -58,6 +58,7 @@ const yesterday = (
   }
 )();
 
+//@eslint-disable-next-line
 const mock: ChartData[] = [
   {
     date: yesterday,

@@ -1,5 +1,4 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
-import { log } from 'console';
 import React from 'react';
 import { AxisOptions, Chart } from 'react-charts';
 
