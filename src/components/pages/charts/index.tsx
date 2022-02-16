@@ -58,6 +58,34 @@ const yesterday = (
   }
 )();
 
+const mock: ChartData[] = [
+  {
+    date: yesterday,
+    serverId: '1',
+    basketId: '1',
+    equity: 1,
+    balance: 1,
+    margin: 1,
+    freeMargin: 1,
+    marginLevel: 1,
+    netLot: 1,
+    
+  },
+  {
+    date: new Date(),
+    serverId: '1',
+    basketId: '1',
+    equity: 1,
+    balance: 1,
+    margin: 1,
+    freeMargin: 1,
+    marginLevel: 1,
+    netLot: 1,
+
+  },
+
+];
+
 const Charts: React.FC = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);

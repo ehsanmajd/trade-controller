@@ -1,4 +1,5 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
+import { log } from 'console';
 import React from 'react';
 import { AxisOptions, Chart } from 'react-charts';
 
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
     chart: {
       width: '80%',
       height: 'calc(50vh - 50px)',
-      
+
       [theme.breakpoints.down('md')]: {
         height: 'calc(100vh - 100px)'
       },
@@ -44,7 +45,16 @@ function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) 
   const primaryAxis = React.useMemo(
     (): AxisOptions<T> => (
       {
-        getValue: datum => datum[dateProp]
+        getValue: datum => datum[dateProp],
+        formatters: {
+          tooltip: (value: Date, formatters) => {
+            if (!value) {
+              return '';
+            }
+            const date = new Date(value);
+            return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+          }
+        }
       }
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +103,8 @@ function BasketChart<T>({ label, data, dateProp, valueProp, colors }: Props<T>) 
             defaultColors: colors,
             data: chartData as any,
             primaryAxis,
-            secondaryAxes
+            secondaryAxes,
+
           }}
         />}
       </div>
