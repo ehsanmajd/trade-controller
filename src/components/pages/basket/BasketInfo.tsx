@@ -1,8 +1,13 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import React from 'react'
-import { BasketInfoModel } from '../../../types/baskets';
+import { BasketInfoModel, ChartData } from '../../../types/baskets';
 import ProgressBar from '../../PorgressBar';
+import { BasketChart, TimeFilter } from '../charts';
+import { TimeFilterType } from '../../../types/baskets';
+import * as services from '../../../service';
+import { useUserContext } from '../../../context/UserContext';
+import { useEffect } from 'react';
 
 interface Props {
   label: string;
@@ -14,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: '16px 0',
-      
+
     },
     column: {
       boxSizing: 'border-box',
@@ -57,6 +62,12 @@ const Row = ({ label, value, color }: Props) => {
   )
 }
 
+
+const ChartRow: React.FC = ({ children }) => {
+  const classes = useStyles();
+  return <Grid container justify='space-between' className={classes.row}>{children}</Grid>
+}
+
 const Column: React.FC = ({ children }) => {
   const classes = useStyles();
   return <Grid className={classes.column} md={6} xs={12}>{children}</Grid>
@@ -67,6 +78,8 @@ interface BasketInfoProps {
     main: BasketInfoModel;
     extra?: BasketInfoModel[];
   }
+  displayGraphs?: boolean;
+  basketId: string;
 }
 
 const INIT_STATE = {
@@ -113,10 +126,60 @@ const INIT_STATE = {
   }
 }
 
-export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
+const yesterday = (
+  () => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return d;
+  }
+)();
+
+export default function BasketInfo({ data = INIT_STATE, displayGraphs = false, basketId }: BasketInfoProps) {
   const { main, extra } = data || {};
-  const [expanded, setExpanded] = React.useState(false);
+  const { data: userData } = useUserContext();
   const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
+  const [filterType, setFilterType] = React.useState<TimeFilterType>(TimeFilterType.Last24Hours);
+  const [from, setFrom] = React.useState<Date>(yesterday);
+  const [to, setTo] = React.useState<Date>(new Date());
+  const [chartData, setChartData] = React.useState<ChartData[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+
+  const handleExport = async () => {
+    await services.exportStatistics(
+      userData.username,
+      {
+        type: filterType,
+        from,
+        to
+      }
+    );
+  }
+
+  useEffect(
+    () => {
+      if (displayGraphs) {
+        setExpanded(true);
+        (async () => {
+          setLoading(true);
+          const data = await services.getBasketStatistics(
+            basketId,
+            {
+              type: filterType,
+              from,
+              to
+            }
+          );
+          setChartData(data.map(x => ({ ...x, date: new Date(x.date) })));
+          setLoading(false);
+        })();
+      }
+
+    },
+    [filterType, from, to]
+  )
+
   return (
     <div className={classes.root}>
       <h2>Basket Summary</h2>
@@ -137,6 +200,43 @@ export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
           <Row label='Total_Profit' value={main?.['Total_Profit']?.value} color={main?.['Total_Profit']?.color} />
         </Column>
       </Grid>
+      <Grid container>
+        <Grid container md={4} alignItems='center'>
+          <h1 style={{ paddingLeft: '28px' }}>
+            Charts
+            <span style={{ fontSize: '16px' }}> (Please wait ...)</span>
+          </h1>
+        </Grid>
+        <Grid container md={6} spacing={2} alignItems='center'>
+          <TimeFilter
+            filterType={filterType}
+            onFilterTypeChange={setFilterType}
+            from={from}
+            onFromChange={setFrom}
+            to={to}
+            onToChange={setTo}
+          />
+        </Grid>
+        <Grid container md={2} alignItems='center'>
+          {loading && <Button onClick={handleExport} variant='outlined' color='secondary'>Export</Button>}
+        </Grid>
+      </Grid>
+      {loading && <ChartRow>
+        <BasketChart<ChartData>
+          data={chartData}
+          dateProp='date'
+          valueProp={['balance']}
+          label='Balance'
+          colors={['#AA25F4']}
+        />
+        <BasketChart<ChartData>
+          data={chartData}
+          dateProp='date'
+          valueProp={['equity']}
+          label='Equity'
+          colors={['#142EE4']}
+        />
+      </ChartRow>}
       {expanded && <Grid container>
         {extra.map(extraData => {
           return <Column>{Object.keys(extraData).map(key => <Row label={key} value={extraData[key]?.value} color={extraData[key]?.color} />)}</Column>

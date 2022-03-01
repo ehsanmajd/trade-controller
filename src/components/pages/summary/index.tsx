@@ -60,7 +60,7 @@ export default function Summary() {
             <h2>Basket: {basket.name} ({basket.parameters.length})</h2>
             <hr />
             <div>
-              <BasketInfo data={basket.info} />
+              <BasketInfo data={basket.info} basketId={basket.basketId} />
             </div>
           </div>
         )
