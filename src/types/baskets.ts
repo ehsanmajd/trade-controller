@@ -26,6 +26,7 @@ export type ParameterFileType = {
 export type OrderModel = {
   ticketId:number;
   openTime:number;
+  closeTime:Date;
   type:string;
   size:number;
   symbol:string;
@@ -57,6 +58,7 @@ export interface BasketModel {
   };
   parameters: ParameterFileType[];
   orders: OrderModel[];
+  tradeHistory: OrderModel[];
   reloadableCharts: ReloadableChart[];
   success: boolean;
   accessType?: AccessType;

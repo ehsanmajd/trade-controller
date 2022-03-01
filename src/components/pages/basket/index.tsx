@@ -1,4 +1,4 @@
-import { createStyles, Grid, makeStyles } from '@material-ui/core'
+import { createStyles, Grid, makeStyles, Tab, Tabs } from '@material-ui/core'
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,6 +18,7 @@ import { Refresh } from '@material-ui/icons';
 import Orders from './Orders';
 import ReloadableCharts from './ReloadableCharts';
 import { setLastViewedBasket, getLastViewedBasket } from '../../../utils/basket';
+import History from './History';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,6 +82,7 @@ export default function Basket() {
   const [selectedExpert, setSelectedExpert] = useState<string | null>(null);
   const [selectedBasket, setSelectedBasketState] = useState<string | null>(null);
   const [savedExpert, setSavedExpert] = useState<string>('');
+  const [activeTabIndex, setActiveTabIndex] = useState<number>(0);
   const { data, hasError, refresh } = useBasketsContext();
   const prevData = usePrevious(data);
   const baskets = hasError ? (prevData?.baskets || []) : data.baskets;
@@ -88,6 +90,7 @@ export default function Basket() {
   const basket = baskets.find(x => x.basketId === selectedBasket);
   const parameterFiles = basket?.parameters;
   const orders = basket?.orders;
+  const tradeHistory = basket?.tradeHistory;
   const activeSerials = [];
   parameterFiles?.map(p => p.params).forEach(params => {
     params.forEach(innerParams => {
@@ -198,6 +201,10 @@ export default function Basket() {
     await refresh();
   }
 
+  const handleTabChange=(event,newTabIndex)=>{
+    setActiveTabIndex(newTabIndex);
+  }
+
   function navigate(mode: 'back' | 'forward') {
     setSelectedBasket(mode === 'back' ?
       baskets[index - 1].basketId :
@@ -291,8 +298,13 @@ export default function Basket() {
           </Grid>
           {orders && <>
             <hr />
-            <h2>Orders ({orders.length}) <IconButton onClick={refresh}><Refresh /></IconButton></h2>
-            <Orders orders={orders} isInvestor={isInvestor} onCloseOrder={handleCloseOrder} />
+            <Tabs value={activeTabIndex} onChange={handleTabChange}>
+              <Tab label={`Orders (${orders.length})`} tabIndex={0} />
+              <Tab label={`History (${tradeHistory.length})`} tabIndex={1} />
+              <IconButton onClick={refresh}><Refresh /></IconButton>
+            </Tabs> 
+            {activeTabIndex === 0 && <Orders orders={orders} onCloseOrder={handleCloseOrder} isInvestor={isInvestor} />}
+            {activeTabIndex === 1 && <History orders={tradeHistory} />}
           </>}
           <Info message={`The changes has been successfully applied to EA: "${savedExpert}".`} open={!!savedExpert} onClose={() => setSavedExpert('')} />
         </>
