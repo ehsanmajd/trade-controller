@@ -105,17 +105,6 @@ export default function Summary() {
   const [from, setFrom] = useState<Date>(yesterday);
   const [to, setTo] = useState<Date>(new Date());
 
-  const handleExport = async () => {
-    await services.exportStatistics(
-      userData.username,
-      {
-        type: filterType,
-        from,
-        to
-      }
-    );
-  }
-
   useEffect(
     () => {
       rendered.current = true;
