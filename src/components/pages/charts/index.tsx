@@ -76,6 +76,25 @@ const mock: ChartData[] = [
 
 ];
 
+export const BalanceChart: React.FC<{ data: ChartData[] }> = ({ data }) => (
+  <BasketChart<ChartData>
+    data={data}
+    dateProp='date'
+    valueProp={['balance']}
+    label='Balance'
+    colors={['#AA25F4']}
+  />
+);
+export const EquityChart: React.FC<{ data: ChartData[] }> = ({ data }) => (
+  <BasketChart<ChartData>
+    data={data}
+    dateProp='date'
+    valueProp={['equity']}
+    label='Equity'
+    colors={['#142EE4']}
+  />
+);
+
 const Charts: React.FC = () => {
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
@@ -227,7 +246,9 @@ const Charts: React.FC = () => {
         </Grid>
       </Grid>
       <Row>
-        <BasketChart<ChartData>
+        <BalanceChart data={chartData} />
+        <EquityChart data={chartData} />
+        {/* <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
           valueProp={['balance']}
@@ -240,7 +261,7 @@ const Charts: React.FC = () => {
           valueProp={['equity']}
           label='Equity'
           colors={['#142EE4']}
-        />
+        /> */}
       </Row>
       <Row>
         <BasketChart<ChartData>

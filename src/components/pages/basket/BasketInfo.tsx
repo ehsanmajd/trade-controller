@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import React from 'react'
 import { BasketInfoModel, ChartData } from '../../../types/baskets';
 import ProgressBar from '../../PorgressBar';
-import { BasketChart } from '../charts';
+import { BalanceChart, BasketChart, EquityChart } from '../charts';
 import { TimeFilterType } from '../../../types/baskets';
 import * as services from '../../../service';
 import { useEffect } from 'react';
@@ -193,20 +193,8 @@ export default function BasketInfo({
         })}
       </Grid>}
       {!loading && displayGraphs && <ChartRow>
-        <BasketChart<ChartData>
-          data={chartData}
-          dateProp='date'
-          valueProp={['balance']}
-          label='Balance'
-          colors={['#AA25F4']}
-        />
-        <BasketChart<ChartData>
-          data={chartData}
-          dateProp='date'
-          valueProp={['equity']}
-          label='Equity'
-          colors={['#142EE4']}
-        />
+        <BalanceChart data={chartData} />
+        <EquityChart data={chartData} />
       </ChartRow>}
       {extra && <Grid container justify='center'>
         <Grid><Button variant='outlined' onClick={() => setExpanded(p => !p)}>{`Load ${expanded ? 'less' : 'more'} ...`}</Button></Grid>
