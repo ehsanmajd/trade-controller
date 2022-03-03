@@ -252,7 +252,7 @@ export default function Basket() {
       </Grid>
       {selectedBasket &&
         <>
-          <BasketInfo data={basket.info} />
+          <BasketInfo data={basket.info} basketId={basket.basketId} />
           <hr />
           <h2>Expert Setting ({parameterFiles.length})</h2>
           <ReloadableCharts reloadableCharts={reloadableCharts} onReload={handleReloadClick} />

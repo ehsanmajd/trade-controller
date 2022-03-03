@@ -10,7 +10,7 @@ import Back from '@material-ui/icons/ArrowBack';
 import Forward from '@material-ui/icons/ArrowForward';
 import BasketChart from './BasketChart';
 import TimeFilter from './TimeFilter';
-import { TimeFilterType } from '../../../types/baskets';
+import { ChartData, TimeFilterType } from '../../../types/baskets';
 import { useUserContext } from '../../../context/UserContext';
 import { setLastViewedBasket, getLastViewedBasket } from '../../../utils/basket';
 
@@ -33,17 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface ChartData {
-  date: Date;
-  serverId: string;
-  basketId: string;
-  equity: number;
-  balance: number;
-  margin: number;
-  freeMargin: number;
-  marginLevel: number;
-  netLot: number;
-}
 
 const Row: React.FC = ({ children }) => {
   const classes = useStyles();
@@ -70,7 +59,7 @@ const mock: ChartData[] = [
     freeMargin: 1,
     marginLevel: 1,
     netLot: 1,
-    
+
   },
   {
     date: new Date(),
@@ -86,6 +75,25 @@ const mock: ChartData[] = [
   },
 
 ];
+
+export const BalanceChart: React.FC<{ data: ChartData[] }> = ({ data }) => (
+  <BasketChart<ChartData>
+    data={data}
+    dateProp='date'
+    valueProp={['balance']}
+    label='Balance'
+    colors={['#AA25F4']}
+  />
+);
+export const EquityChart: React.FC<{ data: ChartData[] }> = ({ data }) => (
+  <BasketChart<ChartData>
+    data={data}
+    dateProp='date'
+    valueProp={['equity']}
+    label='Equity'
+    colors={['#142EE4']}
+  />
+);
 
 const Charts: React.FC = () => {
   const classes = useStyles();
@@ -238,7 +246,9 @@ const Charts: React.FC = () => {
         </Grid>
       </Grid>
       <Row>
-        <BasketChart<ChartData>
+        <BalanceChart data={chartData} />
+        <EquityChart data={chartData} />
+        {/* <BasketChart<ChartData>
           data={chartData}
           dateProp='date'
           valueProp={['balance']}
@@ -251,7 +261,7 @@ const Charts: React.FC = () => {
           valueProp={['equity']}
           label='Equity'
           colors={['#142EE4']}
-        />
+        /> */}
       </Row>
       <Row>
         <BasketChart<ChartData>
@@ -290,3 +300,4 @@ const Charts: React.FC = () => {
 }
 
 export default Charts;
+export { TimeFilter, BasketChart }
