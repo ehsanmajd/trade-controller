@@ -248,20 +248,6 @@ const Charts: React.FC = () => {
       <Row>
         <BalanceChart data={chartData} />
         <EquityChart data={chartData} />
-        {/* <BasketChart<ChartData>
-          data={chartData}
-          dateProp='date'
-          valueProp={['balance']}
-          label='Balance'
-          colors={['#AA25F4']}
-        />
-        <BasketChart<ChartData>
-          data={chartData}
-          dateProp='date'
-          valueProp={['equity']}
-          label='Equity'
-          colors={['#142EE4']}
-        /> */}
       </Row>
       <Row>
         <BasketChart<ChartData>

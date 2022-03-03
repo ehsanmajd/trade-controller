@@ -148,7 +148,6 @@ export default function BasketInfo({
   useEffect(
     () => {
       if (displayGraphs) {
-        setExpanded(true);
         (async () => {
           setLoading(true);
           const data = await services.getBasketStatistics(
@@ -165,7 +164,7 @@ export default function BasketInfo({
       }
 
     },
-    [chartSettings?.type, chartSettings?.from, chartSettings?.to]
+    [displayGraphs, chartSettings?.type, chartSettings?.from, chartSettings?.to]
   )
 
   return (
