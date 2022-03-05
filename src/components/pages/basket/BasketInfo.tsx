@@ -17,7 +17,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: '16px 0',
+      padding: '0',
 
     },
     column: {
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     row: {
-      lineHeight: '36px'
+      lineHeight: '28px'
     }
   }),
 );

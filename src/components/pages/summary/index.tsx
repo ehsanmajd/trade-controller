@@ -25,7 +25,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: '#f8f8f8',
       maxHeight: '0',
       opacity: '0',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      margin: '4px',
+      width: 'auto',
     },
     expand: {
       animation: `$expand 1000ms ${theme.transitions.easing.easeInOut}`,
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) =>
     baskets: {
       border: 'solid 1px #ccc',
       borderRadius: '8px',
-      margin: '24px 0',
+      margin: '4px',
       padding: '16px',
       boxSizing: 'border-box',
       '&:nth-of-type(odd)': {
@@ -157,7 +159,7 @@ export default function Summary() {
             Charts settings
           </h4>
         </Grid>
-        <Grid container md={6} spacing={2} alignItems='center'>
+        <Grid container md={8} spacing={0} alignItems='center'>
           <TimeFilter
             filterType={filterType}
             onFilterTypeChange={setFilterType}
@@ -171,7 +173,7 @@ export default function Summary() {
       {baskets.map(basket => {
         return (
           <div key={basket.name} className={classes.baskets}>
-            <h3>Basket: {basket.name} ({basket.parameters.length})</h3>
+            <h3 style={{margin: '0'}}>Basket: {basket.name} ({basket.parameters.length})</h3>
             <hr />
             <div>
               <BasketInfo
