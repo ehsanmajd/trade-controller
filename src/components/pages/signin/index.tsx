@@ -52,6 +52,7 @@ export default function SignIn() {
   });
   const history = useHistory();
   const classes = useStyles();
+  const recaptchaRef = React.useRef<{reset: Function}>(null);
 
   const { setData: setUser, data: user } = useUserContext();
 
@@ -82,6 +83,7 @@ export default function SignIn() {
         });
       }
       catch {
+        recaptchaRef.current?.reset();
         setError('Invalid username or password');
       }
     }
@@ -168,6 +170,7 @@ export default function SignIn() {
             autoComplete="current-password"
           />}
           {mode === 'signin' && <ReCAPTCHA
+            ref={recaptchaRef}
             sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
             onChange={(value) => handleChange({
               target: {
