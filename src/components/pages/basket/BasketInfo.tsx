@@ -17,7 +17,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: '16px 0',
+      padding: '0',
 
     },
     column: {
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     row: {
-      lineHeight: '36px'
+      lineHeight: '28px'
     }
   }),
 );
@@ -186,15 +186,15 @@ export default function BasketInfo({
           <Row label='Total_Profit' value={main?.['Total_Profit']?.value} color={main?.['Total_Profit']?.color} />
         </Column>
       </Grid>
+      {!loading && displayGraphs && <ChartRow>
+        <BalanceChart data={chartData} />
+        <EquityChart data={chartData} />
+      </ChartRow>}
       {expanded && <Grid container>
         {extra.map(extraData => {
           return <Column>{Object.keys(extraData).map(key => <Row label={key} value={extraData[key]?.value} color={extraData[key]?.color} />)}</Column>
         })}
       </Grid>}
-      {!loading && displayGraphs && <ChartRow>
-        <BalanceChart data={chartData} />
-        <EquityChart data={chartData} />
-      </ChartRow>}
       {extra && <Grid container justify='center'>
         <Grid><Button variant='outlined' onClick={() => setExpanded(p => !p)}>{`Load ${expanded ? 'less' : 'more'} ...`}</Button></Grid>
       </Grid>}
