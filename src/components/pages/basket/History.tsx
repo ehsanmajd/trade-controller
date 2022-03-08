@@ -67,7 +67,7 @@ export default function History({orders}:HistoryProps){
     let deposit=0;
     depositRows.forEach(item=> deposit += item.profit);
 
-    const totalProfit= React.useCallback((days)=>{
+    const totalProfit= (days)=>{
         let sum=0;
         const from = new Date().getTime() - days * 1000 * 60 * 60 * 24;
         marketOrders.forEach(item=>{
@@ -77,7 +77,7 @@ export default function History({orders}:HistoryProps){
           }
         });
         return sum;
-    },[marketOrders]);
+    }
 
     const getAmountClass=(amount:number)=>{
         return amount > 0 ? classes.blue : (amount < 0 ? classes.red : null)
