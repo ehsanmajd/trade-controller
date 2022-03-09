@@ -7,10 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import CloseIcon from '@material-ui/icons/Close'
-import IconButton from '@material-ui/core/IconButton';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { OrderModel } from '../../../types/baskets';
+import { OrderModel } from '../../../../types/baskets';
+import Rows from './OrderRows';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -49,30 +47,8 @@ export default function Orders({orders,isInvestor,onCloseOrder}:OrdersProps){
     const [closingTicketIds,setClosingTicketIds] = React.useState([]);
     
     const handleCloseOrder=(ticketId:number)=>{
-        setClosingTicketIds([...closingTicketIds,ticketId]);
-        onCloseOrder(ticketId);
-    }
-
-    const Rows = ({orders,isPending}:{orders:OrderModel[],isPending?:boolean})=>{
-        return <>{orders.map((row) => (
-            <TableRow key={row.ticketId} className={isPending ? classes.pendings : ""}>
-                <TableCell component="th" scope="row">
-                    {row.ticketId}
-                </TableCell>
-                <TableCell align="center">{row.symbol}</TableCell>
-                <TableCell align="center">{row.openTime}</TableCell>
-                <TableCell align="center">{row.type}</TableCell>
-                <TableCell align="center">{row.size}</TableCell>
-                <TableCell align="center">{row.openPrice}</TableCell>
-                <TableCell align="center">{row.stopLoss}</TableCell>
-                <TableCell align="center">{row.takeProfit}</TableCell>
-                <TableCell align="center" className={getAmountClass(row.profit)}>{row.profit}</TableCell>
-                {!isInvestor &&  <TableCell align="center"><IconButton onClick={()=>handleCloseOrder(row.ticketId)}>
-                  {!closingTicketIds.includes(row.ticketId) && <CloseIcon color='secondary' />}
-                  {closingTicketIds.includes(row.ticketId) && <CircularProgress color="secondary" size={20} />}
-                  </IconButton>
-                </TableCell>}
-            </TableRow>))}</>;
+      setClosingTicketIds([...closingTicketIds,ticketId]);
+      onCloseOrder(ticketId);
     }
 
     const marketOrders = orders.filter(c=> ['buy','sell'].includes(c.type));
@@ -105,7 +81,12 @@ export default function Orders({orders,isInvestor,onCloseOrder}:OrdersProps){
         </TableRow>
       </TableHead>
       <TableBody>
-        <Rows orders={marketOrders} />
+        <Rows 
+          orders={marketOrders} 
+          onCloseOrder={handleCloseOrder} 
+          closingTicketIds={closingTicketIds} 
+          isInvestor={isInvestor} 
+        />
         {!!marketOrders.length && <TableRow key={'sum'}>
             <TableCell component="th" scope="row"></TableCell>
             <TableCell></TableCell>
@@ -116,7 +97,13 @@ export default function Orders({orders,isInvestor,onCloseOrder}:OrdersProps){
             <TableCell className={getAmountClass(totalProfit)} >{totalProfit.toFixed(2)}</TableCell>
             {!isInvestor && <TableCell></TableCell>}
           </TableRow>}
-        <Rows orders={pendingOrders} isPending={true} />
+        <Rows 
+          orders={pendingOrders} 
+          onCloseOrder={handleCloseOrder} 
+          closingTicketIds={closingTicketIds} 
+          isPending={true} 
+          isInvestor={isInvestor} 
+        />
       </TableBody>
     </Table>
   </TableContainer>

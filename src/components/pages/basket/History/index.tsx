@@ -7,7 +7,9 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { OrderModel } from '../../../types/baskets';
+import { OrderModel } from '../../../../types/baskets';
+import Rows from './HistoryRows';
+import SumRow from './SumRow';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,34 +37,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface HistoryProps {
-    orders:OrderModel[];
-  }
+  orders:OrderModel[];
+}
 
 export default function History({orders}:HistoryProps){
     const classes = useStyles();
     
-    const Rows = ({orders}:{orders:OrderModel[]})=>{
-        return <>{orders.map((row) => (
-            <TableRow key={row.ticketId}>
-                <TableCell component="th" scope="row">
-                    {row.ticketId}
-                </TableCell>
-                <TableCell align="center">{row.symbol}</TableCell>
-                <TableCell align="center">{row.closeTime}</TableCell>
-                <TableCell align="center">{row.type}</TableCell>
-                <TableCell align="center">{row.size}</TableCell>
-                <TableCell align="center">{row.openPrice}</TableCell>
-                <TableCell align="center">{row.stopLoss}</TableCell>
-                <TableCell align="center">{row.takeProfit}</TableCell>
-                <TableCell align="center" className={getAmountClass(row.profit)}>{row.profit}</TableCell>
-            </TableRow>))}</>;
-    }
-
     const marketOrders = orders.filter(c=> ['buy','sell'].includes(c.type)).sort((a,b)=>{
       if (a.closeTime > b.closeTime) return 1;
       if (a.closeTime < b.closeTime) return -1;
       return 0;
     });
+
     const depositRows = orders.filter(c=> c.orderComment && c.orderComment.toLowerCase().includes('deposit'));
     let deposit=0;
     depositRows.forEach(item=> deposit += item.profit);
@@ -77,23 +63,6 @@ export default function History({orders}:HistoryProps){
           }
         });
         return sum;
-    }
-
-    const getAmountClass=(amount:number)=>{
-        return amount > 0 ? classes.blue : (amount < 0 ? classes.red : null)
-    }
-
-    const SumRow=({label,amount})=>{
-
-      return <TableRow key={'sum'}>
-        <TableCell component="th" scope="row"></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell></TableCell>
-        <TableCell colSpan={3} className={classes.rightBold}>{label}</TableCell>
-        <TableCell className={getAmountClass(amount)} >{amount.toFixed(2)}</TableCell>
-      </TableRow>
     }
 
     return <TableContainer component={Paper}>

@@ -300,7 +300,7 @@ export default function Basket() {
             <hr />
             <Tabs value={activeTabIndex} onChange={handleTabChange}>
               <Tab label={`Orders (${orders.length})`} tabIndex={0} />
-              <Tab label={`History (${tradeHistory.length})`} tabIndex={1} />
+              <Tab label={`History (${tradeHistory.filter(c=> ['buy','sell'].includes(c.type)).length})`} tabIndex={1} />
               <IconButton onClick={refresh}><Refresh /></IconButton>
             </Tabs> 
             {activeTabIndex === 0 && <Orders orders={orders} onCloseOrder={handleCloseOrder} isInvestor={isInvestor} />}
