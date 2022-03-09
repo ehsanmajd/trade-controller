@@ -53,16 +53,11 @@ export default function History({orders}:HistoryProps){
     let deposit=0;
     depositRows.forEach(item=> deposit += item.profit);
 
-    const dateToString=(date:Date)=>{
-      const filler = (input:number)=> input.toString().padStart(2,'0');
-      return `${date.getFullYear()}/${filler(date.getMonth())}/${filler(date.getDate())} ${filler(date.getHours())}:${filler(date.getMinutes())}`
-    }
-
     const totalProfit= (days)=>{
         let sum=0;
         const from = new Date().getTime() - days * 1000 * 60 * 60 * 24;
         marketOrders.forEach(item=>{
-          const closetime = new Date(dateToString(item.closeTime)).getTime();
+          const closetime = new Date(item.closeTime.toString().replace(/\./g,'/')).getTime();
           if (closetime >= from){
             sum += item.profit;
           }
