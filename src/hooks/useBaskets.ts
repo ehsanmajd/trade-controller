@@ -38,11 +38,14 @@ function reducer(state: State, action: any) {
   }
 }
 
+// const mock  = require('./mock.json');
+
 const refreshActionCreator = () => {
   return async (dispatch) => {
     const timeStamp = new Date();
     const baskets: BasketModel[] = await service.getBaskets();
-    dispatch({ type: 'REFRESH', payload: { baskets, timeStamp } });
+    // dispatch({ type: 'REFRESH', payload: { baskets: mock, timeStamp } });
+    dispatch({ type: 'REFRESH', payload: { baskets: baskets, timeStamp } });
   }
 }
 

@@ -1,8 +1,12 @@
 import { createStyles, Grid, makeStyles, Theme } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import React from 'react'
-import { BasketInfoModel } from '../../../types/baskets';
+import { BasketInfoModel, ChartData } from '../../../types/baskets';
 import ProgressBar from '../../PorgressBar';
+import { BalanceChart, BasketChart, EquityChart } from '../charts';
+import { TimeFilterType } from '../../../types/baskets';
+import * as services from '../../../service';
+import { useEffect } from 'react';
 
 interface Props {
   label: string;
@@ -13,8 +17,8 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: '16px 0',
-      
+      padding: '0',
+
     },
     column: {
       boxSizing: 'border-box',
@@ -39,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) =>
       }
     },
     row: {
-      lineHeight: '36px'
+      lineHeight: '28px'
     }
   }),
 );
@@ -57,6 +61,12 @@ const Row = ({ label, value, color }: Props) => {
   )
 }
 
+
+const ChartRow: React.FC = ({ children }) => {
+  const classes = useStyles();
+  return <Grid container justify='space-between' className={classes.row}>{children}</Grid>
+}
+
 const Column: React.FC = ({ children }) => {
   const classes = useStyles();
   return <Grid className={classes.column} md={6} xs={12}>{children}</Grid>
@@ -66,6 +76,13 @@ interface BasketInfoProps {
   data?: {
     main: BasketInfoModel;
     extra?: BasketInfoModel[];
+  }
+  displayGraphs?: boolean;
+  basketId: string;
+  chartSettings?: {
+    from: Date;
+    to: Date;
+    type: TimeFilterType;
   }
 }
 
@@ -113,13 +130,45 @@ const INIT_STATE = {
   }
 }
 
-export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
+
+
+export default function BasketInfo({ 
+  data = INIT_STATE, 
+  displayGraphs = false, 
+  basketId,
+  chartSettings
+}: BasketInfoProps) {
   const { main, extra } = data || {};
-  const [expanded, setExpanded] = React.useState(false);
   const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
+  
+  const [chartData, setChartData] = React.useState<ChartData[]>([]);
+  const [loading, setLoading] = React.useState(false);
+
+  useEffect(
+    () => {
+      if (displayGraphs) {
+        (async () => {
+          setLoading(true);
+          const data = await services.getBasketStatistics(
+            basketId,
+            {
+              type: chartSettings?.type,
+              from: chartSettings?.from,
+              to: chartSettings?.to
+            }
+          );
+          setChartData(data.map(x => ({ ...x, date: new Date(x.date) })));
+          setLoading(false);
+        })();
+      }
+
+    },
+    [displayGraphs, chartSettings?.type, chartSettings?.from, chartSettings?.to]
+  )
+
   return (
     <div className={classes.root}>
-      <h2>Basket Summary</h2>
       <Grid container>
         <Column>
           <Row label='Balance' value={main?.['Balance']?.value} color='#506dbe' />
@@ -137,6 +186,10 @@ export default function BasketInfo({ data = INIT_STATE }: BasketInfoProps) {
           <Row label='Total_Profit' value={main?.['Total_Profit']?.value} color={main?.['Total_Profit']?.color} />
         </Column>
       </Grid>
+      {!loading && displayGraphs && <ChartRow>
+        <BalanceChart data={chartData} />
+        <EquityChart data={chartData} />
+      </ChartRow>}
       {expanded && <Grid container>
         {extra.map(extraData => {
           return <Column>{Object.keys(extraData).map(key => <Row label={key} value={extraData[key]?.value} color={extraData[key]?.color} />)}</Column>

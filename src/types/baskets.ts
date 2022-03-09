@@ -98,3 +98,16 @@ export enum TimeFilterType {
   Last30Days = 3,
   SpecificDate = 4
 }
+
+ 
+export interface ChartData {
+  date: Date;
+  serverId: string;
+  basketId: string;
+  equity: number;
+  balance: number;
+  margin: number;
+  freeMargin: number;
+  marginLevel: number;
+  netLot: number;
+}
