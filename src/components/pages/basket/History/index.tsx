@@ -57,7 +57,7 @@ export default function History({orders}:HistoryProps){
         let sum=0;
         const from = new Date().getTime() - days * 1000 * 60 * 60 * 24;
         marketOrders.forEach(item=>{
-          const closetime = new Date(item.closeTime).getTime();
+          const closetime = new Date(item.closeTime.toString().replace('.','/')).getTime();
           if (closetime >= from){
             sum += item.profit;
           }
