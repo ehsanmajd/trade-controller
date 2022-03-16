@@ -15,6 +15,7 @@ import Charts from "../../pages/Charts";
 import ChangePassword from "../../pages/ChangePassword";
 import UpdateEmail from "../../pages/UpdateEmail";
 import AskFor from "../AskFor";
+import SubAdminRouter from "./SubAdminRouter";
 
 interface Props {
   routePrefix: string;
@@ -52,6 +53,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
             </Route>
             <Route path={`${routePrefix}/admin`}>
               <Admin />
+            </Route>
+            <Route path={`${routePrefix}/sub-admin`}>
+              <SubAdminRouter routePrefix={`${routePrefix}/sub-admin`} />
             </Route>
             <Route path={`${routePrefix}/signout`}>
               <SignOut />

@@ -55,7 +55,7 @@ export function useBaskets() {
 
   const refresh = useCallback(() => dispatch(refreshActionCreator()), [dispatch]);
   const reset = useCallback(() => dispatch({ type: 'RESET' }), [dispatch]);
-  useInterval(refresh, 20 * 1000);
+  // useInterval(refresh, 20 * 1000);
 
   return {
     refreshTime,
