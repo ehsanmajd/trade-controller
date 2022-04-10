@@ -15,6 +15,7 @@ import Charts from "../../pages/Charts";
 import ChangePassword from "../../pages/ChangePassword";
 import UpdateEmail from "../../pages/UpdateEmail";
 import AskFor from "../AskFor";
+import WS from "../pages/ws";
 
 interface Props {
   routePrefix: string;
@@ -58,6 +59,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
             </Route>
             <Route path={`${routePrefix}/access-denied`}>
               <AccessDenied />
+            </Route>
+            <Route path={`${routePrefix}/ws`}>
+              <WS />
             </Route>
           </Switch>
         </BasketProvider>
