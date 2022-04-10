@@ -4,7 +4,7 @@ const WS: React.FC = () => {
 
   useEffect(
     () => {
-      var ws = new WebSocket('https://mybasket.trade/socket?basketId=123456');
+      var ws = new WebSocket('wss://mybasket.trade/socket?basketId=123456');
 
       ws.onopen = function () {
         console.log('websocket is connected ...')
