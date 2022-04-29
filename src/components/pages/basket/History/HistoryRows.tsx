@@ -31,8 +31,8 @@ export default function Rows ({orders}:{orders:OrderModel[]}){
           <TableCell align="center">{row.type}</TableCell>
           <TableCell align="center">{row.size}</TableCell>
           <TableCell align="center">{row.openPrice}</TableCell>
-          <TableCell align="center">{row.stopLoss}</TableCell>
-          <TableCell align="center">{row.takeProfit}</TableCell>
+          <TableCell align="center" style={{backgroundColor:`${row.orderComment?.includes('[sl]') ? '#f44336':'unset'}`}} >{row.stopLoss}</TableCell>
+          <TableCell align="center" style={{backgroundColor:`${row.orderComment?.includes('[tp]') ? '#4caf50':'unset'}`}}>{row.takeProfit}</TableCell>
           <TableCell align="center" className={getAmountClass(row.profit)}>{row.profit}</TableCell>
       </TableRow>))}</>;
 }

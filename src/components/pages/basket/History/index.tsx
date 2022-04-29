@@ -44,8 +44,8 @@ export default function History({orders}:HistoryProps){
     const classes = useStyles();
     
     const marketOrders = orders.filter(c=> ['buy','sell'].includes(c.type)).sort((a,b)=>{
-      if (a.closeTime > b.closeTime) return 1;
-      if (a.closeTime < b.closeTime) return -1;
+      if (a.closeTime > b.closeTime) return -1;
+      if (a.closeTime < b.closeTime) return 1;
       return 0;
     });
 
