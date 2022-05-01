@@ -7,6 +7,7 @@ import { BalanceChart, BasketChart, EquityChart } from '../charts';
 import { TimeFilterType } from '../../../types/baskets';
 import * as services from '../../../service';
 import { useEffect } from 'react';
+import {ArrowDropUp} from '@material-ui/icons';
 
 interface Props {
   label: string;
@@ -44,6 +45,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     row: {
       lineHeight: '28px'
+    },
+    marginBar:{
+      display:'inline', 
+      backgroundImage: 'linear-gradient(to right,#ff1900,#ff9100, #00ff23,#039e18)', 
+      width:'auto', 
+      height:'24px',
+      borderRadius:'8px',
+      flexGrow: 1,
+      marginLeft:'2px',
+      marginRight:'2px',
+      margin:'2px'
     }
   }),
 );
@@ -59,6 +71,30 @@ const Row = ({ label, value, color }: Props) => {
       </Grid>
     </Grid>
   )
+}
+
+const Gage = ({value})=>{
+  const classes = useStyles();
+  let position=-2;
+
+  if (value < 100){
+    position = -2;
+  }else if (value < 400){
+    position = (value - 100)  * 32 / 300;
+  }else if (value < 700){
+    position = ((value - 400) * 32 / 300) + 32;
+  }else if (value < 1000){
+    position = ((value - 700) * 32 / 300) + 64;
+  }else{
+    position = 94;
+  }
+
+  return <Grid container>
+    <label>{value}</label> 
+    <Grid container className={classes.marginBar}>
+      <ArrowDropUp style={{position:'relative',left:`${position}%`}} />
+    </Grid>
+  </Grid>
 }
 
 
@@ -174,7 +210,7 @@ export default function BasketInfo({
           <Row label='Balance' value={main?.['Balance']?.value} color='#506dbe' />
           <Row label='Equity' value={<ProgressBar leftColor='#506dbe' rightColor='#b43232' left={+main?.['Equity']?.value} right={+main?.['Balance']?.value - +main?.['Equity']?.value} hideRight />} />
           <Row label='Margin' value={<ProgressBar rightColor='#b43232' leftColor='#506dbe' right={+main?.['Margin']?.value} left={+main?.['Free_Margin']?.value} />} />
-          <Row label='Margin_Level' value={main?.['Margin_Level']?.value} />
+          <Row label='Margin_Level' value={<Gage value={main?.['Margin_Level']?.value} />} />
           <Row label='Total_Market_Orders' value={main?.['Total_Market_Orders']?.value} />
         </Column>
         <Column>
