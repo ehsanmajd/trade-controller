@@ -77,7 +77,9 @@ const Gage = ({value})=>{
   const classes = useStyles();
   let position=-2;
 
-  if (value < 100){
+  if (value == 0){
+    position = 94;
+  }else if (value < 100){
     position = -2;
   }else if (value < 400){
     position = (value - 100)  * 32 / 300;
