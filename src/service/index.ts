@@ -297,3 +297,21 @@ export const registerUser = async (
   });
   return data;
 }
+
+interface ToggleReceiveErrorByEmailInput {
+  userId: string;
+  receivedErrorsByEmail: boolean;
+}
+
+export const toggleReceiveErrorByEmail = async (input: ToggleReceiveErrorByEmailInput) => {
+  // const { data } = await axiosApiInstance.post(BASE_URL + '/users/setting', input);
+  // return data;
+  return new Promise(resolve => {
+    setTimeout(
+      () => {
+        resolve(true);
+      },
+      500
+    )
+  });
+}

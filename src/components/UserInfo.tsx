@@ -8,6 +8,7 @@ const UserInfo: React.FC = () => {
   const isAdmin = user.roles.indexOf('admin') !== -1;
   return (
     <div>
+      {user.loggedIn && <Link to="/dashboard/profile">profile</Link>} /&nbsp;
       <label>{`Welcome ${user.name || user.username || 'guest'}`}</label>&nbsp;
       {user.loggedIn && <Link to="/dashboard/signout">sign out</Link>} /&nbsp;
       {user.loggedIn && <Link to="/dashboard/change-password">change password</Link>}
