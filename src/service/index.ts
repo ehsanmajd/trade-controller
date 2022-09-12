@@ -299,19 +299,10 @@ export const registerUser = async (
 }
 
 interface ToggleReceiveErrorByEmailInput {
-  userId: string;
-  receivedErrorsByEmail: boolean;
+  receiveErrorsByEmail: boolean;
 }
 
 export const toggleReceiveErrorByEmail = async (input: ToggleReceiveErrorByEmailInput) => {
-  // const { data } = await axiosApiInstance.post(BASE_URL + '/users/setting', input);
-  // return data;
-  return new Promise(resolve => {
-    setTimeout(
-      () => {
-        resolve(true);
-      },
-      500
-    )
-  });
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/settings', input);
+  return data;
 }

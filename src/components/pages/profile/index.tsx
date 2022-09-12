@@ -1,9 +1,8 @@
-import React, { FC, useState } from 'react'
+import { FC, useState } from 'react'
 import { useUserContext } from '../../../context/UserContext';
 import { useHistory } from 'react-router-dom';
 import { Avatar, Button, Container, Switch, makeStyles, Grid, FormGroup, FormControlLabel } from '@material-ui/core';
 import { toggleReceiveErrorByEmail } from '../../../service';
-import EmailIcon from '@material-ui/icons/Email';
 import { AccountCircleOutlined } from '@material-ui/icons';
 
 
@@ -13,8 +12,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     flexDirection: 'column',
     boxSizing: 'border-box',
-    margin: '40px',
-    width: '50%',
+    width: '100%',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -51,6 +49,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     margin: '20px',
     boxSizing: 'border-box',
+    flexDirection: 'column'
   },
 
   containerLabels: {
@@ -84,32 +83,29 @@ const Profile: FC = () => {
   const { data: user } = useUserContext();
   const history = useHistory();
   const classes = useStyles();
-  const [receivedErrorsByEmail, setReceivedErrorsByEmail] = useState<boolean>(false)
-
-
+  const [receiveErrorsByEmail, setReceiveErrorsByEmail] = useState<boolean>(user?.settings?.nonifyByEmailForErrors)
 
   const handleCancel = () => {
 
     history.push('/dashboard/home');
   }
 
-  const handleReceivedErrorsByEmail = () => {
-    setReceivedErrorsByEmail(!receivedErrorsByEmail)
+  const handleChangePassword = () => {
+    history.push('/dashboard/change-password');
+  }
+
+  const handleReceiveErrorsByEmailChange = () => {
+    setReceiveErrorsByEmail(!receiveErrorsByEmail)
 
   }
 
   const handleSave = async () => {
     const model = {
-      userId: user.userId,
-      receivedErrorsByEmail: receivedErrorsByEmail,
+      receiveErrorsByEmail: receiveErrorsByEmail,
     }
 
-    console.log(model);
-
-
-
     await toggleReceiveErrorByEmail(model);
-    console.log('Done!');
+    history.push('/dashboard/home');
   };
 
   return (
@@ -136,12 +132,22 @@ const Profile: FC = () => {
         <FormGroup>
           <FormControlLabel
             labelPlacement="start"
-            checked={receivedErrorsByEmail}
-            onChange={handleReceivedErrorsByEmail}
+            checked={receiveErrorsByEmail}
+            onChange={handleReceiveErrorsByEmailChange}
             label="Received errors by email"
             control={<Switch defaultChecked color='primary' />}
           />
         </FormGroup>
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="secondary"
+          className={classes.submit}
+          onClick={handleChangePassword}
+        >
+          Change password
+        </Button>
       </div>
 
       <Grid container>

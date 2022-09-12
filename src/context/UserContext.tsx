@@ -8,6 +8,9 @@ export interface UserContextDataModel {
   roles: string[];
   askEmail?: boolean;
   askPassword?: boolean;
+  settings?: {
+    nonifyByEmailForErrors?: boolean;
+  }
 }
 export interface UserContextModel {
   data: UserContextDataModel;
@@ -20,7 +23,10 @@ export const UserContext = React.createContext<UserContextModel>({
     name: '',
     loggedIn: false,
     roles: ['user'],
-    askEmail: false
+    askEmail: false,
+    settings: {
+      nonifyByEmailForErrors: true
+    }
   },
   setData: () => undefined
 });

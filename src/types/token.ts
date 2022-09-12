@@ -5,4 +5,7 @@ export interface Token {
   username: string;
   roles: string[];
   askEmail: boolean;
+  settings?: {
+    nonifyByEmailForErrors: boolean;
+  }
 }

@@ -79,7 +79,10 @@ export default function SignIn() {
           username: user.username,
           roles: user.roles,
           askEmail: !user.email,
-          askPassword: user.askForPasswordReset
+          askPassword: user.askForPasswordReset,
+          settings: {
+            nonifyByEmailForErrors: user.receiveErrorsByEmail
+          }
         });
       }
       catch {
