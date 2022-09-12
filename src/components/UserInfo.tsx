@@ -10,7 +10,7 @@ const UserInfo: React.FC = () => {
     <div>
       <label>{`Welcome ${user.name || user.username || 'guest'}`}</label>&nbsp;
       {user.loggedIn && <Link to="/dashboard/signout">sign out</Link>} /&nbsp;
-      {user.loggedIn && <Link to="/dashboard/change-password">change password</Link>}
+      {user.loggedIn && <Link to="/dashboard/profile">profile</Link>} &nbsp;
       &nbsp;
       {isAdmin && <Link to="/dashboard/admin">Admin panel</Link>}
       {!user.loggedIn && <Link to="/guest/signin">sign in</Link>}

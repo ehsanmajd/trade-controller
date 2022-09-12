@@ -16,6 +16,7 @@ import ChangePassword from "../../pages/ChangePassword";
 import UpdateEmail from "../../pages/UpdateEmail";
 import AskFor from "../AskFor";
 import WS from "../pages/ws";
+import Profile from "../../pages/Profile";
 
 interface Props {
   routePrefix: string;
@@ -35,6 +36,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
             </Route>
             <Route path={`${routePrefix}/change-password`}>
               <ChangePassword />
+            </Route>
+            <Route path={`${routePrefix}/profile`}>
+              <Profile />
             </Route>
             <Route path={`${routePrefix}/setting`}>
               <Setting />

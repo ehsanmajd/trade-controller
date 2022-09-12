@@ -297,3 +297,12 @@ export const registerUser = async (
   });
   return data;
 }
+
+interface ToggleReceiveErrorByEmailInput {
+  receiveErrorsByEmail: boolean;
+}
+
+export const toggleReceiveErrorByEmail = async (input: ToggleReceiveErrorByEmailInput) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/users/settings', input);
+  return data;
+}

@@ -22,7 +22,8 @@ const Auth: React.FC = ({ children }) => {
             userId: token.userId,
             loggedIn: true,
             roles: token.roles,
-            askEmail: token.askEmail
+            askEmail: token.askEmail,
+            settings: token.settings
           });
           return;
         }
