@@ -74,6 +74,11 @@ export const getBaskets = async () => {
   return data;
 }
 
+export const getBaskets2 = async () => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/baskets?v3=1');
+  return data;
+}
+
 export const updateExpert = async (
   {
     serverId,

@@ -65,6 +65,12 @@ export interface BasketModel {
   address: string;
 }
 
+export interface BasketModel2 {
+  id: string;
+  name: string;
+  experts: any[];
+}
+
 export type UserAccessType = {
   userId: string;
   username: string;

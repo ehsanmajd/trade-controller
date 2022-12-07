@@ -64,10 +64,10 @@ export default function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (mode === 'signin') {
-      if (!form.email || !form.password || !form.captcha) {
-        setError('Please fill all the fields');
-        return;
-      }
+      // if (!form.email || !form.password || !form.captcha) {
+      //   setError('Please fill all the fields');
+      //   return;
+      // }
       setError('');
       try {
         const { accessToken, refreshToken, user } = await service.login(form.email, form.password, form.captcha);
@@ -169,7 +169,7 @@ export default function SignIn() {
             id="password"
             autoComplete="current-password"
           />}
-          {mode === 'signin' && <ReCAPTCHA
+          {/* {mode === 'signin' && <ReCAPTCHA
             ref={recaptchaRef}
             sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY}
             onChange={(value) => handleChange({
@@ -178,7 +178,7 @@ export default function SignIn() {
                 value
               }
             })}
-          />}
+          />} */}
           {error && <Typography component="p" variant="caption" color='error'>
             {error}
           </Typography>}

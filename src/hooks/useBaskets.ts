@@ -40,10 +40,10 @@ function reducer(state: State, action: any) {
 
 // const mock  = require('./mock.json');
 
-const refreshActionCreator = () => {
+const refreshActionCreator = (v3: boolean) => {
   return async (dispatch) => {
     const timeStamp = new Date();
-    const baskets: BasketModel[] = await service.getBaskets();
+    const baskets: BasketModel[] = v3 ? await service.getBaskets2() : await service.getBaskets();
     // dispatch({ type: 'REFRESH', payload: { baskets: mock, timeStamp } });
     dispatch({ type: 'REFRESH', payload: { baskets: baskets, timeStamp } });
   }
@@ -53,15 +53,17 @@ export function useBaskets() {
   const [{ refreshTime, baskets }, dispatch] = useThunkReducer(reducer, INIT_STATE);
   const hasError = baskets.some(x => !x.success);
 
-  const refresh = useCallback(() => dispatch(refreshActionCreator()), [dispatch]);
+  const refresh = useCallback(() => dispatch(refreshActionCreator(false)), [dispatch]);
+  const refresh2 = useCallback(() => dispatch(refreshActionCreator(true)), [dispatch]);
   const reset = useCallback(() => dispatch({ type: 'RESET' }), [dispatch]);
-  useInterval(refresh, 20 * 1000);
+  // useInterval(refresh, 20 * 1000);
 
   return {
     refreshTime,
     baskets,
     refresh,
     hasError,
-    reset
+    reset,
+    refresh2
   }
 }

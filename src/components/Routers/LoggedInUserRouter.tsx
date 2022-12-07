@@ -1,4 +1,5 @@
 import Main from "../../pages/Main";
+import Baskets from "../../pages/Baskets";
 import Setting from "../../pages/Setting";
 import BasketProvider from "../BasketProvider";
 import Summary from "../../pages/Summary";
@@ -32,6 +33,9 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
           <Switch>
             <Route path={`${routePrefix}/home`}>
               <Main />
+            </Route>
+            <Route path={`${routePrefix}/baskets`}>
+              <Baskets />
             </Route>
             <Route path={`${routePrefix}/change-password`}>
               <ChangePassword />
