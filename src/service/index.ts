@@ -302,3 +302,22 @@ export const registerUser = async (
   });
   return data;
 }
+
+export const getDefinedBaskets = async () => {
+  const { data } = await axiosApiInstance.get(BASE_URL + '/baskets2');
+  return data;
+}
+
+export const defineBasket = async (name: string) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/baskets', {
+    name: name
+  });
+  return data;
+}
+
+export const updateDefinedBasket = async (id: string, name: string) => {
+  const { data } = await axiosApiInstance.post(BASE_URL + '/baskets/' + id, {
+    name: name
+  });
+  return data;
+}
