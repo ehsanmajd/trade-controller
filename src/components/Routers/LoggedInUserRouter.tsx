@@ -25,8 +25,8 @@ export default function LoggedInUserRouter({ routePrefix }: Props) {
   return (
     <Auth>
       <AskFor 
-        email={{pathname: '/dashboard/update-email', userContextKey: 'askEmail'}}
-        password={{pathname: '/dashboard/change-password', userContextKey: 'askPassword'}}
+        email={{pathname: '/v1/dashboard/update-email', userContextKey: 'askEmail'}}
+        password={{pathname: '/v1/dashboard/change-password', userContextKey: 'askPassword'}}
       >
         <BasketProvider>
           <Switch>

@@ -9,11 +9,11 @@ const UserInfo: React.FC = () => {
   return (
     <div>
       <label>{`Welcome ${user.name || user.username || 'guest'}`}</label>&nbsp;
-      {user.loggedIn && <Link to="/dashboard/signout">sign out</Link>} /&nbsp;
-      {user.loggedIn && <Link to="/dashboard/change-password">change password</Link>}
+      {user.loggedIn && <Link to="/v1/dashboard/signout">sign out</Link>} /&nbsp;
+      {user.loggedIn && <Link to="/v1/dashboard/change-password">change password</Link>}
       &nbsp;
-      {isAdmin && <Link to="/dashboard/admin">Admin panel</Link>}
-      {!user.loggedIn && <Link to="/guest/signin">sign in</Link>}
+      {isAdmin && <Link to="/v1/dashboard/admin">Admin panel</Link>}
+      {!user.loggedIn && <Link to="/v1/guest/signin">sign in</Link>}
     </div>
   )
 }

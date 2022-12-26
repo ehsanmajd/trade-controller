@@ -39,7 +39,7 @@ const Header: FC = () => {
     return paperClasses.join(' ');
   }
 
-  const HeaderPaper = ({ name, path }) => <Paper className={getClassNames(path)} onClick={() => history.push('/dashboard/' + path)}>{name}</Paper>;
+  const HeaderPaper = ({ name, path }) => <Paper className={getClassNames(path)} onClick={() => history.push('/v1/dashboard/' + path)}>{name}</Paper>;
 
   return <Grid container spacing={1} justify='flex-start' alignItems='center'>
     <Grid item xs={3} sm={3}>
