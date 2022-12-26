@@ -1,0 +1,7 @@
+services:
+  my-basket:
+    image: my-basket
+    build:
+      context: .
+    ports:
+      - "8080:80"

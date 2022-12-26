@@ -54,7 +54,7 @@ export default function Register() {
     e.preventDefault();
     setError('');
     if (signupComplete) {
-      history.push('/guest/signin');
+      history.push('/v1/guest/signin');
       return;
     }
 
@@ -92,7 +92,7 @@ export default function Register() {
   }
 
   const handleCancel = () => {
-    history.push('/guest/signin');
+    history.push('/v1/guest/signin');
   }
 
   return (
