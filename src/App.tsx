@@ -14,8 +14,6 @@ import GuestUserRouter from './components/Routers/GuestUserRouter';
 import SignOut from './pages/SignOut';
 import ServiceUnAvailable from './pages/ServiceUnAvailable';
 
-const PREFIX = '/v1';
-
 function App() {
   const [user, setUser] = React.useState<UserContextDataModel>({
     loggedIn: false,
@@ -27,20 +25,17 @@ function App() {
       <UserContext.Provider value={{ data: user, setData: setUser }}>
         <Router>
           <Switch>
-            <Route path={`${PREFIX}/dashboard`}>
-              <LoggedInUserRouter routePrefix={`${PREFIX}/dashboard`} />
+            <Route path={`/dashboard`}>
+              <LoggedInUserRouter routePrefix={`/dashboard`} />
             </Route>
-            <Route path={`${PREFIX}/guest`}>
-              <GuestUserRouter routePrefix={`${PREFIX}/guest`} />
+            <Route path={`/guest`}>
+              <GuestUserRouter routePrefix={`/guest`} />
             </Route>
-            <Route path={`${PREFIX}/signout`}>
+            <Route path={`/signout`}>
               <SignOut />
             </Route>
-            <Route path={`${PREFIX}/`}>
+            <Route path={`/`}>
               <DefaultPage />
-            </Route>
-            <Route path='/'>
-              <ServiceUnAvailable />
             </Route>
           </Switch>
         </Router>

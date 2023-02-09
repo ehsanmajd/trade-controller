@@ -28,7 +28,7 @@ const Auth: React.FC = ({ children }) => {
         }
       }
       if (!user.loggedIn) {
-        history.replace('/v1/guest/signin')
+        history.replace('/guest/signin')
       }
     },
     [user.loggedIn, setUser, history]

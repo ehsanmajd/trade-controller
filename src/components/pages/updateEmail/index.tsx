@@ -49,7 +49,7 @@ function Index() {
       ...user,
       askEmail: false,
     });
-    history.replace('/v1/dashboard/home');
+    history.replace('/dashboard/home');
   }
 
   const handleChange = e => setForm({
@@ -107,7 +107,7 @@ function Index() {
   React.useEffect(
     () => {
       if (!user.askEmail) {
-        history.push('/v1/dashboard/home');
+        history.push('/dashboard/home');
       }
     },
     [user.askEmail, history]

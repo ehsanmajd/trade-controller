@@ -24,7 +24,7 @@ const SignOut: React.FC = () => {
             roles: ['user'],
             askEmail: false
           });
-          history.replace('/v1/guest/signin');
+          history.replace('/guest/signin');
         }
       )
     },

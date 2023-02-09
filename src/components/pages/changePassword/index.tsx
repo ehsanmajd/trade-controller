@@ -69,7 +69,7 @@ export default function ChangePassword() {
     setError('');
     setMessage('');
     setCounter(COUNTER_INIT);
-    history.push('/v1/dashboard/home');
+    history.push('/dashboard/home');
   }
 
   const handleSubmit = async (e) => {
