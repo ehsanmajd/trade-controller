@@ -92,7 +92,7 @@ export default function Register() {
   }
 
   const handleCancel = () => {
-    history.push('/v1/guest/signin');
+    history.push('/guest/signin');
   }
 
   return (

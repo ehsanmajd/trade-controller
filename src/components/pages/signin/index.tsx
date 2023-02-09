@@ -128,7 +128,7 @@ export default function SignIn() {
   }
 
   const gotoRegisterPage = () => {
-    history.push('/v1/guest/register');
+    history.push('/guest/register');
   }
 
   return (
